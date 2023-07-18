@@ -6,6 +6,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import Splash from './screens/Splash';
 import Home from './screens/Home';
+import Slok from './screens/Slok';
+import Verse from './screens/Verse';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -15,6 +17,8 @@ const App = () => {
         <Stack.Navigator initialRouteName="Home">
           <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Slok" component={Slok} />
+          <Stack.Screen name="Verse" component={Verse} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

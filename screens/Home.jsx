@@ -26,27 +26,26 @@ const Home = ({navigation}) => {
       const response = await axios.get('https://bhagavadgitaapi.in/chapters');
       const data = response.data;
       setChapters(data);
-      getRandomSlok();
+      // getRandomSlok();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const getRandomSlok = async () => {
-    try {
-      let random = Math.floor(Math.random() * 18) + 1;
-      const response = await axios.get(
-        `https://bhagavadgitaapi.in/slok/${random}/${
-          Math.floor(Math.random() * chapters[random - 1].verses_count) + 1
-        }`,
-      );
-      const data = response.data;
-      setRandomSlok(data);
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const getRandomSlok = async () => {
+  //   try {
+  //     let random = Math.floor(Math.random() * 18) + 1;
+  //     const response = await axios.get(
+  //       `https://bhagavadgitaapi.in/slok/${random}/${
+  //         Math.floor(Math.random() * chapters[random - 1].verses_count) + 1
+  //       }`,
+  //     );
+  //     const data = response.data;
+  //     setRandomSlok(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -61,7 +60,13 @@ const Home = ({navigation}) => {
                 <TouchableOpacity
                   activeOpacity={0.9}
                   key={chap.chapter_number}
-                  style={styles.mainChapDiv}>
+                  style={styles.mainChapDiv}
+                  onPress={() =>
+                    navigation.navigate('Verse', {
+                      chap_no: chap.chapter_number,
+                      versed: chap.verses_count,
+                    })
+                  }>
                   <View style={styles.chapCountDiv}>
                     <Text style={styles.chapCountTxt}>
                       {chap.chapter_number}
