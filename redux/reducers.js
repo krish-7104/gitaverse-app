@@ -2,7 +2,7 @@ import { BOOKMARK, COMMENTARY, DARK_MODE, LANGUAGE, TRANSLATION } from "./action
 
 const initialState = {
     darkmode: false,
-    language: "english",
+    language: "English",
     translation: { author: "siva", type: "et" },
     commentary: { author: "chinmay", type: "hc" },
     bookmark: []

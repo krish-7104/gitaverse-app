@@ -8,10 +8,13 @@ import {
 import React from 'react';
 import data from '../data.json';
 import {useSelector} from 'react-redux';
-import BottomNav from '../components/BottomNav';
-const Setting = ({navigation}) => {
+import {useNavigation} from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+const Setting = () => {
   const commentaryData = useSelector(state => state.commentary);
   const translationData = useSelector(state => state.translation);
+  const langauageData = useSelector(state => state.language);
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -30,6 +33,33 @@ const Setting = ({navigation}) => {
             Commentary By{' '}
             {data.verse_commentary_sources[commentaryData.author].author}
           </Text>
+          <Ionicons name={'chevron-down-outline'} color="#00000080" size={20} />
+        </TouchableOpacity>
+        <Text style={styles.sectionTitle}>Translation Source</Text>
+        <TouchableOpacity
+          style={styles.selectedBtn}
+          onPress={() =>
+            navigation.navigate('LangChange', {
+              type: 'verse_translation_sources',
+            })
+          }>
+          <Text style={styles.selectedTxt}>
+            {data.verse_translation_sources[translationData.author].language}{' '}
+            Translation By{' '}
+            {data.verse_translation_sources[translationData.author].author}
+          </Text>
+          <Ionicons name={'chevron-down-outline'} color="#00000080" size={20} />
+        </TouchableOpacity>
+        <Text style={styles.sectionTitle}>Select Language</Text>
+        <TouchableOpacity
+          style={styles.selectedBtn}
+          onPress={() =>
+            navigation.navigate('LangChange', {
+              type: 'language',
+            })
+          }>
+          <Text style={styles.selectedTxt}>{langauageData}</Text>
+          <Ionicons name={'chevron-down-outline'} color="#00000080" size={20} />
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -47,24 +77,29 @@ const styles = StyleSheet.create({
   scrollContainer: {
     width: '90%',
     alignSelf: 'center',
-    marginVertical: 18,
+    marginTop: 18,
   },
   sectionTitle: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Poppins-SemiBold',
     marginBottom: 6,
+    marginTop: 10,
   },
   selectedBtn: {
     borderColor: '#00000040',
     borderWidth: 1.4,
     paddingHorizontal: 18,
     paddingVertical: 8,
-    borderRadius: 6,
+    borderRadius: 4,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   selectedTxt: {
     color: '#00000090',
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Poppins-Medium',
   },
 });

@@ -8,8 +8,9 @@ import {
 import React, {useLayoutEffect} from 'react';
 import data from '../data.json';
 import {useDispatch} from 'react-redux';
-import {setCommentaryhandler} from '../redux/actions';
+import {setCommentaryhandler, setTranslationhandler} from '../redux/actions';
 const LangChange = ({navigation, route}) => {
+  console.log(route.params.type);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -32,24 +33,35 @@ const LangChange = ({navigation, route}) => {
     });
   }, [navigation]);
   const dispatch = useDispatch();
-  const changeHandler = (author, type) => {
-    dispatch(setCommentaryhandler({author, type}));
-    navigation.navigate('Setting');
+  const changeHandler = (author, langaugeType, type) => {
+    if (type === 'Translation') {
+      dispatch(setTranslationhandler({author, type: langaugeType}));
+    } else {
+      dispatch(setCommentaryhandler({author, type: langaugeType}));
+    }
+    navigation.replace('Setting');
   };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}>
-        {route.params.type &&
-          Object.keys(data[route.params.type]).map(item => {
+        {data &&
+          route.params.type &&
+          Object.keys(data[route.params.type]).map((item, index) => {
             return (
               <TouchableOpacity
                 onPress={() =>
-                  changeHandler(item, data[route.params.type][item].symbol)
+                  changeHandler(
+                    item,
+                    data[route.params.type][item].symbol,
+                    route.params.type === 'verse_commentary_sources'
+                      ? 'Commentary'
+                      : 'Translation',
+                  )
                 }
                 style={styles.nameCard}
-                key={data[route.params.type][item].author}>
+                key={index}>
                 <Text style={styles.textArea}>
                   {data[route.params.type][item].language}{' '}
                   {route.params.type === 'verse_commentary_sources'
