@@ -1,17 +1,44 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
 import axios from 'axios';
+import {useSelector} from 'react-redux';
 
-const Verse = ({route}) => {
+const Verse = ({route, navigation}) => {
+  const translationData = useSelector(state => state.translation);
+  const commentaryData = useSelector(state => state.commentary);
   const [versed, setVersed] = useState([]);
+  const [count, setCount] = useState(1);
   useEffect(() => {
-    getAllChapters();
-  }, []);
-  const getAllChapters = async () => {
-    console.log(route.params.chap_no);
+    getData();
+  }, [count]);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTintColor: 'black',
+      headerTitle: () => {
+        return (
+          <Text
+            style={{
+              fontSize: 18,
+              marginTop: 6,
+              color: '#000',
+              fontFamily: 'Poppins-SemiBold',
+            }}>
+            {route.params.chap_no}. {route.params.name}
+          </Text>
+        );
+      },
+    });
+  }, [navigation]);
+  const getData = async () => {
     try {
       const response = await axios.get(
-        `https://bhagavadgitaapi.in/slok/${route.params.chap_no}/1`,
+        `https://bhagavadgitaapi.in/slok/${route.params.chap_no}/${count}`,
       );
       const data = response.data;
       setVersed(data);
@@ -19,32 +46,50 @@ const Verse = ({route}) => {
       console.error(error);
     }
   };
+
+  const handleIncrement = () => {
+    setCount(count + 1);
+  };
+
+  const handlerDecrement = () => {
+    setCount(count - 1);
+  };
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white',
       }}>
       <View style={styles.container}>
-        {versed && (
+        {translationData && commentaryData && versed && (
           <>
             <Text style={styles.chapSlokNum}>
-              {route.params.chap_no}.{1}
+              {route.params.chap_no}.{count}
             </Text>
-            <Text style={styles.slokTxt}>{versed.slok}</Text>
-            <Text style={styles.transliterationTitle}>Transliteration</Text>
-            <Text style={styles.transliterationTxt}>
-              {versed.transliteration}
+            <Text style={styles.slokTxt}>{versed?.slok}</Text>
+            <Text style={styles.sectionTitle}>Transliteration</Text>
+            <Text style={styles.sectionTxt}>{versed?.transliteration}</Text>
+            <Text style={styles.sectionTitle}>Translation</Text>
+            <Text style={styles.sectionTxt}>
+              {versed?.[translationData?.author]?.[translationData?.type]}
             </Text>
-            {/* <Text>{versed.adi.author}</Text> */}
-            {/* <Text>{versed.adi.et}</Text> */}
+            <Text style={styles.sectionTitle}>Commentary</Text>
+            <Text style={styles.sectionTxt}>
+              {versed?.[commentaryData?.author]?.[commentaryData?.type]}
+            </Text>
           </>
         )}
       </View>
       <View style={styles.bottomNavDiv}>
-        <View></View>
+        <TouchableOpacity onPress={handlerDecrement}>
+          <Text style={{color: 'black'}}>Decrement</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleIncrement}>
+          <Text style={{color: 'black'}}>Increment</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -62,30 +107,29 @@ const styles = StyleSheet.create({
   chapSlokNum: {
     color: 'black',
     fontFamily: 'Poppins-Bold',
-    fontSize: 18,
-    marginBottom: 15,
+    fontSize: 22,
+    marginVertical: 12,
   },
   slokTxt: {
     color: '#dc2626',
-    fontFamily: 'Poppins-Medium',
-    lineHeight: 30,
-    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+    lineHeight: 38,
+    fontSize: 17,
     textAlign: 'center',
-    marginBottom: 15,
   },
-  transliterationTitle: {
+  sectionTitle: {
     color: 'black',
     fontSize: 16,
     fontFamily: 'Poppins-SemiBold',
     textTransform: 'uppercase',
-    marginBottom: 10,
+    marginVertical: 15,
   },
-  transliterationTxt: {
+  sectionTxt: {
     textAlign: 'center',
     color: 'black',
     fontSize: 16,
     fontFamily: 'Poppins-Medium',
-    marginBottom: 15,
     lineHeight: 27,
   },
+  bottomNavDiv: {},
 });

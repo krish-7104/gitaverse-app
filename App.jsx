@@ -9,6 +9,7 @@ import Home from './screens/Home';
 import Slok from './screens/Slok';
 import Verse from './screens/Verse';
 import LangChange from './screens/LangChange';
+import Chapter from './screens/Chapter';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -20,6 +21,7 @@ const App = () => {
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Slok" component={Slok} />
           <Stack.Screen name="Verse" component={Verse} />
+          <Stack.Screen name="Chapter" component={Chapter} />
           <Stack.Screen name="LangChange" component={LangChange} />
         </Stack.Navigator>
       </NavigationContainer>

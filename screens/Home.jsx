@@ -7,10 +7,13 @@ import {
 } from 'react-native';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
 
 const Home = ({navigation}) => {
   const [chapters, setChapters] = useState([]);
   const [randomSlok, setRandomSlok] = useState([]);
+  const language = useSelector(state => state.language);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -51,7 +54,9 @@ const Home = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.mainChap}>
         <View style={styles.chapDiv}>
-          <Text style={styles.chapTitle}>Chapters</Text>
+          <Text style={styles.chapTitle}>
+            {language === 'hindi' ? 'सभी अध्याय' : 'Chapters'}
+          </Text>
         </View>
         <ScrollView showsVerticalScrollIndicator={false}>
           {chapters &&
@@ -62,9 +67,10 @@ const Home = ({navigation}) => {
                   key={chap.chapter_number}
                   style={styles.mainChapDiv}
                   onPress={() =>
-                    navigation.navigate('Verse', {
+                    navigation.navigate('Chapter', {
                       chap_no: chap.chapter_number,
                       versed: chap.verses_count,
+                      name: language === 'hindi' ? chap.name : chap.translation,
                     })
                   }>
                   <View style={styles.chapCountDiv}>
@@ -73,10 +79,20 @@ const Home = ({navigation}) => {
                     </Text>
                   </View>
                   <View style={styles.chapDataDiv}>
-                    <Text style={styles.chapDataTitle}>{chap.translation}</Text>
-                    <Text style={styles.chapDataSubtitle}>
-                      {chap.verses_count} verses
+                    <Text style={styles.chapDataTitle}>
+                      {language === 'hindi' ? chap.name : chap.translation}
                     </Text>
+                    <Text style={styles.chapDataSubtitle}>
+                      {chap.verses_count}{' '}
+                      {language === 'hindi' ? 'छंद' : 'verses'}
+                    </Text>
+                  </View>
+                  <View style={styles.rightIcon}>
+                    <Icon
+                      name="chevron-forward-outline"
+                      color="#00000080"
+                      size={18}
+                    />
                   </View>
                 </TouchableOpacity>
               );
@@ -131,15 +147,19 @@ const styles = StyleSheet.create({
   },
   chapDataDiv: {
     marginLeft: 20,
+    flexGrow: 1,
   },
   chapDataTitle: {
     color: 'black',
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 16,
+    fontSize: 17,
   },
   chapDataSubtitle: {
     color: 'black',
     fontFamily: 'Poppins-Regular',
-    fontSize: 14,
+    fontSize: 15,
+  },
+  rightIcon: {
+    padding: 10,
   },
 });
