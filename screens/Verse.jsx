@@ -18,11 +18,11 @@ const Verse = ({route, navigation}) => {
   const commentaryData = useSelector(state => state.commentary);
   const bookmarkData = useSelector(state => state.bookmark);
   const dispatch = useDispatch();
-  const [versed, setVersed] = useState([]);
+  const [versed, setVersed] = useState({});
   const [count, setCount] = useState(1);
   useEffect(() => {
     getData();
-  }, [count]);
+  }, []);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -43,12 +43,22 @@ const Verse = ({route, navigation}) => {
     });
   }, [navigation]);
   const getData = async () => {
-    try {
-      const response = await axios.get(
-        `https://bhagavadgitaapi.in/slok/${route.params.chap_no}/${count}`,
+    const requests = [];
+
+    for (let i = 1; i <= route.params.versed; i++) {
+      requests.push(
+        axios.get(
+          `https://bhagavadgitaapi.in/slok/${route.params.chap_no}/${i}`,
+        ),
       );
-      const data = response.data;
-      setVersed(data);
+    }
+    try {
+      const responses = await Promise.all(requests);
+      const data = responses.reduce((acc, response, index) => {
+        acc[index + 1] = response.data;
+        return acc;
+      }, {});
+      setVersed(prev => ({...prev, ...data}));
     } catch (error) {
       console.error(error);
     }
@@ -82,20 +92,30 @@ const Verse = ({route, navigation}) => {
               <Text style={styles.chapSlokNum}>
                 {route.params.chap_no}.{count}
               </Text>
-              <Text style={styles.slokTxt}>{versed?.slok}</Text>
+              <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
               <Image
                 source={require('../assets/flower.png')}
                 style={styles.image}
               />
               <Text style={styles.sectionTitle}>Transliteration</Text>
-              <Text style={styles.sectionTxt}>{versed?.transliteration}</Text>
+              <Text style={styles.sectionTxt}>
+                {versed[count]?.transliteration}
+              </Text>
               <Text style={styles.sectionTitle}>Translation</Text>
               <Text style={styles.sectionTxt}>
-                {versed?.[translationData?.author]?.[translationData?.type]}
+                {
+                  versed[count]?.[translationData?.author]?.[
+                    translationData?.type
+                  ]
+                }
               </Text>
               <Text style={styles.sectionTitle}>Commentary</Text>
               <Text style={styles.sectionTxt}>
-                {versed?.[commentaryData?.author]?.[commentaryData?.type]}
+                {
+                  versed[count]?.[commentaryData?.author]?.[
+                    commentaryData?.type
+                  ]
+                }
               </Text>
             </>
           )}
