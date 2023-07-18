@@ -2,7 +2,6 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const BottomNav = ({active, setActive}) => {
-  console.log(active);
   return (
     <View style={styles.bottomNavDiv}>
       <TouchableOpacity
