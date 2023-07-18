@@ -1,0 +1,141 @@
+{
+  "verse_commentary_sources": {
+    "siva": {
+      "author": "Swami Sivananda",
+      "type": "English commentary",
+      "language": "English"
+    },
+    "chinmay": {
+      "author": "Swami Chinmayananda",
+      "type": "Hindi commentary",
+      "language": "Hindi"
+    },
+    "madhav": {
+      "author": "Sri Madhavacharya",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "anand": {
+      "author": "Sri Anandgiri",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "rams": {
+      "author": "Swami Ramsukhdas",
+      "type": "Hindi commentary",
+      "language": "Hindi"
+    },
+    "raman": {
+      "author": "Sri Ramanuja",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "abhinav": {
+      "author": "Sri Abhinav Gupta",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "sankar": {
+      "author": "Sri Shankaracharya",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "jaya": {
+      "author": "Sri Jayatritha",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "vallabh": {
+      "author": "Sri Vallabhacharya",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "ms": {
+      "author": "Sri Madhusudan Saraswati",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "srid": {
+      "author": "Sri Sridhara Swami",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "dhan": {
+      "author": "Sri Dhanpati",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "venkat": {
+      "author": "Vedantadeshikacharya Venkatanatha",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "puru": {
+      "author": "Sri Purushottamji",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    },
+    "neel": {
+      "author": "Sri Neelkanth",
+      "type": "Sanskrit commentary",
+      "language": "Sanskrit"
+    }
+  },
+  "verse_translation_sources": {
+    "tej": {
+      "author": "Swami Tejomayananda",
+      "type": "Hindi translation",
+      "language": "Hindi"
+    },
+    "siva": {
+      "author": "Swami Sivananda",
+      "type": "English translation",
+      "language": "English"
+    },
+    "purohit": {
+      "author": "Shri Purohit Swami",
+      "type": "English translation",
+      "language": "English"
+    },
+    "san": {
+      "author": "Dr.S.Sankaranarayan",
+      "type": "English translation",
+      "language": "English"
+    },
+    "adi": {
+      "author": "Swami Adidevananda",
+      "type": "English translation",
+      "language": "English"
+    },
+    "gambir": {
+      "author": "Swami Gambirananda",
+      "type": "English translation",
+      "language": "English"
+    },
+    "rams": {
+      "author": "Swami Ramsukhdas",
+      "type": "Hindi translation",
+      "language": "Hindi"
+    },
+    "raman": {
+      "author": "Sri Ramanuja",
+      "type": "English translation",
+      "language": "English"
+    },
+    "abhinav": {
+      "author": "Sri Abhinav Gupta",
+      "type": "English translation",
+      "language": "English"
+    },
+    "sankar": {
+      "author": "Sri Shankaracharya",
+      "type": "Hindi translation",
+      "language": "Hindi"
+    },
+    "sankar1": {
+      "author": "Sri Shankaracharya",
+      "type": "English translation",
+      "language": "English"
+    }
+  }
+}
