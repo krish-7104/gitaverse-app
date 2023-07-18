@@ -1,4 +1,4 @@
-import { DARK_MODE } from "./action";
+import { BOOKMARK, DARK_MODE } from "./action";
 import { LANGUAGE } from "./action";
 import { COMMENTARY } from "./action";
 import { TRANSLATION } from "./action";
@@ -20,5 +20,10 @@ export const setTranslationhandler = (data) => ({
 
 export const setCommentaryhandler = (data) => ({
     type: COMMENTARY,
+    payload: data
+})
+
+export const setBookmarkHandler = (data) => ({
+    type: BOOKMARK,
     payload: data
 })

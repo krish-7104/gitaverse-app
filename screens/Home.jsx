@@ -7,9 +7,8 @@ import {
 } from 'react-native';
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
+import RightIcon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
-
 const Home = ({navigation}) => {
   const [chapters, setChapters] = useState([]);
   const [randomSlok, setRandomSlok] = useState([]);
@@ -88,7 +87,7 @@ const Home = ({navigation}) => {
                     </Text>
                   </View>
                   <View style={styles.rightIcon}>
-                    <Icon
+                    <RightIcon
                       name="chevron-forward-outline"
                       color="#00000080"
                       size={18}
@@ -109,6 +108,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   mainChap: {
     width: '90%',
@@ -133,21 +133,22 @@ const styles = StyleSheet.create({
   },
   chapCountDiv: {
     backgroundColor: '#fee2e2',
-    width: 26,
-    height: 26,
+    width: 28,
+    height: 28,
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '10%',
   },
   chapCountTxt: {
     textAlign: 'center',
     fontFamily: 'Poppins-Medium',
     color: '#dc2626',
-    fontSize: 14,
+    fontSize: 16,
   },
   chapDataDiv: {
     marginLeft: 20,
-    flexGrow: 1,
+    width: '70%',
   },
   chapDataTitle: {
     color: 'black',
@@ -155,11 +156,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   chapDataSubtitle: {
-    color: 'black',
+    color: '#00000090',
     fontFamily: 'Poppins-Regular',
     fontSize: 15,
   },
   rightIcon: {
+    width: '10%',
     padding: 10,
   },
 });

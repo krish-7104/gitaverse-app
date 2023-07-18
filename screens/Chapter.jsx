@@ -45,33 +45,35 @@ const Chapter = ({navigation, route}) => {
   };
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <View style={styles.container}>
-        {chapData && (
-          <>
-            <Text style={styles.sectionTitle}>Meaning</Text>
-            <Text style={styles.mainText}>{chapData.meaning.en}</Text>
-            <Text style={styles.sectionTitle}>Summary</Text>
-            <Text style={styles.mainText}>{chapData.summary.en}</Text>
-            <TouchableOpacity
-              style={styles.mainBtnDiv}
-              activeOpacity={0.8}
-              onPress={() =>
-                navigation.navigate('Verse', {
-                  ...route.params,
-                })
-              }>
-              <Text style={styles.mainBtnTxt}>Read Verses</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
-    </ScrollView>
+    <View style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          justifyContent: 'center',
+          width: '90%',
+        }}>
+        <View style={styles.mainDataDiv}>
+          {chapData && (
+            <>
+              <Text style={styles.sectionTitle}>Meaning</Text>
+              <Text style={styles.mainText}>{chapData.meaning.en}</Text>
+              <Text style={styles.sectionTitle}>Summary</Text>
+              <Text style={styles.mainText}>{chapData.summary.en}</Text>
+            </>
+          )}
+        </View>
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.mainBtnDiv}
+        activeOpacity={0.8}
+        onPress={() =>
+          navigation.navigate('Verse', {
+            ...route.params,
+          })
+        }>
+        <Text style={styles.mainBtnTxt}>Read Verses</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -79,8 +81,13 @@ export default Chapter;
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
-    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    flex: 1,
+  },
+  mainDataDiv: {
+    flex: 1,
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   sectionTitle: {
@@ -91,6 +98,7 @@ const styles = StyleSheet.create({
     marginVertical: 14,
     color: '#dc2626',
     letterSpacing: 1,
+    textAlign: 'center',
   },
   mainText: {
     textAlign: 'center',
@@ -101,8 +109,8 @@ const styles = StyleSheet.create({
   },
   mainBtnDiv: {
     backgroundColor: '#dc2626',
-    width: '70%',
     display: 'flex',
+    width: '80%',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 8,
