@@ -4,76 +4,76 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
-import React, {useLayoutEffect, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
-const Chapter = ({navigation, route}) => {
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTintColor: 'black',
-      headerTitle: () => {
-        return (
-          <Text
-            style={{
-              fontSize: 18,
-              marginTop: 6,
-              color: '#000',
-              fontFamily: 'Poppins-SemiBold',
-            }}>
-            {route.params.chap_no}. {route.params.name}
-          </Text>
-        );
-      },
-    });
-  }, [navigation]);
-  const [chapData, setChapData] = useState();
+const Chapter = () => {
+  const navigation = useNavigation();
+  const [chapters, setChapters] = useState([]);
+  const language = useSelector(state => state.language);
+
   useEffect(() => {
-    getChapterData();
+    getAllChapters();
   }, []);
 
-  const getChapterData = async () => {
+  const getAllChapters = async () => {
     try {
-      const response = await axios.get(
-        `https://bhagavadgitaapi.in/chapter/${route.params.chap_no}`,
-      );
+      const response = await axios.get('https://bhagavadgitaapi.in/chapters');
       const data = response.data;
-      setChapData(data);
+      setChapters(data);
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          justifyContent: 'center',
-          width: '90%',
-        }}>
-        <View style={styles.mainDataDiv}>
-          {chapData && (
-            <>
-              <Text style={styles.sectionTitle}>Meaning</Text>
-              <Text style={styles.mainText}>{chapData.meaning.en}</Text>
-              <Text style={styles.sectionTitle}>Summary</Text>
-              <Text style={styles.mainText}>{chapData.summary.en}</Text>
-            </>
-          )}
-        </View>
+        contentContainerStyle={{width: '94%'}}>
+        {chapters &&
+          chapters.map(chap => {
+            return (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                key={chap.chapter_number}
+                style={styles.mainChapDiv}
+                onPress={() =>
+                  navigation.navigate('Verse', {
+                    chap_no: chap.chapter_number,
+                    versed: chap.verses_count,
+                    name: language === 'hindi' ? chap.name : chap.translation,
+                  })
+                }>
+                <View style={styles.chapCountDiv}>
+                  <Text style={styles.chapCountTxt}>{chap.chapter_number}</Text>
+                </View>
+                <View style={styles.chapDataDiv}>
+                  <Text style={styles.chapDataTitle}>
+                    {language === 'hindi' ? chap.name : chap.translation}
+                  </Text>
+                  <Text style={styles.chapDataSubtitle}>
+                    {chap.verses_count}{' '}
+                    {language === 'hindi' ? 'छंद' : 'verses'}
+                  </Text>
+                </View>
+                <View style={styles.rightIcon}>
+                  <Ionicons
+                    name="chevron-forward-outline"
+                    color="#00000080"
+                    size={18}
+                  />
+                </View>
+              </TouchableOpacity>
+            );
+          })}
       </ScrollView>
-      <TouchableOpacity
-        style={styles.mainBtnDiv}
-        activeOpacity={0.8}
-        onPress={() =>
-          navigation.navigate('Verse', {
-            ...route.params,
-          })
-        }>
-        <Text style={styles.mainBtnTxt}>Read Verses</Text>
-      </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -81,47 +81,67 @@ export default Chapter;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    flex: 1,
     backgroundColor: 'white',
-    flex: 1,
-  },
-  mainDataDiv: {
-    flex: 1,
-    justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  sectionTitle: {
-    color: 'black',
-    fontSize: 18,
-    fontFamily: 'Poppins-SemiBold',
-    textTransform: 'uppercase',
-    marginVertical: 14,
-    color: '#dc2626',
-    letterSpacing: 1,
-    textAlign: 'center',
-  },
-  mainText: {
-    textAlign: 'center',
-    color: 'black',
-    fontSize: 16,
-    fontFamily: 'Poppins-Medium',
-    lineHeight: 24,
-  },
-  mainBtnDiv: {
-    backgroundColor: '#dc2626',
+  headDiv: {
+    width: '100%',
+    shadowColor: '#000000',
+    elevation: 10,
+    backgroundColor: 'white',
+    paddingVertical: 8,
+    paddingHorizontal: 24,
     display: 'flex',
-    width: '80%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  headTitle: {
+    fontFamily: 'Poppins-Bold',
+    color: 'black',
+    fontSize: 22,
+    textAlign: 'left',
+  },
+  mainChapDiv: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomColor: '#00000020',
+    borderBottomWidth: 1.4,
+  },
+  chapCountDiv: {
+    backgroundColor: '#fee2e2',
+    width: 28,
+    height: 28,
+    borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 8,
-    borderRadius: 8,
-    shadowColor: '#dc2626',
-    elevation: 20,
-    marginVertical: 14,
+    width: '10%',
   },
-  mainBtnTxt: {
-    fontFamily: 'Poppins-SemiBold',
-    color: 'white',
+  chapCountTxt: {
+    textAlign: 'center',
+    fontFamily: 'Poppins-Medium',
+    color: '#dc2626',
     fontSize: 16,
+  },
+  chapDataDiv: {
+    marginLeft: 20,
+    width: '70%',
+  },
+  chapDataTitle: {
+    color: 'black',
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 17,
+  },
+  chapDataSubtitle: {
+    color: '#00000090',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 15,
+  },
+  rightIcon: {
+    width: '10%',
+    padding: 10,
   },
 });

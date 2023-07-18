@@ -4,39 +4,63 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from 'react-native';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect} from 'react';
 import data from '../data.json';
+import {useDispatch} from 'react-redux';
+import {setCommentaryhandler} from '../redux/actions';
 const LangChange = ({navigation, route}) => {
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: false,
+      headerTintColor: 'black',
+      headerTitle: () => {
+        return (
+          <Text
+            style={{
+              fontSize: 18,
+              marginTop: 6,
+              marginLeft: -16,
+              color: '#000',
+              fontFamily: 'Poppins-SemiBold',
+            }}>
+            {route.params.type === 'verse_commentary_sources'
+              ? 'Verse Commentary Source'
+              : 'Verse Translation Source'}
+          </Text>
+        );
+      },
     });
   }, [navigation]);
+  const dispatch = useDispatch();
+  const changeHandler = (author, type) => {
+    dispatch(setCommentaryhandler({author, type}));
+    navigation.navigate('Setting');
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.mainTitle}>Verse Commentary Source</Text>
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}>
         {route.params.type &&
           Object.keys(data[route.params.type]).map(item => {
             return (
-              <TouchableOpacity style={styles.nameCard}>
+              <TouchableOpacity
+                onPress={() =>
+                  changeHandler(item, data[route.params.type][item].symbol)
+                }
+                style={styles.nameCard}
+                key={data[route.params.type][item].author}>
                 <Text style={styles.textArea}>
-                  {data[route.params.type][item].language} Commentary By{' '}
-                  {data[route.params.type][item].author}
+                  {data[route.params.type][item].language}{' '}
+                  {route.params.type === 'verse_commentary_sources'
+                    ? 'Commentary'
+                    : 'Translation'}{' '}
+                  By {data[route.params.type][item].author}
                 </Text>
               </TouchableOpacity>
             );
           })}
       </ScrollView>
-      <View style={styles.btnArea}>
-        <TouchableOpacity style={styles.mainBtnDiv} activeOpacity={0.8}>
-          <Text style={styles.mainBtnTxt}>Save Changes</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
@@ -60,34 +84,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 14,
     marginVertical: 2,
+    borderBottomColor: '#e7e7e790',
+    borderBottomWidth: 1.2,
   },
   textArea: {
     fontSize: 15,
     fontFamily: 'Poppins-Medium',
     color: 'black',
-  },
-  btnArea: {
-    backgroundColor: 'white',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    padding: 10,
-  },
-  mainBtnDiv: {
-    backgroundColor: '#dc2626',
-    width: '70%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 8,
-    shadowColor: '#dc2626',
-    elevation: 20,
-  },
-  mainBtnTxt: {
-    fontFamily: 'Poppins-SemiBold',
-    color: 'white',
-    fontSize: 16,
   },
 });

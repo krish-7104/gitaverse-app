@@ -203,7 +203,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: '#fff',
-    flexGrow: 1,
     paddingHorizontal: 10,
     paddingVertical: 22,
     shadowColor: 'black',

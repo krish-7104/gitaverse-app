@@ -1,41 +1,36 @@
-import {SafeAreaView, ScrollView, StyleSheet, Text} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import React, {useLayoutEffect} from 'react';
-
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import React from 'react';
+import data from '../data.json';
+import {useSelector} from 'react-redux';
+import BottomNav from '../components/BottomNav';
 const Setting = ({navigation}) => {
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTintColor: 'black',
-      headerTitle: () => {
-        return (
-          <Text
-            style={{
-              fontSize: 18,
-              marginTop: 6,
-              marginLeft: -8,
-              color: '#000',
-              fontFamily: 'Poppins-SemiBold',
-            }}>
-            Settings
-          </Text>
-        );
-      },
-    });
-  }, [navigation]);
+  const commentaryData = useSelector(state => state.commentary);
+  const translationData = useSelector(state => state.translation);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.sectionTitle}>Commentary Source</Text>
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={handleValueChange}
-          style={styles.picker}>
-          <Picker.Item label="Option 1" value="option1" />
-          <Picker.Item label="Option 2" value="option2" />
-          <Picker.Item label="Option 3" value="option3" />
-        </Picker>
+        <TouchableOpacity
+          style={styles.selectedBtn}
+          onPress={() =>
+            navigation.navigate('LangChange', {
+              type: 'verse_commentary_sources',
+            })
+          }>
+          <Text style={styles.selectedTxt}>
+            {data.verse_commentary_sources[commentaryData.author].language}{' '}
+            Commentary By{' '}
+            {data.verse_commentary_sources[commentaryData.author].author}
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -56,7 +51,20 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     color: 'black',
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
+    marginBottom: 6,
+  },
+  selectedBtn: {
+    borderColor: '#00000040',
+    borderWidth: 1.4,
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  selectedTxt: {
+    color: '#00000090',
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium',
   },
 });
