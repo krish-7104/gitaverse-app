@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -19,12 +19,14 @@ const Chapter = () => {
   useEffect(() => {
     getAllChapters();
   }, []);
+
   const getAllChapters = async () => {
     try {
-      const response = await axios.get('https://bhagavadgitaapi.in/chapters');
-      const data = response.data;
+      const response = await fetch('http://bhagavadgitaapi.in/chapters');
+      const data = await response.json();
       setChapters(data);
     } catch (error) {
+      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
       console.error(error);
     }
   };

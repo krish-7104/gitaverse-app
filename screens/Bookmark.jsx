@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
 
 const Bookmark = () => {
@@ -25,19 +24,23 @@ const Bookmark = () => {
   }, []);
   const getData = async () => {
     const requests = [];
-    for (let i = 0; i < Object.keys(bookmarkData).length; i++) {
+    for (const key of Object.keys(bookmarkData)) {
+      const [chap_no, verse_no] = key.split('.');
       requests.push(
-        axios.get(
-          `https://bhagavadgitaapi.in/slok/${
-            Object.keys(bookmarkData)[i].split('.')[0]
-          }/${Object.keys(bookmarkData)[i].split('.')[1]}`,
+        fetch(`http://bhagavadgitaapi.in/slok/${chap_no}/${verse_no}`).then(
+          response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          },
         ),
       );
     }
     try {
       const responses = await Promise.all(requests);
-      const data = responses.reduce((acc, response, index) => {
-        acc[index + 1] = response.data;
+      const data = responses.reduce((acc, responseData, index) => {
+        acc[index + 1] = responseData;
         return acc;
       }, {});
       setData(prev => ({...prev, ...data}));
@@ -48,8 +51,12 @@ const Bookmark = () => {
 
   const getAllChapters = async () => {
     try {
-      const response = await axios.get('https://bhagavadgitaapi.in/chapters');
-      const data = response.data;
+      const response = await fetch('http://bhagavadgitaapi.in/chapters');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
       setChapters(data);
     } catch (error) {
       console.error(error);

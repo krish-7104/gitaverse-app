@@ -63,12 +63,20 @@ const Verse = ({route, navigation}) => {
       const requests = [];
       for (let i = start; i <= end; i++) {
         requests.push(
-          axios.get(`https://bhagavadgitaapi.in/slok/${chap_no}/${i}`),
+          fetch(`http://bhagavadgitaapi.in/slok/${chap_no}/${i}`).then(
+            response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            },
+          ),
         );
       }
-      const responses = await axios.all(requests);
-      const data = responses.reduce((acc, response, index) => {
-        acc[start + index] = response.data;
+
+      const responses = await Promise.all(requests);
+      const data = responses.reduce((acc, responseData, index) => {
+        acc[start + index] = responseData;
         return acc;
       }, {});
 

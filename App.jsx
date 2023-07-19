@@ -7,6 +7,7 @@ import Splash from './screens/Splash';
 import Home from './screens/Home';
 import Verse from './screens/Verse';
 import LangChange from './screens/LangChange';
+import Setting from './screens/Setting';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -19,6 +20,7 @@ const App = () => {
           <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="Verse" component={Verse} />
           <Stack.Screen name="LangChange" component={LangChange} />
+          <Stack.Screen name="Setting" component={Setting} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
