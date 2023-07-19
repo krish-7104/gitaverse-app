@@ -21,9 +21,7 @@ const Verse = ({route, navigation}) => {
   const dispatch = useDispatch();
   const [versed, setVersed] = useState({});
   const [count, setCount] = useState(1);
-  useEffect(() => {
-    getData();
-  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -35,7 +33,7 @@ const Verse = ({route, navigation}) => {
               marginTop: 6,
               marginLeft: -8,
               color: '#000',
-              fontFamily: 'Poppins-SemiBold',
+              fontFamily: 'Inter-SemiBold',
             }}>
             {route.params.chap_no}. {route.params.name}
           </Text>
@@ -43,37 +41,52 @@ const Verse = ({route, navigation}) => {
       },
     });
   }, [navigation]);
-  const getData = async () => {
-    const requests = [];
 
-    for (let i = 1; i <= route.params.versed; i++) {
-      requests.push(
-        axios.get(
-          `https://bhagavadgitaapi.in/slok/${route.params.chap_no}/${i}`,
-        ),
-      );
-    }
+  const versesPerPage = 10;
+
+  useEffect(() => {
+    fetchData(1, versesPerPage);
+  }, []);
+
+  const fetchData = async (start, end) => {
     try {
-      const responses = await Promise.all(requests);
+      const {chap_no} = route.params;
+      const requests = [];
+      for (let i = start; i <= end; i++) {
+        requests.push(
+          axios.get(`https://bhagavadgitaapi.in/slok/${chap_no}/${i}`),
+        );
+      }
+      const responses = await axios.all(requests);
       const data = responses.reduce((acc, response, index) => {
-        acc[index + 1] = response.data;
+        acc[start + index] = response.data;
         return acc;
       }, {});
-      setVersed(prev => ({...prev, ...data}));
+
+      setVersed(prevData => ({...prevData, ...data}));
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleIncrement = () => {
-    if (count !== route.params.versed) {
+    if (count + 1 <= route.params.versed) {
       setCount(count + 1);
+      const nextPageStart = count + 1;
+      const nextPageEnd = Math.min(
+        nextPageStart + versesPerPage - 1,
+        route.params.versed,
+      );
+      fetchData(nextPageStart, nextPageEnd);
     }
   };
 
   const handlerDecrement = () => {
-    if (count !== 1) {
+    if (count - 1 >= 1) {
       setCount(count - 1);
+      const prevPageStart = count - versesPerPage;
+      const prevPageEnd = count - 1;
+      fetchData(prevPageStart, prevPageEnd);
     }
   };
 
@@ -201,7 +214,7 @@ const styles = StyleSheet.create({
   },
   chapSlokNum: {
     color: 'black',
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Inter-Bold',
     fontSize: 22,
     marginVertical: 12,
   },
@@ -212,15 +225,15 @@ const styles = StyleSheet.create({
   },
   slokTxt: {
     color: '#dc2626',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Inter-SemiBold',
     lineHeight: 38,
     fontSize: 17,
     textAlign: 'center',
   },
   sectionTitle: {
     color: 'black',
-    fontSize: 16,
-    fontFamily: 'Poppins-SemiBold',
+    fontSize: 14,
+    fontFamily: 'Inter-Bold',
     textTransform: 'uppercase',
     marginVertical: 15,
   },
@@ -228,7 +241,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     fontSize: 16,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Inter-Medium',
     lineHeight: 28,
   },
   bottomNavDiv: {

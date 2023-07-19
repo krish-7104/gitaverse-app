@@ -1,18 +1,31 @@
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
+
 const Bookmark = ({navigation}) => {
   const [data, setData] = useState([]);
   const bookmarkData = useSelector(state => state.bookmark);
+  const translationData = useSelector(state => state.translation);
+  const languageData = useSelector(state => state.language);
   useEffect(() => {
     getData();
   }, []);
   const getData = async () => {
     const requests = [];
-    for (let i = 0; i < bookmarkData.length; i++) {
+    for (let i = 0; i < Object.keys(bookmarkData).length; i++) {
       requests.push(
-        axios.get(`https://bhagavadgitaapi.in/slok/${bookmarkData[i]}`),
+        axios.get(
+          `https://bhagavadgitaapi.in/slok/${
+            Object.keys(bookmarkData)[i].split('.')[0]
+          }/${Object.keys(bookmarkData)[i].split('.')[1]}`,
+        ),
       );
     }
     try {
@@ -35,14 +48,29 @@ const Bookmark = ({navigation}) => {
         {data &&
           Object.keys(data).map(item => {
             return (
-              <View style={styles.bookmarkCard}>
-                <Text style={styles.bookmarkLabel}>
+              <TouchableOpacity
+                key={'Verse ' + data[item].chapter + '.' + data[item].verse}
+                style={styles.bookmarkCard}
+                activeOpacity={0.5}
+                onPress={() =>
+                  navigation.navigate('Verse', {
+                    chap_no: data[item].chapter,
+                    versed: data[item].verse,
+                    name:
+                      languageData === 'Hindi' ? chap.name : chap.translation,
+                  })
+                }>
+                <Text style={styles.bookmarkLabelTxt}>
                   {'Verse ' + data[item].chapter + '.' + data[item].verse}
                 </Text>
                 <Text style={styles.bookmarkTxt}>
-                  {data[item].transliteration}
+                  {(data[item]?.[translationData?.author]?.[
+                    translationData?.type
+                  ])
+                    .replace(data[item].chapter + '.' + data[item].verse, '')
+                    .slice(0, 100)}
                 </Text>
-              </View>
+              </TouchableOpacity>
             );
           })}
       </ScrollView>
@@ -58,25 +86,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   scrollContainer: {
-    width: '94%',
     alignSelf: 'center',
     marginVertical: 18,
+    width: '100%',
+    alignItems: 'center',
   },
   bookmarkCard: {
-    width: '100%',
-    borderBottomWidth: 1.4,
+    backgroundColor: 'white',
     paddingVertical: 12,
-    borderBottomColor: '#00000020',
-    borderBottomWidth: 1.4,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    marginBottom: 12,
+    elevation: 10,
+    shadowColor: '#00000010',
+    width: '94%',
   },
-  bookmarkLabel: {
-    fontFamily: 'Inter-SemiBold',
-    color: '#00000080',
+  bookmarkLabelTxt: {
+    fontFamily: 'Inter-ExtraBold',
+    marginLeft: 2,
+    color: '#e11d48',
     fontSize: 14,
+    textTransform: 'uppercase',
+    letterSpacing: 2,
+    width: '100%',
   },
   bookmarkTxt: {
+    marginTop: 4,
     fontFamily: 'Inter-Medium',
     color: '#000000',
     fontSize: 15,
+    lineHeight: 24,
   },
 });

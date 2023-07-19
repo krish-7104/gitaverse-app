@@ -20,21 +20,6 @@ const Setting = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.sectionTitle}>Commentary Source</Text>
-        <TouchableOpacity
-          style={styles.selectedBtn}
-          onPress={() =>
-            navigation.navigate('LangChange', {
-              type: 'verse_commentary_sources',
-            })
-          }>
-          <Text style={styles.selectedTxt}>
-            {data.verse_commentary_sources[commentaryData.author].language}{' '}
-            Commentary By{' '}
-            {data.verse_commentary_sources[commentaryData.author].author}
-          </Text>
-          <Ionicons name={'chevron-down-outline'} color="#00000080" size={20} />
-        </TouchableOpacity>
         <Text style={styles.sectionTitle}>Translation Source</Text>
         <TouchableOpacity
           style={styles.selectedBtn}
@@ -47,6 +32,21 @@ const Setting = () => {
             {data.verse_translation_sources[translationData.author].language}{' '}
             Translation By{' '}
             {data.verse_translation_sources[translationData.author].author}
+          </Text>
+          <Ionicons name={'chevron-down-outline'} color="#00000080" size={20} />
+        </TouchableOpacity>
+        <Text style={styles.sectionTitle}>Commentary Source</Text>
+        <TouchableOpacity
+          style={styles.selectedBtn}
+          onPress={() =>
+            navigation.navigate('LangChange', {
+              type: 'verse_commentary_sources',
+            })
+          }>
+          <Text style={styles.selectedTxt}>
+            {data.verse_commentary_sources[commentaryData.author].language}{' '}
+            Commentary By{' '}
+            {data.verse_commentary_sources[commentaryData.author].author}
           </Text>
           <Ionicons name={'chevron-down-outline'} color="#00000080" size={20} />
         </TouchableOpacity>
