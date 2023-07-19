@@ -4,6 +4,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
@@ -42,11 +44,20 @@ const Bookmark = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainer}>
-        {data &&
-          Object.keys(data).map(item => {
+      {!data && (
+        <View
+          style={{flex: 1, justifyContent: 'center', backgroundColor: 'white'}}>
+          <ActivityIndicator size="large" color="#e11d48" />
+        </View>
+      )}
+      {data && Object.keys(data).length === 0 && (
+        <Text style={styles.noBookTxt}>No Bookmarks!</Text>
+      )}
+      {data && Object.keys(data).length !== 0 && (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}>
+          {Object.keys(data).map(item => {
             return (
               <TouchableOpacity
                 key={'Verse ' + data[item].chapter + '.' + data[item].verse}
@@ -73,7 +84,8 @@ const Bookmark = ({navigation}) => {
               </TouchableOpacity>
             );
           })}
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -116,5 +128,11 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 15,
     lineHeight: 24,
+  },
+  noBookTxt: {
+    fontFamily: 'Inter-Medium',
+    color: '#000000',
+    fontSize: 18,
+    textAlign: 'center',
   },
 });

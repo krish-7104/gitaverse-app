@@ -24,11 +24,14 @@ const BottomNav = ({active, setActive}) => {
           size={22}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.bottomBtnDiv} activeOpacity={0.9}>
+      <TouchableOpacity
+        style={styles.bottomBtnDiv}
+        activeOpacity={0.9}
+        onPress={() => setActive('summary')}>
         <Ionicons
-          name={active === 'share' ? 'share-social' : 'share-social-outline'}
-          color={active === 'share' ? '#dc2626' : '#000000'}
-          size={22}
+          name={active === 'summary' ? 'bulb' : 'bulb-outline'}
+          color={active === 'summary' ? '#dc2626' : '#000000'}
+          size={24}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -54,20 +57,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: '#fff',
-    paddingHorizontal: 10,
-    paddingVertical: 22,
     shadowColor: 'black',
-    elevation: 30,
+    elevation: 10,
     shadowOffset: {
       width: -10,
-      height: -5,
+      height: 20,
     },
+    flex: 0,
   },
   bottomBtnDiv: {
     flex: 1,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 5,
+    paddingVertical: 20,
   },
 });

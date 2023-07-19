@@ -1,12 +1,7 @@
-import { BOOKMARK, DARK_MODE, LASTREAD } from "./action";
+import { BOOKMARK, LASTREAD } from "./action";
 import { LANGUAGE } from "./action";
 import { COMMENTARY } from "./action";
 import { TRANSLATION } from "./action";
-
-export const setDarkModeHandler = (data) => ({
-    type: DARK_MODE,
-    payload: data
-})
 
 export const setLanguageHandler = (data) => ({
     type: LANGUAGE,

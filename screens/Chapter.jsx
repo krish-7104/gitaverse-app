@@ -5,22 +5,20 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-
 const Chapter = () => {
   const navigation = useNavigation();
   const [chapters, setChapters] = useState([]);
   const language = useSelector(state => state.language);
-
   useEffect(() => {
     getAllChapters();
   }, []);
-
   const getAllChapters = async () => {
     try {
       const response = await axios.get('https://bhagavadgitaapi.in/chapters');
@@ -30,14 +28,19 @@ const Chapter = () => {
       console.error(error);
     }
   };
-
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{width: '94%'}}>
-        {chapters &&
-          chapters.map(chap => {
+      {!chapters && (
+        <View
+          style={{flex: 1, justifyContent: 'center', backgroundColor: 'white'}}>
+          <ActivityIndicator size="large" color="#e11d48" />
+        </View>
+      )}
+      {chapters && (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{width: '94%'}}>
+          {chapters.map(chap => {
             return (
               <TouchableOpacity
                 activeOpacity={0.9}
@@ -72,7 +75,8 @@ const Chapter = () => {
               </TouchableOpacity>
             );
           })}
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -84,6 +88,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
+  },
+  quoteDiv: {
+    backgroundColor: 'white',
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+  },
+  quoteTitle: {
+    color: 'black',
+    fontFamily: 'Inter-Bold',
+  },
+  quoteTxt: {
+    color: 'black',
+    fontFamily: 'Inter-Medium',
   },
   mainChapDiv: {
     flexDirection: 'row',

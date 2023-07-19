@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState, useLayoutEffect} from 'react';
 import axios from 'axios';
@@ -92,62 +93,65 @@ const Verse = ({route, navigation}) => {
 
   return (
     <>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'white',
-          paddingBottom: 10,
-        }}>
-        <View style={styles.container}>
-          {translationData && commentaryData && versed && (
-            <>
-              <Text style={styles.chapSlokNum}>
-                {route.params.chap_no}.{count}
-              </Text>
-              <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
-              <Image
-                source={require('../assets/flower.png')}
-                style={styles.image}
-              />
-              <Text style={styles.sectionTitle}>
-                {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
-              </Text>
-              <Text style={styles.sectionTxt}>
-                {versed[count]?.transliteration}
-              </Text>
-              <Text style={styles.sectionTitle}>
-                {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
-              </Text>
-              <Text style={styles.sectionTxt}>
-                {
-                  versed[count]?.[translationData?.author]?.[
-                    translationData?.type
-                  ]
-                }
-              </Text>
-              <Text style={styles.sectionTitle}>
-                {' '}
-                {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
-              </Text>
-              <Text style={styles.sectionTxt}>
-                {
-                  versed[count]?.[commentaryData?.author]?.[
-                    commentaryData?.type
-                  ]
-                }
-              </Text>
-            </>
-          )}
+      {!versed[count] && (
+        <View
+          style={{flex: 1, justifyContent: 'center', backgroundColor: 'white'}}>
+          <ActivityIndicator size="large" color="#e11d48" />
         </View>
-      </ScrollView>
+      )}
+      {translationData && commentaryData && versed && versed[count] && (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'white',
+            paddingBottom: 10,
+          }}>
+          <View style={styles.container}>
+            <Text style={styles.chapSlokNum}>
+              {route.params.chap_no}.{count}
+            </Text>
+            <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
+            <Image
+              source={require('../assets/flower.png')}
+              style={styles.image}
+            />
+            <Text style={styles.sectionTitle}>
+              {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
+            </Text>
+            <Text style={styles.sectionTxt}>
+              {versed[count]?.transliteration}
+            </Text>
+            <Text style={styles.sectionTitle}>
+              {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
+            </Text>
+            <Text style={styles.sectionTxt}>
+              {
+                versed[count]?.[translationData?.author]?.[
+                  translationData?.type
+                ]
+              }
+            </Text>
+            <Text style={styles.sectionTitle}>
+              {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
+            </Text>
+            <Text style={styles.sectionTxt}>
+              {versed[count]?.[commentaryData?.author]?.[commentaryData?.type]}
+            </Text>
+          </View>
+        </ScrollView>
+      )}
       <View style={styles.bottomNavDiv}>
         <TouchableOpacity
           onPress={handlerDecrement}
           style={styles.bottomBtnDiv}
           activeOpacity={0.9}>
-          <Octiocon name="chevron-left" color="#000000" size={22} />
+          <Octiocon
+            name="chevron-left"
+            color={count === 1 ? '#00000040' : '#000000'}
+            size={22}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.bottomBtnDiv}
@@ -196,7 +200,11 @@ const Verse = ({route, navigation}) => {
           onPress={handleIncrement}
           style={styles.bottomBtnDiv}
           activeOpacity={0.9}>
-          <Octiocon name="chevron-right" color="#000000" size={22} />
+          <Octiocon
+            name="chevron-right"
+            color={count === route.params.versed ? '#00000040' : '#000000'}
+            size={22}
+          />
         </TouchableOpacity>
       </View>
     </>
@@ -233,9 +241,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: 'black',
     fontSize: 14,
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Inter-ExtraBold',
     textTransform: 'uppercase',
-    marginVertical: 15,
+    marginVertical: 14,
+    letterSpacing: 1,
   },
   sectionTxt: {
     textAlign: 'center',
