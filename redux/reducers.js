@@ -1,11 +1,12 @@
-import { BOOKMARK, COMMENTARY, DARK_MODE, LANGUAGE, TRANSLATION } from "./action";
+import { BOOKMARK, COMMENTARY, DARK_MODE, LANGUAGE, LASTREAD, TRANSLATION } from "./action";
 
 const initialState = {
     darkmode: false,
     language: "English",
     translation: { author: "siva", type: "et" },
     commentary: { author: "chinmay", type: "hc" },
-    bookmark: []
+    bookmark: {},
+    lastread: {}
 }
 
 export const Reducers = (state = initialState, action) => {
@@ -20,6 +21,8 @@ export const Reducers = (state = initialState, action) => {
             return { ...state, commentary: action.payload }
         case BOOKMARK:
             return { ...state, bookmark: action.payload }
+        case LASTREAD:
+            return { ...state, lastread: action.payload }
         default:
             return state;
     }

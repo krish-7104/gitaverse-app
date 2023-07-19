@@ -16,7 +16,7 @@ const Home = ({navigation}) => {
               fontSize: 22,
               marginTop: 6,
               color: '#000',
-              fontFamily: 'Poppins-SemiBold',
+              fontFamily: 'Inter-SemiBold',
             }}>
             GitaVerse
           </Text>

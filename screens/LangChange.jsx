@@ -8,9 +8,12 @@ import {
 import React, {useLayoutEffect} from 'react';
 import data from '../data.json';
 import {useDispatch} from 'react-redux';
-import {setCommentaryhandler, setTranslationhandler} from '../redux/actions';
+import {
+  setCommentaryhandler,
+  setLanguageHandler,
+  setTranslationhandler,
+} from '../redux/actions';
 const LangChange = ({navigation, route}) => {
-  console.log(route.params.type);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -22,7 +25,7 @@ const LangChange = ({navigation, route}) => {
               marginTop: 6,
               marginLeft: -16,
               color: '#000',
-              fontFamily: 'Poppins-SemiBold',
+              fontFamily: 'Inter-SemiBold',
             }}>
             {route.params.type === 'verse_commentary_sources'
               ? 'Verse Commentary Source'
@@ -41,13 +44,17 @@ const LangChange = ({navigation, route}) => {
     }
     navigation.replace('Setting');
   };
+  const changeLangHandler = lang => {
+    dispatch(setLanguageHandler(lang));
+    navigation.replace('Setting');
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}>
         {data &&
-          route.params.type &&
+          route.params.type !== 'language' &&
           Object.keys(data[route.params.type]).map((item, index) => {
             return (
               <TouchableOpacity
@@ -72,6 +79,20 @@ const LangChange = ({navigation, route}) => {
               </TouchableOpacity>
             );
           })}
+        {data && route.params.type === 'language' && (
+          <>
+            <TouchableOpacity
+              style={styles.nameCard}
+              onPress={() => changeLangHandler('English')}>
+              <Text style={styles.textArea}>English</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.nameCard}
+              onPress={() => changeLangHandler('Hindi')}>
+              <Text style={styles.textArea}>Hindi</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -88,7 +109,7 @@ const styles = StyleSheet.create({
   mainTitle: {
     color: 'black',
     fontSize: 20,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Inter-SemiBold',
     textAlign: 'center',
     marginVertical: 16,
   },
@@ -101,7 +122,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     fontSize: 15,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Inter-Medium',
     color: 'black',
   },
 });

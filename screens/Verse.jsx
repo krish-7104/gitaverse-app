@@ -17,6 +17,7 @@ const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
   const commentaryData = useSelector(state => state.commentary);
   const bookmarkData = useSelector(state => state.bookmark);
+  const langaugeData = useSelector(state => state.language);
   const dispatch = useDispatch();
   const [versed, setVersed] = useState({});
   const [count, setCount] = useState(1);
@@ -97,11 +98,15 @@ const Verse = ({route, navigation}) => {
                 source={require('../assets/flower.png')}
                 style={styles.image}
               />
-              <Text style={styles.sectionTitle}>Transliteration</Text>
+              <Text style={styles.sectionTitle}>
+                {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
+              </Text>
               <Text style={styles.sectionTxt}>
                 {versed[count]?.transliteration}
               </Text>
-              <Text style={styles.sectionTitle}>Translation</Text>
+              <Text style={styles.sectionTitle}>
+                {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
+              </Text>
               <Text style={styles.sectionTxt}>
                 {
                   versed[count]?.[translationData?.author]?.[
@@ -109,7 +114,10 @@ const Verse = ({route, navigation}) => {
                   ]
                 }
               </Text>
-              <Text style={styles.sectionTitle}>Commentary</Text>
+              <Text style={styles.sectionTitle}>
+                {' '}
+                {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
+              </Text>
               <Text style={styles.sectionTxt}>
                 {
                   versed[count]?.[commentaryData?.author]?.[
@@ -134,7 +142,9 @@ const Verse = ({route, navigation}) => {
           onPress={() => navigation.navigate('Setting')}>
           <Octiocon name="gear" color="#000000" size={20} />
         </TouchableOpacity>
-        {bookmarkData.includes(route.params.chap_no + '.' + count) ? (
+        {Object.keys(bookmarkData).includes(
+          route.params.chap_no + '.' + count,
+        ) ? (
           <TouchableOpacity
             style={styles.bottomBtnDiv}
             activeOpacity={0.9}
@@ -155,10 +165,15 @@ const Verse = ({route, navigation}) => {
             activeOpacity={0.9}
             onPress={() =>
               dispatch(
-                setBookmarkHandler([
+                setBookmarkHandler({
                   ...bookmarkData,
-                  route.params.chap_no + '.' + count,
-                ]),
+                  [route.params.chap_no + '.' + count]: {
+                    slok: versed[count]?.slok,
+                    transliteration: versed[count]?.transliteration,
+                    translation: versed[count]?.translation,
+                    title: versed[count]?.title,
+                  },
+                }),
               )
             }>
             <FontAwesome name="bookmark-o" color="#000000" size={20} />

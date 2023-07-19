@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: 'black',
     fontSize: 18,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Inter-SemiBold',
     marginBottom: 6,
     marginTop: 10,
   },
@@ -100,6 +100,6 @@ const styles = StyleSheet.create({
   selectedTxt: {
     color: '#00000090',
     fontSize: 15,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Inter-Medium',
   },
 });

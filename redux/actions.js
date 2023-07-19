@@ -1,4 +1,4 @@
-import { BOOKMARK, DARK_MODE } from "./action";
+import { BOOKMARK, DARK_MODE, LASTREAD } from "./action";
 import { LANGUAGE } from "./action";
 import { COMMENTARY } from "./action";
 import { TRANSLATION } from "./action";
@@ -27,3 +27,9 @@ export const setBookmarkHandler = (data) => ({
     type: BOOKMARK,
     payload: data
 })
+
+export const setLastReadHandler = (data) => ({
+    type: LASTREAD,
+    payload: data
+})
+

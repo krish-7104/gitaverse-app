@@ -47,7 +47,7 @@ const Chapter = () => {
                   navigation.navigate('Verse', {
                     chap_no: chap.chapter_number,
                     versed: chap.verses_count,
-                    name: language === 'hindi' ? chap.name : chap.translation,
+                    name: language === 'Hindi' ? chap.name : chap.translation,
                   })
                 }>
                 <View style={styles.chapCountDiv}>
@@ -55,11 +55,11 @@ const Chapter = () => {
                 </View>
                 <View style={styles.chapDataDiv}>
                   <Text style={styles.chapDataTitle}>
-                    {language === 'hindi' ? chap.name : chap.translation}
+                    {language === 'Hindi' ? chap.name : chap.translation}
                   </Text>
                   <Text style={styles.chapDataSubtitle}>
                     {chap.verses_count}{' '}
-                    {language === 'hindi' ? 'छंद' : 'verses'}
+                    {language === 'Hindi' ? 'छंद' : 'verses'}
                   </Text>
                 </View>
                 <View style={styles.rightIcon}>
@@ -85,24 +85,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
   },
-  headDiv: {
-    width: '100%',
-    shadowColor: '#000000',
-    elevation: 10,
-    backgroundColor: 'white',
-    paddingVertical: 8,
-    paddingHorizontal: 24,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  headTitle: {
-    fontFamily: 'Poppins-Bold',
-    color: 'black',
-    fontSize: 22,
-    textAlign: 'left',
-  },
   mainChapDiv: {
     flexDirection: 'row',
     marginBottom: 10,
@@ -122,7 +104,7 @@ const styles = StyleSheet.create({
   },
   chapCountTxt: {
     textAlign: 'center',
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Inter-Medium',
     color: '#dc2626',
     fontSize: 16,
   },
@@ -132,12 +114,12 @@ const styles = StyleSheet.create({
   },
   chapDataTitle: {
     color: 'black',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Inter-SemiBold',
     fontSize: 17,
   },
   chapDataSubtitle: {
     color: '#00000090',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Inter-Regular',
     fontSize: 15,
   },
   rightIcon: {

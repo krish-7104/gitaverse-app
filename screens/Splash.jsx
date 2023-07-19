@@ -1,5 +1,8 @@
 import {StyleSheet, Text, View, TouchableOpacity, Linking} from 'react-native';
 import React, {useEffect, useLayoutEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {setLastReadHandler} from '../redux/actions';
 
 const Splash = ({navigation}) => {
   useLayoutEffect(() => {
@@ -7,10 +10,22 @@ const Splash = ({navigation}) => {
       headerShown: false,
     });
   }, [navigation]);
+  const dispatch = useDispatch();
+  const getData = async () => {
+    try {
+      const data = await AsyncStorage.getItem('lastRead');
+      if (data !== null) {
+        dispatch(setLastReadHandler(data));
+      }
+      setTimeout(() => {
+        navigation.replace('Home');
+      }, 3000);
+    } catch (error) {
+      console.error('Error retrieving data: ', error);
+    }
+  };
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('Home');
-    }, 3000);
+    getData();
   }, []);
   return (
     <View style={styles.container}>
@@ -36,12 +51,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainTxt: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Inter-SemiBold',
     fontSize: 40,
     color: '#dc2626',
   },
   subTxt: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Inter-Medium',
     fontSize: 22,
     color: '#00000090',
     marginTop: -12,
@@ -51,7 +66,7 @@ const styles = StyleSheet.create({
     bottom: 14,
   },
   footerTxt: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Inter-Regular',
     color: '#00000090',
     fontSize: 16,
   },
