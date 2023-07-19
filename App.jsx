@@ -7,9 +7,6 @@ import Splash from './screens/Splash';
 import Home from './screens/Home';
 import Verse from './screens/Verse';
 import LangChange from './screens/LangChange';
-import Setting from './screens/Setting';
-import Chapter from './screens/Chapter';
-import Bookmark from './screens/Bookmark';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -20,11 +17,8 @@ const App = () => {
         <Stack.Navigator initialRouteName="Home">
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Splash" component={Splash} />
-          <Stack.Screen name="Bookmark" component={Bookmark} />
-          <Stack.Screen name="Chapter" component={Chapter} />
           <Stack.Screen name="Verse" component={Verse} />
           <Stack.Screen name="LangChange" component={LangChange} />
-          <Stack.Screen name="Setting" component={Setting} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

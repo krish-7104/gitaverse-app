@@ -43,10 +43,18 @@ const Verse = ({route, navigation}) => {
     });
   }, [navigation]);
 
-  const versesPerPage = 10;
+  const versesPerPage = 4;
 
   useEffect(() => {
-    fetchData(1, versesPerPage);
+    const current = route?.params?.current;
+    if (current && current >= 1 && current <= route.params.versed) {
+      setCount(current);
+      const start = Math.max(current - Math.floor(versesPerPage / 2), 1);
+      const end = Math.min(start + versesPerPage - 1, route.params.versed);
+      fetchData(start, end);
+    } else {
+      fetchData(1, versesPerPage);
+    }
   }, []);
 
   const fetchData = async (start, end) => {
@@ -107,6 +115,7 @@ const Verse = ({route, navigation}) => {
             alignItems: 'center',
             backgroundColor: 'white',
             paddingBottom: 10,
+            minHeight: '95%',
           }}>
           <View style={styles.container}>
             <Text style={styles.chapSlokNum}>

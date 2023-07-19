@@ -10,14 +10,19 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
+import {useNavigation} from '@react-navigation/native';
 
-const Bookmark = ({navigation}) => {
+const Bookmark = () => {
   const [data, setData] = useState([]);
+  const [chapters, setChapters] = useState([]);
+
   const bookmarkData = useSelector(state => state.bookmark);
   const translationData = useSelector(state => state.translation);
   const languageData = useSelector(state => state.language);
+  const navigation = useNavigation();
   useEffect(() => {
     getData();
+    getAllChapters();
   }, []);
   const getData = async () => {
     const requests = [];
@@ -37,6 +42,16 @@ const Bookmark = ({navigation}) => {
         return acc;
       }, {});
       setData(prev => ({...prev, ...data}));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getAllChapters = async () => {
+    try {
+      const response = await axios.get('https://bhagavadgitaapi.in/chapters');
+      const data = response.data;
+      setChapters(data);
     } catch (error) {
       console.error(error);
     }
@@ -66,9 +81,12 @@ const Bookmark = ({navigation}) => {
                 onPress={() =>
                   navigation.navigate('Verse', {
                     chap_no: data[item].chapter,
-                    versed: data[item].verse,
+                    versed: chapters[data[item].chapter - 1].verses_count,
                     name:
-                      languageData === 'Hindi' ? chap.name : chap.translation,
+                      languageData === 'Hindi'
+                        ? chapters[data[item].chapter - 1].name
+                        : chapters[data[item].chapter - 1].translation,
+                    current: data[item].verse,
                   })
                 }>
                 <Text style={styles.bookmarkLabelTxt}>
@@ -114,13 +132,13 @@ const styles = StyleSheet.create({
     width: '94%',
   },
   bookmarkLabelTxt: {
-    fontFamily: 'Inter-ExtraBold',
+    fontFamily: 'Inter-Bold',
     marginLeft: 2,
     color: '#e11d48',
-    fontSize: 14,
+    fontSize: 12,
     textTransform: 'uppercase',
-    letterSpacing: 2,
     width: '100%',
+    letterSpacing: 1,
   },
   bookmarkTxt: {
     marginTop: 4,
