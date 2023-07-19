@@ -13,7 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Octiocon from 'react-native-vector-icons/Octicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {setBookmarkHandler} from '../redux/actions';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
   const commentaryData = useSelector(state => state.commentary);
@@ -99,6 +99,38 @@ const Verse = ({route, navigation}) => {
     }
   };
 
+  const removeBookMarkHandler = async () => {
+    const updatedBookmarkData = {...bookmarkData};
+    delete updatedBookmarkData[route.params.chap_no + '.' + count];
+    dispatch(setBookmarkHandler(updatedBookmarkData));
+    try {
+      await AsyncStorage.setItem('BookMark', JSON.stringify(bookmarkData));
+      console.log('Data saved successfully.');
+    } catch (error) {
+      console.error('Error saving data: ', error);
+    }
+  };
+
+  const addBookMarkhandler = async () => {
+    dispatch(
+      setBookmarkHandler({
+        ...bookmarkData,
+        [route.params.chap_no + '.' + count]: {
+          slok: versed[count]?.slok,
+          transliteration: versed[count]?.transliteration,
+          translation: versed[count]?.translation,
+          title: versed[count]?.title,
+        },
+      }),
+    );
+    try {
+      await AsyncStorage.setItem('BookMark', JSON.stringify(bookmarkData));
+      console.log('Data saved successfully.');
+    } catch (error) {
+      console.error('Error saving data: ', error);
+    }
+  };
+
   return (
     <>
       {!versed[count] && (
@@ -174,34 +206,14 @@ const Verse = ({route, navigation}) => {
           <TouchableOpacity
             style={styles.bottomBtnDiv}
             activeOpacity={0.9}
-            onPress={() =>
-              dispatch(
-                setBookmarkHandler(
-                  bookmarkData.filter(
-                    item => item !== route.params.chap_no + '.' + count,
-                  ),
-                ),
-              )
-            }>
+            onPress={removeBookMarkHandler}>
             <FontAwesome name="bookmark" color="#000000" size={20} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
             style={styles.bottomBtnDiv}
             activeOpacity={0.9}
-            onPress={() =>
-              dispatch(
-                setBookmarkHandler({
-                  ...bookmarkData,
-                  [route.params.chap_no + '.' + count]: {
-                    slok: versed[count]?.slok,
-                    transliteration: versed[count]?.transliteration,
-                    translation: versed[count]?.translation,
-                    title: versed[count]?.title,
-                  },
-                }),
-              )
-            }>
+            onPress={addBookMarkhandler}>
             <FontAwesome name="bookmark-o" color="#000000" size={20} />
           </TouchableOpacity>
         )}

@@ -1,12 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState, useEffect} from 'react';
 import BottomNav from '../components/BottomNav';
 import Chapter from './Chapter';
 import Setting from './Setting';
 import Bookmark from './Bookmark';
 import Summary from './Summary';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {setBookmarkHandler} from '../redux/actions';
 const Home = ({navigation}) => {
+  const dispatch = useDispatch();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -18,6 +21,20 @@ const Home = ({navigation}) => {
     bookmark: 'Bookmarks',
     summary: 'Summary',
     settings: 'Settings',
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const data = await AsyncStorage.getItem('BookMark');
+      if (data !== null) {
+        dispatch(setBookmarkHandler(JSON.parse(data)));
+      }
+    } catch (error) {
+      console.error('Error retrieving data: ', error);
+    }
   };
   return (
     <>

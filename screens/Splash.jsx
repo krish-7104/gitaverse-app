@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TouchableOpacity, Linking} from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import React, {useEffect, useLayoutEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
@@ -29,14 +29,12 @@ const Splash = ({navigation}) => {
   }, []);
   return (
     <View style={styles.container}>
+      <Image
+        source={require('../assets/logo.png')}
+        style={{height: 140, objectFit: 'contain'}}
+      />
       <Text style={styles.mainTxt}>GitaVerse</Text>
       <Text style={styles.subTxt}>The Ultimate Gyan Of Gita</Text>
-      <TouchableOpacity
-        style={styles.footer}
-        activeOpacity={0.8}
-        onPress={() => Linking.openURL('https://krishjotaniya.netlify.app')}>
-        <Text style={styles.footerTxt}>App By Krish Jotaniya</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -49,25 +47,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   mainTxt: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Poppins-SemiBold',
     fontSize: 40,
     color: '#dc2626',
   },
   subTxt: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 22,
+    fontFamily: 'Poppins-Medium',
+    fontSize: 18,
     color: '#00000090',
-    marginTop: -12,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 14,
-  },
-  footerTxt: {
-    fontFamily: 'Inter-Regular',
-    color: '#00000090',
-    fontSize: 16,
+    marginTop: -10,
   },
 });

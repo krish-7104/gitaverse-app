@@ -15,7 +15,6 @@ import {useNavigation} from '@react-navigation/native';
 const Bookmark = () => {
   const [data, setData] = useState([]);
   const [chapters, setChapters] = useState([]);
-
   const bookmarkData = useSelector(state => state.bookmark);
   const translationData = useSelector(state => state.translation);
   const languageData = useSelector(state => state.language);
