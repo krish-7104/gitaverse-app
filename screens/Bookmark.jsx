@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -6,58 +7,72 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import {setBookmarkHandler} from '../redux/actions';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Bookmark = () => {
-  const [data, setData] = useState();
-  const [chapters, setChapters] = useState([]);
+  const [data, setData] = useState(null);
   const bookmarkData = useSelector(state => state.bookmark);
-  const translationData = useSelector(state => state.translation);
   const languageData = useSelector(state => state.language);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+
   useEffect(() => {
     getData();
-    getAllChapters();
-  }, []);
-  const getData = async () => {
-    const requests = [];
-    for (const key of Object.keys(bookmarkData)) {
-      const [chap_no, verse_no] = key.split('.');
-      requests.push(
-        fetch(`http://bhagavadgitaapi.in/slok/${chap_no}/${verse_no}`).then(
-          response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          },
-        ),
-      );
-    }
+  }, [bookmarkData]);
+
+  const removeBookMarkHandler = async key => {
     try {
-      const responses = await Promise.all(requests);
-      const data = responses.reduce((acc, responseData, index) => {
-        acc[index + 1] = responseData;
-        return acc;
-      }, {});
-      setData(prev => ({...prev, ...data}));
+      const updatedBookmarkData = {...bookmarkData};
+      delete updatedBookmarkData[key];
+      await AsyncStorage.setItem(
+        'BookMark',
+        JSON.stringify(updatedBookmarkData),
+      );
+      dispatch(setBookmarkHandler(updatedBookmarkData));
+      setData(prevData => {
+        const newData = {...prevData};
+        delete newData[key];
+        return newData;
+      });
+      ToastAndroid.show('Bookmark Removed!', ToastAndroid.CENTER);
+      console.log('Data saved successfully.');
     } catch (error) {
-      console.error(error);
+      console.error('Error saving data: ', error);
     }
   };
 
-  const getAllChapters = async () => {
-    try {
-      const response = await fetch('http://bhagavadgitaapi.in/chapters');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+  const getData = async () => {
+    if (!bookmarkData) {
+      setData(null);
+      return;
+    }
 
-      const data = await response.json();
-      setChapters(data);
+    const requests = Object.keys(bookmarkData).map(key => {
+      const [chap_no, verse_no] = key.split('.');
+      return fetch(`http://bhagavadgitaapi.in/slok/${chap_no}/${verse_no}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .catch(error => console.error(error));
+    });
+
+    try {
+      const responses = await Promise.all(requests);
+      const data = responses.reduce((acc, responseData, index) => {
+        const key = Object.keys(bookmarkData)[index];
+        acc[key] = responseData;
+        return acc;
+      }, {});
+      setData(data);
     } catch (error) {
       console.error(error);
     }
@@ -66,39 +81,48 @@ const Bookmark = () => {
   return (
     <SafeAreaView style={styles.container}>
       {!data && (
-        <View
-          style={{flex: 1, justifyContent: 'center', backgroundColor: 'white'}}>
+        <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color="#e11d48" />
         </View>
       )}
+
       {data && Object.keys(data).length === 0 && (
         <Text style={styles.noBookTxt}>No Bookmarks!</Text>
       )}
+
       {data && Object.keys(data).length !== 0 && (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContainer}>
-          {Object.keys(data).map(item => {
+          {Object.keys(data).map(key => {
+            const item = data[key];
             return (
               <TouchableOpacity
-                key={'Verse ' + data[item].chapter + '.' + data[item].verse}
+                key={`Verse ${item.chapter}.${item.verse}`}
                 style={styles.bookmarkCard}
                 activeOpacity={0.4}
                 onPress={() =>
                   navigation.navigate('Verse', {
-                    chap_no: data[item].chapter,
-                    versed: chapters[data[item].chapter - 1].verses_count,
+                    chap_no: item.chapter,
+                    versed: item.chapter.verses_count,
                     name:
                       languageData === 'Hindi'
-                        ? chapters[data[item].chapter - 1].name
-                        : chapters[data[item].chapter - 1].translation,
-                    current: data[item].verse,
+                        ? item.chapter.name
+                        : item.chapter.translation,
+                    current: item.verse,
                   })
                 }>
-                <Text style={styles.bookmarkLabelTxt}>
-                  {'Verse ' + data[item].chapter + '.' + data[item].verse}
-                </Text>
-                <Text style={styles.bookmarkTxt}>{data[item].slok}</Text>
+                <Text
+                  style={
+                    styles.bookmarkLabelTxt
+                  }>{`Verse ${item.chapter}.${item.verse}`}</Text>
+                <Text style={styles.bookmarkTxt}>{item.slok}</Text>
+                <TouchableOpacity
+                  style={styles.bottomBtnDiv}
+                  activeOpacity={0.9}
+                  onPress={() => removeBookMarkHandler(key)}>
+                  <FontAwesome name="bookmark" color="#000000" size={24} />
+                </TouchableOpacity>
               </TouchableOpacity>
             );
           })}
@@ -115,11 +139,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
   scrollContainer: {
     alignSelf: 'center',
     marginVertical: 18,
-    width: '100%',
-    alignItems: 'center',
+    width: '90%',
   },
   bookmarkCard: {
     backgroundColor: 'white',
@@ -129,20 +157,21 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     elevation: 20,
     shadowColor: '#00000030',
-    width: '90%',
+    width: '100%',
+    position: 'relative',
   },
   bookmarkLabelTxt: {
     fontFamily: 'Inter-ExtraBold',
-    marginLeft: 2,
     color: '#e11d48',
-    fontSize: 13,
+    fontSize: 14,
     textTransform: 'uppercase',
     width: '100%',
     letterSpacing: 1,
     textAlign: 'center',
+    marginBottom: -4,
   },
   bookmarkTxt: {
-    marginTop: 4,
+    marginTop: 8,
     fontFamily: 'Inter-Medium',
     color: '#000000',
     fontSize: 17,
@@ -155,5 +184,11 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 18,
     textAlign: 'center',
+  },
+  bottomBtnDiv: {
+    position: 'absolute',
+    right: 10,
+    top: 6,
+    padding: 8,
   },
 });

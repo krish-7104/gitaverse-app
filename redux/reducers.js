@@ -1,11 +1,13 @@
-import { BOOKMARK, COMMENTARY, LANGUAGE, LASTREAD, TRANSLATION } from "./action";
+import { BOOKMARK, COMMENTARY, LANGUAGE, LASTREAD, SPEECH_PITCH, SPEECH_RATE, TRANSLATION } from "./action";
 
 const initialState = {
     language: "English",
     translation: { author: "adi", type: "et" },
     commentary: { author: "siva", type: "ec" },
     bookmark: {},
-    lastread: {}
+    lastread: {},
+    pitch: 1.0,
+    rate: 0.5,
 }
 
 export const Reducers = (state = initialState, action) => {
@@ -20,6 +22,10 @@ export const Reducers = (state = initialState, action) => {
             return { ...state, bookmark: action.payload }
         case LASTREAD:
             return { ...state, lastread: action.payload }
+        case SPEECH_PITCH:
+            return { ...state, pitch: action.payload }
+        case SPEECH_RATE:
+            return { ...state, rate: action.payload }
         default:
             return state;
     }

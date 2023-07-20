@@ -13,7 +13,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
 const Summary = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
   const languageData = useSelector(state => state.language);
   const navigation = useNavigation();
   useEffect(() => {
@@ -36,8 +36,7 @@ const Summary = () => {
   return (
     <SafeAreaView style={styles.container}>
       {!data && (
-        <View
-          style={{flex: 1, justifyContent: 'center', backgroundColor: 'white'}}>
+        <View style={{flex: 1, justifyContent: 'center'}}>
           <ActivityIndicator size="large" color="#e11d48" />
         </View>
       )}

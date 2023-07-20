@@ -1,4 +1,4 @@
-import { BOOKMARK, LASTREAD } from "./action";
+import { BOOKMARK, LASTREAD, SPEECH_PITCH, SPEECH_RATE } from "./action";
 import { LANGUAGE } from "./action";
 import { COMMENTARY } from "./action";
 import { TRANSLATION } from "./action";
@@ -28,3 +28,12 @@ export const setLastReadHandler = (data) => ({
     payload: data
 })
 
+export const setSpeechPitchHandler = (data) => ({
+    type: SPEECH_PITCH,
+    payload: data
+})
+
+export const setSpeechRateHandler = (data) => ({
+    type: SPEECH_RATE,
+    payload: data
+})

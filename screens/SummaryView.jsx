@@ -1,9 +1,17 @@
-import {SafeAreaView, ScrollView, StyleSheet, Text} from 'react-native';
-import React, {useLayoutEffect} from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useLayoutEffect, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Tts from 'react-native-tts';
 const SummaryView = ({navigation, route}) => {
   const languageData = useSelector(state => state.language);
+  const [play, setPlay] = useState(false);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -23,6 +31,39 @@ const SummaryView = ({navigation, route}) => {
       },
     });
   }, [navigation]);
+
+  useEffect(() => {
+    Tts.addEventListener('tts-finish', () => setPlay(false));
+  }, []);
+  const startSpeechHandler = () => {
+    setPlay(!play);
+    Tts.setDefaultLanguage('hi-IN');
+    Tts.setDefaultRate(0.45);
+    Tts.setDefaultPitch(1);
+    Tts.speak(
+      `${languageData === 'Hindi' ? `शीर्षक` : `Title`} ${'    '} 
+        ${
+          languageData === 'Hindi'
+            ? route.params.data.name
+            : route.params.data.translation
+        } ${'    '} ${languageData === 'Hindi' ? 'अर्थ' : 'Meaning'} ${
+        languageData === 'Hindi'
+          ? route.params.data.meaning.hi
+          : route.params.data.meaning.en
+      } ${'    '}   ${languageData === 'Hindi' ? 'सारांश' : 'Summary'}
+      ${
+        languageData === 'Hindi'
+          ? route.params.data.summary.hi
+          : route.params.data.summary.en
+      } `,
+    );
+  };
+
+  const stopSpeechHandler = () => {
+    Tts.stop();
+    setPlay(!play);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -53,6 +94,22 @@ const SummaryView = ({navigation, route}) => {
             : route.params.data.summary.en}
         </Text>
       </ScrollView>
+      {play && (
+        <TouchableOpacity
+          onPress={stopSpeechHandler}
+          style={styles.bottomBtnDiv}
+          activeOpacity={0.9}>
+          <Ionicons name="stop-outline" color="#fff" size={22} />
+        </TouchableOpacity>
+      )}
+      {!play && (
+        <TouchableOpacity
+          onPress={startSpeechHandler}
+          style={styles.bottomBtnDiv}
+          activeOpacity={0.9}>
+          <Ionicons name="play-outline" color="#fff" size={22} />
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };
@@ -70,6 +127,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '96%',
     paddingVertical: 16,
+    paddingBottom: 60,
   },
   sectionTitle: {
     color: 'black',
@@ -86,6 +144,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Medium',
     lineHeight: 26,
     paddingHorizontal: 20,
+    marginBottom: 10,
   },
   bottomNavDiv: {
     width: '100%',
@@ -99,11 +158,14 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   bottomBtnDiv: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    position: 'absolute',
+    padding: 16,
+    backgroundColor: '#dc2626',
+    borderRadius: 50,
+    bottom: 30,
+    right: 35,
+    elevation: 10,
+    shadowColor: '#dc2626',
   },
   mainChapDiv: {
     flexDirection: 'row',

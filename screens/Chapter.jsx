@@ -14,7 +14,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 const Chapter = () => {
   const navigation = useNavigation();
-  const [chapters, setChapters] = useState([]);
+  const [chapters, setChapters] = useState();
   const language = useSelector(state => state.language);
   useEffect(() => {
     getAllChapters();
