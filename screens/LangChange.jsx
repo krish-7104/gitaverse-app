@@ -42,11 +42,11 @@ const LangChange = ({navigation, route}) => {
     } else {
       dispatch(setCommentaryhandler({author, type: langaugeType}));
     }
-    navigation.replace('Setting');
+    navigation.goBack();
   };
   const changeLangHandler = lang => {
     dispatch(setLanguageHandler(lang));
-    navigation.replace('Setting');
+    navigation.goBack();
   };
   return (
     <SafeAreaView>

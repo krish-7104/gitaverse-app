@@ -6,7 +6,7 @@ const BottomNav = ({active, setActive}) => {
     <View style={styles.bottomNavDiv}>
       <TouchableOpacity
         style={styles.bottomBtnDiv}
-        activeOpacity={0.9}
+        activeOpacity={0.4}
         onPress={() => setActive('home')}>
         <Ionicons
           name={active === 'home' ? 'home' : 'home-outline'}
@@ -16,7 +16,7 @@ const BottomNav = ({active, setActive}) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.bottomBtnDiv}
-        activeOpacity={0.9}
+        activeOpacity={0.4}
         onPress={() => setActive('bookmark')}>
         <Ionicons
           name={active === 'bookmark' ? 'bookmarks' : 'bookmarks-outline'}
@@ -26,7 +26,7 @@ const BottomNav = ({active, setActive}) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.bottomBtnDiv}
-        activeOpacity={0.9}
+        activeOpacity={0.4}
         onPress={() => setActive('summary')}>
         <Ionicons
           name={active === 'summary' ? 'bulb' : 'bulb-outline'}
@@ -36,7 +36,7 @@ const BottomNav = ({active, setActive}) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.bottomBtnDiv}
-        activeOpacity={0.9}
+        activeOpacity={0.4}
         onPress={() => setActive('settings')}>
         <Ionicons
           name={active === 'settings' ? 'settings' : 'settings-outline'}

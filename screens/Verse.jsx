@@ -7,7 +7,7 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import React, {useEffect, useState, useLayoutEffect} from 'react';
+import React, {useEffect, useState, useLayoutEffect, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octiocon from 'react-native-vector-icons/Octicons';
@@ -15,7 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {setBookmarkHandler} from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
-
+import data from '../data.json';
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
   const commentaryData = useSelector(state => state.commentary);
@@ -25,6 +25,8 @@ const Verse = ({route, navigation}) => {
   const [versed, setVersed] = useState({});
   const [count, setCount] = useState(1);
   const [play, setPlay] = useState(false);
+  const scrollViewRef = useRef();
+  const [showList, setShowList] = useState(false);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -36,31 +38,62 @@ const Verse = ({route, navigation}) => {
               marginTop: 6,
               marginLeft: -8,
               color: '#000',
-              fontFamily: 'Inter-SemiBold',
+              fontFamily: 'Poppins-SemiBold',
             }}>
-            {route.params.chap_no}. {route.params.name}
+            Chapter {route.params.chap_no}
           </Text>
         );
       },
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            setShowList(!showList);
+          }}
+          style={{marginRight: 10}}
+          activeOpacity={0.4}>
+          <Octiocon
+            name={showList ? 'x' : 'rows'}
+            size={showList ? 26 : 20}
+            color="black"
+            style={{padding: 2}}
+          />
+        </TouchableOpacity>
+      ),
     });
-  }, [navigation]);
+  }, [navigation, showList]);
+
+  useEffect(() => {
+    Tts.addEventListener('tts-finish', () => setPlay(false));
+  }, []);
 
   const startSpeechHandler = () => {
     setPlay(!play);
     Tts.setDefaultLanguage('hi-IN');
-    Tts.setDefaultRate(0.35);
-    Tts.setDefaultPitch(0.8);
-    Tts.speak(`Verse ${route.params.chap_no}.${count}`);
+    Tts.setDefaultRate(0.45);
+    Tts.setDefaultPitch(1);
     Tts.speak(
-      `Slok ${versed[count]?.slok.slice(0, versed[count]?.slok.length - 7)}`,
-    );
-    Tts.speak(`${langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
+      `Verse ${route.params.chap_no}.${count} Slok ${versed[count]?.slok.slice(
+        0,
+        versed[count]?.slok.length - 7,
+      )}
+    ${langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
     ${versed[count]?.[translationData?.author]?.[translationData?.type].replace(
       `${route.params.chap_no}.${count}`,
       '',
-    )}`);
-    Tts.speak(`${langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
-    ${versed[count]?.[commentaryData?.author]?.[commentaryData?.type]}`);
+    )}
+    ${langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
+    ${
+      versed[count]?.[commentaryData?.author]?.[commentaryData?.type].includes(
+        'No Commentary',
+      )
+        ? `No Commentary by ${
+            data['verse_commentary_sources'][commentaryData?.author].author
+          }`
+        : versed[count]?.[commentaryData?.author]?.[commentaryData?.type]
+            .split('Commentary')[1]
+            ?.replace(`${route.params.chap_no}.${count}`, '')
+    }`,
+    );
   };
 
   const stopSpeechHandler = () => {
@@ -120,6 +153,7 @@ const Verse = ({route, navigation}) => {
         route.params.versed,
       );
       fetchData(nextPageStart, nextPageEnd);
+      scrollViewRef?.current?.scrollTo({x: 0, y: 0, animated: true});
     }
   };
 
@@ -129,6 +163,7 @@ const Verse = ({route, navigation}) => {
       const prevPageStart = count - versesPerPage;
       const prevPageEnd = count - 1;
       fetchData(prevPageStart, prevPageEnd);
+      scrollViewRef?.current?.scrollTo({x: 0, y: 0, animated: true});
     }
   };
 
@@ -150,8 +185,6 @@ const Verse = ({route, navigation}) => {
         ...bookmarkData,
         [route.params.chap_no + '.' + count]: {
           slok: versed[count]?.slok,
-          transliteration: versed[count]?.transliteration,
-          translation: versed[count]?.translation,
           title: versed[count]?.title,
         },
       }),
@@ -164,6 +197,40 @@ const Verse = ({route, navigation}) => {
     }
   };
 
+  const selectVerseFromTable = i => {
+    const current = i;
+    if (current && current >= 1 && current <= route.params.versed) {
+      setCount(current);
+      const start = Math.max(current - Math.floor(versesPerPage / 2), 1);
+      const end = Math.min(start + versesPerPage - 1, route.params.versed);
+      fetchData(start, end);
+    } else {
+      fetchData(1, versesPerPage);
+    }
+    setShowList(false);
+  };
+
+  const VerseTableTxt = () => {
+    let arr = [];
+    for (let i = 1; i <= route.params.versed; i++) {
+      arr.push(
+        <View style={styles.verseNumDiv} key={i}>
+          <Text
+            onPress={() => selectVerseFromTable(i)}
+            style={
+              count === i
+                ? [styles.verseNumTxt, styles.verseNumSelected]
+                : styles.verseNumTxt
+            }>
+            {i}
+          </Text>
+          {count === i && <View style={styles.dot}></View>}
+        </View>,
+      );
+    }
+    return arr;
+  };
+
   return (
     <>
       {!versed[count] && (
@@ -172,109 +239,149 @@ const Verse = ({route, navigation}) => {
           <ActivityIndicator size="large" color="#e11d48" />
         </View>
       )}
-      {translationData && commentaryData && versed && versed[count] && (
+      {!showList &&
+        translationData &&
+        commentaryData &&
+        versed &&
+        versed[count] && (
+          <ScrollView
+            ref={scrollViewRef}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'white',
+              paddingBottom: 10,
+              minHeight: '95%',
+            }}>
+            <View style={styles.container}>
+              <Text style={styles.chapSlokNum}>
+                {route.params.chap_no}.{count}
+              </Text>
+              <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
+              <Image
+                source={require('../assets/flower.png')}
+                style={styles.image}
+              />
+              <Text style={styles.sectionTitle}>
+                {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
+              </Text>
+              <Text style={styles.sectionTxt}>
+                {versed[count]?.transliteration}
+              </Text>
+              <Text style={styles.sectionTitle}>
+                {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
+              </Text>
+              <Text style={styles.sectionTxt}>
+                {versed[count]?.[translationData?.author]?.[
+                  translationData?.type
+                ]
+                  ?.replace(`${route.params.chap_no}.${count}`, '')
+                  .replaceAll('  ', ' ')}
+              </Text>
+              <Text style={styles.sectionTitle}>
+                {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
+              </Text>
+              <Text style={styles.sectionTxt}>
+                {versed[count]?.[commentaryData?.author]?.[
+                  commentaryData?.type
+                ].includes('Commentary')
+                  ? !versed[count]?.[commentaryData?.author]?.[
+                      commentaryData?.type
+                    ].includes('No Commentary')
+                    ? versed[count]?.[commentaryData?.author]?.[
+                        commentaryData?.type
+                      ].split('Commentary')[0] +
+                      '\n' +
+                      versed[count]?.[commentaryData?.author]?.[
+                        commentaryData?.type
+                      ].split('Commentary')[1]
+                    : 'No Commentary'
+                  : versed[count]?.[commentaryData?.author]?.[
+                      commentaryData?.type
+                    ]}
+              </Text>
+            </View>
+          </ScrollView>
+        )}
+      {!showList && (
+        <View style={styles.bottomNavDiv}>
+          <TouchableOpacity
+            onPress={handlerDecrement}
+            style={styles.bottomBtnDiv}
+            activeOpacity={0.9}>
+            <Octiocon
+              name="chevron-left"
+              color={count === 1 ? '#00000040' : '#000000'}
+              size={22}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.bottomBtnDiv}
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('Settings')}>
+            <Octiocon name="gear" color="#000000" size={20} />
+          </TouchableOpacity>
+          {play && (
+            <TouchableOpacity
+              onPress={stopSpeechHandler}
+              style={styles.bottomBtnDiv}
+              activeOpacity={0.9}>
+              <Ionicons name="stop-outline" color="#000000" size={22} />
+            </TouchableOpacity>
+          )}
+          {!play && (
+            <TouchableOpacity
+              onPress={startSpeechHandler}
+              style={styles.bottomBtnDiv}
+              activeOpacity={0.9}>
+              <Ionicons name="play-outline" color="#000000" size={22} />
+            </TouchableOpacity>
+          )}
+          {Object.keys(bookmarkData).includes(
+            route.params.chap_no + '.' + count,
+          ) ? (
+            <TouchableOpacity
+              style={styles.bottomBtnDiv}
+              activeOpacity={0.9}
+              onPress={removeBookMarkHandler}>
+              <FontAwesome name="bookmark" color="#000000" size={20} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.bottomBtnDiv}
+              activeOpacity={0.9}
+              onPress={addBookMarkhandler}>
+              <FontAwesome name="bookmark-o" color="#000000" size={20} />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={handleIncrement}
+            style={styles.bottomBtnDiv}
+            activeOpacity={0.9}>
+            <Octiocon
+              name="chevron-right"
+              color={count === route.params.versed ? '#00000040' : '#000000'}
+              size={22}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
+      {showList && (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'white',
             paddingBottom: 10,
-            minHeight: '95%',
+            minHeight: '100%',
           }}>
-          <View style={styles.container}>
-            <Text style={styles.chapSlokNum}>
-              {route.params.chap_no}.{count}
-            </Text>
-            <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
-            <Image
-              source={require('../assets/flower.png')}
-              style={styles.image}
-            />
-            <Text style={styles.sectionTitle}>
-              {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
-            </Text>
-            <Text style={styles.sectionTxt}>
-              {versed[count]?.transliteration}
-            </Text>
-            <Text style={styles.sectionTitle}>
-              {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
-            </Text>
-            <Text style={styles.sectionTxt}>
-              {versed[count]?.[translationData?.author]?.[
-                translationData?.type
-              ].replace(`${route.params.chap_no}.${count}`, '')}
-            </Text>
-            <Text style={styles.sectionTitle}>
-              {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
-            </Text>
-            <Text style={styles.sectionTxt}>
-              {versed[count]?.[commentaryData?.author]?.[commentaryData?.type]}
-            </Text>
+          <Text style={styles.verseNumTitle}>{route.params.versed} Verses</Text>
+          <View style={styles.verseNumCard}>
+            <VerseTableTxt />
           </View>
         </ScrollView>
       )}
-      <View style={styles.bottomNavDiv}>
-        <TouchableOpacity
-          onPress={handlerDecrement}
-          style={styles.bottomBtnDiv}
-          activeOpacity={0.9}>
-          <Octiocon
-            name="chevron-left"
-            color={count === 1 ? '#00000040' : '#000000'}
-            size={22}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.bottomBtnDiv}
-          activeOpacity={0.9}
-          onPress={() => navigation.navigate('Settings')}>
-          <Octiocon name="gear" color="#000000" size={20} />
-        </TouchableOpacity>
-        {play && (
-          <TouchableOpacity
-            onPress={stopSpeechHandler}
-            style={styles.bottomBtnDiv}
-            activeOpacity={0.9}>
-            <Ionicons name="stop-outline" color="#000000" size={22} />
-          </TouchableOpacity>
-        )}
-        {!play && (
-          <TouchableOpacity
-            onPress={startSpeechHandler}
-            style={styles.bottomBtnDiv}
-            activeOpacity={0.9}>
-            <Ionicons name="play-outline" color="#000000" size={22} />
-          </TouchableOpacity>
-        )}
-        {Object.keys(bookmarkData).includes(
-          route.params.chap_no + '.' + count,
-        ) ? (
-          <TouchableOpacity
-            style={styles.bottomBtnDiv}
-            activeOpacity={0.9}
-            onPress={removeBookMarkHandler}>
-            <FontAwesome name="bookmark" color="#000000" size={20} />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={styles.bottomBtnDiv}
-            activeOpacity={0.9}
-            onPress={addBookMarkhandler}>
-            <FontAwesome name="bookmark-o" color="#000000" size={20} />
-          </TouchableOpacity>
-        )}
-        <TouchableOpacity
-          onPress={handleIncrement}
-          style={styles.bottomBtnDiv}
-          activeOpacity={0.9}>
-          <Octiocon
-            name="chevron-right"
-            color={count === route.params.versed ? '#00000040' : '#000000'}
-            size={22}
-          />
-        </TouchableOpacity>
-      </View>
     </>
   );
 };
@@ -309,7 +416,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: 'black',
     fontSize: 14,
-    fontFamily: 'Inter-ExtraBold',
+    fontFamily: 'Inter-Bold',
     textTransform: 'uppercase',
     marginVertical: 14,
     letterSpacing: 1,
@@ -318,7 +425,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     fontSize: 16,
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Inter-Regular',
     lineHeight: 28,
   },
   bottomNavDiv: {
@@ -342,5 +449,49 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  verseNumTitle: {
+    color: 'black',
+    fontSize: 20,
+    fontFamily: 'Poppins-Medium',
+    letterSpacing: 1,
+    marginTop: 30,
+  },
+  verseNumCard: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginTop: 20,
+    rowGap: 20,
+    marginHorizontal: 10,
+  },
+  verseNumDiv: {
+    width: '20%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  verseNumTxt: {
+    color: 'black',
+    fontSize: 16,
+    fontFamily: 'Inter-Regular',
+    textAlign: 'center',
+    display: 'flex',
+    position: 'relative',
+    padding: 4,
+  },
+  verseNumSelected: {
+    color: '#dc2626',
+    fontFamily: 'Inter-SemiBold',
+  },
+  dot: {
+    width: 5,
+    height: 5,
+    borderRadius: 20,
+    backgroundColor: '#dc2626',
+    position: 'absolute',
+    bottom: -5,
   },
 });

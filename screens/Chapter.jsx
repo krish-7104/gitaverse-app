@@ -49,7 +49,7 @@ const Chapter = () => {
                 key={chap.chapter_number}
                 style={styles.mainChapDiv}
                 onPress={() =>
-                  navigation.navigate('Verse', {
+                  navigation.push('Verse', {
                     chap_no: chap.chapter_number,
                     versed: chap.verses_count,
                     name: language === 'Hindi' ? chap.name : chap.translation,
@@ -91,24 +91,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
   },
-  quoteDiv: {
-    backgroundColor: 'white',
-    paddingVertical: 14,
-    paddingHorizontal: 10,
-  },
-  quoteTitle: {
-    color: 'black',
-    fontFamily: 'Inter-Bold',
-  },
-  quoteTxt: {
-    color: 'black',
-    fontFamily: 'Inter-Medium',
-  },
   mainChapDiv: {
     flexDirection: 'row',
     marginBottom: 10,
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 14,
     borderBottomColor: '#00000020',
     borderBottomWidth: 1.4,
   },
@@ -125,7 +112,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Inter-Medium',
     color: '#dc2626',
-    fontSize: 16,
+    fontSize: 14,
   },
   chapDataDiv: {
     marginLeft: 20,
@@ -140,6 +127,7 @@ const styles = StyleSheet.create({
     color: '#00000090',
     fontFamily: 'Inter-Regular',
     fontSize: 15,
+    marginTop: 2,
   },
   rightIcon: {
     width: '10%',

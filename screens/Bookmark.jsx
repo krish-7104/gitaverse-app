@@ -12,7 +12,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
 const Bookmark = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
   const [chapters, setChapters] = useState([]);
   const bookmarkData = useSelector(state => state.bookmark);
   const translationData = useSelector(state => state.translation);
@@ -83,7 +83,7 @@ const Bookmark = () => {
               <TouchableOpacity
                 key={'Verse ' + data[item].chapter + '.' + data[item].verse}
                 style={styles.bookmarkCard}
-                activeOpacity={0.5}
+                activeOpacity={0.4}
                 onPress={() =>
                   navigation.navigate('Verse', {
                     chap_no: data[item].chapter,
@@ -98,13 +98,7 @@ const Bookmark = () => {
                 <Text style={styles.bookmarkLabelTxt}>
                   {'Verse ' + data[item].chapter + '.' + data[item].verse}
                 </Text>
-                <Text style={styles.bookmarkTxt}>
-                  {(data[item]?.[translationData?.author]?.[
-                    translationData?.type
-                  ])
-                    .replace(data[item].chapter + '.' + data[item].verse, '')
-                    .slice(0, 100)}
-                </Text>
+                <Text style={styles.bookmarkTxt}>{data[item].slok}</Text>
               </TouchableOpacity>
             );
           })}
@@ -129,29 +123,32 @@ const styles = StyleSheet.create({
   },
   bookmarkCard: {
     backgroundColor: 'white',
-    paddingVertical: 12,
+    paddingVertical: 18,
     paddingHorizontal: 10,
     borderRadius: 6,
     marginBottom: 12,
-    elevation: 10,
-    shadowColor: '#00000010',
-    width: '94%',
+    elevation: 20,
+    shadowColor: '#00000030',
+    width: '90%',
   },
   bookmarkLabelTxt: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Inter-ExtraBold',
     marginLeft: 2,
     color: '#e11d48',
-    fontSize: 12,
+    fontSize: 13,
     textTransform: 'uppercase',
     width: '100%',
     letterSpacing: 1,
+    textAlign: 'center',
   },
   bookmarkTxt: {
     marginTop: 4,
     fontFamily: 'Inter-Medium',
     color: '#000000',
-    fontSize: 15,
+    fontSize: 17,
     lineHeight: 24,
+    textAlign: 'center',
+    paddingTop: 5,
   },
   noBookTxt: {
     fontFamily: 'Inter-Medium',
