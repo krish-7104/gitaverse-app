@@ -2,8 +2,8 @@ import { BOOKMARK, COMMENTARY, LANGUAGE, LASTREAD, TRANSLATION } from "./action"
 
 const initialState = {
     language: "English",
-    translation: { author: "siva", type: "et" },
-    commentary: { author: "chinmay", type: "hc" },
+    translation: { author: "adi", type: "et" },
+    commentary: { author: "siva", type: "ec" },
     bookmark: {},
     lastread: {}
 }

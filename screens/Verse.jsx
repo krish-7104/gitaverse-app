@@ -186,9 +186,7 @@ const Verse = ({route, navigation}) => {
             <Text style={styles.chapSlokNum}>
               {route.params.chap_no}.{count}
             </Text>
-            <Text style={styles.slokTxt}>
-              {versed[count]?.slok.slice(0, versed[count]?.slok.length - 7)}
-            </Text>
+            <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
             <Image
               source={require('../assets/flower.png')}
               style={styles.image}
