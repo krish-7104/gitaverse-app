@@ -20,7 +20,7 @@ const App = () => {
           <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="Verse" component={Verse} />
           <Stack.Screen name="LangChange" component={LangChange} />
-          <Stack.Screen name="Setting" component={Setting} />
+          <Stack.Screen name="Settings" component={Setting} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

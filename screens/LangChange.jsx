@@ -49,10 +49,10 @@ const LangChange = ({navigation, route}) => {
     navigation.replace('Setting');
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <ScrollView
-        contentContainerStyle={styles.scrollViewContent}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.container}>
         {data &&
           route.params.type !== 'language' &&
           Object.keys(data[route.params.type]).map((item, index) => {
@@ -102,8 +102,6 @@ export default LangChange;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
     backgroundColor: 'white',
   },
   mainTitle: {
@@ -124,5 +122,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Inter-Medium',
     color: 'black',
+    textAlign: 'left',
+    width: '100%',
   },
 });

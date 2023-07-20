@@ -8,12 +8,14 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState, useLayoutEffect} from 'react';
-import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import Octiocon from 'react-native-vector-icons/Octicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Octiocon from 'react-native-vector-icons/Octicons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {setBookmarkHandler} from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Tts from 'react-native-tts';
+
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
   const commentaryData = useSelector(state => state.commentary);
@@ -22,7 +24,7 @@ const Verse = ({route, navigation}) => {
   const dispatch = useDispatch();
   const [versed, setVersed] = useState({});
   const [count, setCount] = useState(1);
-
+  const [play, setPlay] = useState(false);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -42,6 +44,29 @@ const Verse = ({route, navigation}) => {
       },
     });
   }, [navigation]);
+
+  const startSpeechHandler = () => {
+    setPlay(!play);
+    Tts.setDefaultLanguage('hi-IN');
+    Tts.setDefaultRate(0.35);
+    Tts.setDefaultPitch(0.8);
+    Tts.speak(`Verse ${route.params.chap_no}.${count}`);
+    Tts.speak(
+      `Slok ${versed[count]?.slok.slice(0, versed[count]?.slok.length - 7)}`,
+    );
+    Tts.speak(`${langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
+    ${versed[count]?.[translationData?.author]?.[translationData?.type].replace(
+      `${route.params.chap_no}.${count}`,
+      '',
+    )}`);
+    Tts.speak(`${langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
+    ${versed[count]?.[commentaryData?.author]?.[commentaryData?.type]}`);
+  };
+
+  const stopSpeechHandler = () => {
+    Tts.stop();
+    setPlay(!play);
+  };
 
   const versesPerPage = 4;
 
@@ -161,7 +186,9 @@ const Verse = ({route, navigation}) => {
             <Text style={styles.chapSlokNum}>
               {route.params.chap_no}.{count}
             </Text>
-            <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
+            <Text style={styles.slokTxt}>
+              {versed[count]?.slok.slice(0, versed[count]?.slok.length - 7)}
+            </Text>
             <Image
               source={require('../assets/flower.png')}
               style={styles.image}
@@ -176,11 +203,9 @@ const Verse = ({route, navigation}) => {
               {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
             </Text>
             <Text style={styles.sectionTxt}>
-              {
-                versed[count]?.[translationData?.author]?.[
-                  translationData?.type
-                ]
-              }
+              {versed[count]?.[translationData?.author]?.[
+                translationData?.type
+              ].replace(`${route.params.chap_no}.${count}`, '')}
             </Text>
             <Text style={styles.sectionTitle}>
               {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
@@ -205,9 +230,25 @@ const Verse = ({route, navigation}) => {
         <TouchableOpacity
           style={styles.bottomBtnDiv}
           activeOpacity={0.9}
-          onPress={() => navigation.navigate('Setting')}>
+          onPress={() => navigation.navigate('Settings')}>
           <Octiocon name="gear" color="#000000" size={20} />
         </TouchableOpacity>
+        {play && (
+          <TouchableOpacity
+            onPress={stopSpeechHandler}
+            style={styles.bottomBtnDiv}
+            activeOpacity={0.9}>
+            <Ionicons name="stop-outline" color="#000000" size={22} />
+          </TouchableOpacity>
+        )}
+        {!play && (
+          <TouchableOpacity
+            onPress={startSpeechHandler}
+            style={styles.bottomBtnDiv}
+            activeOpacity={0.9}>
+            <Ionicons name="play-outline" color="#000000" size={22} />
+          </TouchableOpacity>
+        )}
         {Object.keys(bookmarkData).includes(
           route.params.chap_no + '.' + count,
         ) ? (
