@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Medium',
     color: '#000000',
     fontSize: 17,
-    lineHeight: 24,
+    lineHeight: 28,
     textAlign: 'center',
     paddingTop: 5,
   },

@@ -292,11 +292,13 @@ const Verse = ({route, navigation}) => {
                     ? versed[count]?.[commentaryData?.author]?.[
                         commentaryData?.type
                       ].split('Commentary')[0] +
-                      '\n' +
+                      '\n\n' +
                       versed[count]?.[commentaryData?.author]?.[
                         commentaryData?.type
                       ].split('Commentary')[1]
-                    : 'No Commentary'
+                    : `No Commentary By ${[
+                        versed[count]?.[commentaryData?.author].author,
+                      ]}`
                   : versed[count]?.[commentaryData?.author]?.[
                       commentaryData?.type
                     ]}
