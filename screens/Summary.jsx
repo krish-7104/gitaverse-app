@@ -10,16 +10,18 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import axios from 'axios';
-import Octiocon from 'react-native-vector-icons/Octicons';
+import {useNavigation} from '@react-navigation/native';
 
-const Summary = ({navigation}) => {
+const Summary = () => {
   const [data, setData] = useState([]);
   const languageData = useSelector(state => state.language);
+  const navigation = useNavigation();
   useEffect(() => {
     getAllChapters();
   }, []);
+
   const [count, setCount] = useState(0);
+
   const getAllChapters = async () => {
     try {
       const response = await fetch('http://bhagavadgitaapi.in/chapters');
@@ -30,16 +32,7 @@ const Summary = ({navigation}) => {
       console.error(error);
     }
   };
-  const increment = () => {
-    if (count !== 17) {
-      setCount(count + 1);
-    }
-  };
-  const decrement = () => {
-    if (count !== 0) {
-      setCount(count - 1);
-    }
-  };
+
   return (
     <SafeAreaView style={styles.container}>
       {!data && (
@@ -48,60 +41,35 @@ const Summary = ({navigation}) => {
           <ActivityIndicator size="large" color="#e11d48" />
         </View>
       )}
-      <View style={styles.bottomNavDiv}>
-        <TouchableOpacity
-          disabled={count === 0 ? true : false}
-          style={styles.bottomBtnDiv}
-          activeOpacity={0.9}
-          onPress={decrement}>
-          <Octiocon
-            name="chevron-left"
-            color={count === 0 ? '#00000040' : '#000000'}
-            size={22}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          disabled={count === 17 ? true : false}
-          style={styles.bottomBtnDiv}
-          activeOpacity={0.9}
-          onPress={increment}>
-          <Octiocon
-            name="chevron-right"
-            color={count === 17 ? '#00000040' : '#000000'}
-            size={22}
-          />
-        </TouchableOpacity>
-      </View>
-      {data && Object.keys(data).length !== 0 && (
+      {data && (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContainer}>
-          <Text style={styles.sectionTitle}>
-            {languageData === 'Hindi'
-              ? `अध्याय ${count + 1}`
-              : `Chapter ${count + 1}`}
-          </Text>
-          <Text style={styles.sectionTxt}>
-            {languageData === 'Hindi'
-              ? data[count].name
-              : data[count].translation}
-          </Text>
-          <Text style={styles.sectionTitle}>
-            {languageData === 'Hindi' ? 'अर्थ' : 'Meaning'}
-          </Text>
-          <Text style={styles.sectionTxt}>
-            {languageData === 'Hindi'
-              ? data[count].meaning.hi
-              : data[count].meaning.en}
-          </Text>
-          <Text style={styles.sectionTitle}>
-            {languageData === 'Hindi' ? 'सारांश' : 'Summary'}
-          </Text>
-          <Text style={styles.sectionTxt}>
-            {languageData === 'Hindi'
-              ? data[count].summary.hi
-              : data[count].summary.en}
-          </Text>
+          contentContainerStyle={{width: '94%'}}>
+          {data.map(chap => {
+            return (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                key={chap.chapter_number}
+                style={styles.mainChapDiv}
+                onPress={() => {
+                  navigation.push('SummaryView', {
+                    data: chap,
+                  });
+                }}>
+                <View style={styles.chapDataDiv}>
+                  <Text style={styles.chapDataTitle}>
+                    {chap.chapter_number}.{' '}
+                    {languageData === 'Hindi' ? chap.name : chap.translation}
+                  </Text>
+                  <Text style={styles.chapDataSubtitle} numberOfLines={2}>
+                    {languageData === 'Hindi'
+                      ? chap.summary.hi
+                      : chap.summary.en}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
       )}
     </SafeAreaView>
@@ -113,13 +81,14 @@ export default Summary;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     alignItems: 'center',
+    paddingTop: 10,
   },
   scrollContainer: {
     alignSelf: 'center',
     alignItems: 'center',
-    width: '96%',
+    width: '100%',
     paddingVertical: 16,
   },
   sectionTitle: {
@@ -155,5 +124,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 20,
+  },
+  mainChapDiv: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    alignItems: 'center',
+    paddingVertical: 14,
+    backgroundColor: 'white',
+    paddingHorizontal: 14,
+    borderRadius: 8,
+  },
+  chapDataDiv: {
+    width: '100%',
+  },
+  chapDataTitle: {
+    color: 'black',
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 17,
+  },
+  chapDataSubtitle: {
+    color: '#00000090',
+    fontFamily: 'Inter-Regular',
+    fontSize: 15,
+    marginTop: 6,
   },
 });

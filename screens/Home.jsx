@@ -19,7 +19,7 @@ const Home = ({navigation}) => {
   const navTitle = {
     home: 'GitaVerse',
     bookmark: 'Bookmarks',
-    summary: 'Summary',
+    summary: 'Summary of All Chapters',
     settings: 'Settings',
   };
   useEffect(() => {

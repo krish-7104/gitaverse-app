@@ -3,7 +3,7 @@ import React, {useEffect, useLayoutEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {setLastReadHandler} from '../redux/actions';
-
+import apiLink from '../util';
 const Splash = ({navigation}) => {
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -11,15 +11,24 @@ const Splash = ({navigation}) => {
     });
   }, [navigation]);
   const dispatch = useDispatch();
+  const checkUpdate = async () => {
+    const data = await fetch(apiLink);
+    const jsonData = await data.json();
+    if (jsonData.Update.Available && jsonData.Update.Version === 1) {
+      navigation.replace('Update');
+    } else {
+      setTimeout(() => {
+        navigation.replace('Home');
+      }, 1200);
+    }
+  };
   const getData = async () => {
     try {
       const data = await AsyncStorage.getItem('lastRead');
       if (data !== null) {
         dispatch(setLastReadHandler(data));
       }
-      setTimeout(() => {
-        navigation.replace('Home');
-      }, 3000);
+      checkUpdate();
     } catch (error) {
       console.error('Error retrieving data: ', error);
     }
