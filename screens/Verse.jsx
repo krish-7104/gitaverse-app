@@ -84,7 +84,13 @@ const Verse = ({route, navigation}) => {
       ]?.slok.slice(0, versed[count]?.slok.length - 7)}`,
     );
     setSpeechCount(1);
-    Tts.setDefaultLanguage(`${langaugeData === 'Hindi' ? 'hi' : 'en'}-IN`);
+    Tts.setDefaultLanguage(
+      `${
+        [translationData?.author]?.[translationData?.type] === 'ht'
+          ? 'hi'
+          : 'en'
+      }-IN`,
+    );
     Tts.speak(
       ` ${langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
       ${versed[count]?.[translationData?.author]?.[
@@ -92,7 +98,11 @@ const Verse = ({route, navigation}) => {
       ].replace(`${route.params.chap_no}.${count}`, '')}`,
     );
     setSpeechCount(2);
-    Tts.setDefaultLanguage(`${langaugeData === 'Hindi' ? 'hi' : 'en'}-IN`);
+    Tts.setDefaultLanguage(
+      `${
+        [commentaryData?.author]?.[commentaryData?.type] === 'hc' ? 'hi' : 'en'
+      }-IN`,
+    );
     Tts.speak(`${langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
     ${
       versed[count]?.[commentaryData?.author]?.[commentaryData?.type].includes(
@@ -163,13 +173,13 @@ const Verse = ({route, navigation}) => {
   };
 
   const lastReadHandler = async value => {
-    console.log(value);
     await AsyncStorage.setItem('Last Read', value);
     dispatch(setLastReadHandler(value));
   };
 
   const handleIncrement = () => {
     if (count + 1 <= route.params.versed) {
+      stopSpeechHandler();
       setCount(count + 1);
       const nextPageStart = count + 1;
       const nextPageEnd = Math.min(
@@ -183,6 +193,7 @@ const Verse = ({route, navigation}) => {
 
   const handlerDecrement = () => {
     if (count - 1 >= 1) {
+      stopSpeechHandler();
       setCount(count - 1);
       const prevPageStart = count - versesPerPage;
       const prevPageEnd = count - 1;
