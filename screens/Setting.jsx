@@ -21,6 +21,7 @@ import {
   setTranslationhandler,
 } from '../redux/actions';
 import Tts from 'react-native-tts';
+
 const Setting = () => {
   const commentaryData = useSelector(state => state.commentary);
   const translationData = useSelector(state => state.translation);
@@ -43,6 +44,25 @@ const Setting = () => {
     dispatch(setSpeechPitchHandler(1.0));
     dispatch(setSpeechRateHandler(0.5));
     ToastAndroid.show('Reset Done!', ToastAndroid.CENTER);
+  };
+
+  const confirmAlert = () => {
+    Alert.alert(
+      'Are You Sure?',
+      'Reset settings will set all setting to default',
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('No Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => resetHandler(),
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   return (
@@ -94,41 +114,57 @@ const Setting = () => {
         <Text style={[styles.sectionTitle, {marginTop: 14}]}>
           Set Speech Rate
         </Text>
-        <Slider
-          style={{width: '100%', height: 45}}
-          minimumValue={0.01}
-          maximumValue={2.0}
-          minimumTrackTintColor="#dc2626"
-          maximumTrackTintColor="#450a0a"
-          thumbTintColor="#dc2626"
-          step={0.01}
-          value={rate}
-          onValueChange={value => dispatch(setSpeechRateHandler(value))}
-        />
+        <View
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}>
+          <Slider
+            style={{width: '88%', height: 45}}
+            minimumValue={0.01}
+            maximumValue={2.0}
+            minimumTrackTintColor="#dc2626"
+            maximumTrackTintColor="#450a0a"
+            thumbTintColor="#dc2626"
+            step={0.01}
+            value={rate}
+            onValueChange={value => dispatch(setSpeechRateHandler(value))}
+          />
+          <TouchableOpacity
+            activeOpacity={0.4}
+            style={styles.checkBtn}
+            onPress={checkVoiceHandler}>
+            <Ionicons name="volume-high-outline" color="#000000" size={24} />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.sectionTitle}>Set Pitch Value</Text>
-        <Slider
-          style={{width: '100%', height: 45}}
-          minimumValue={0.5}
-          maximumValue={2.0}
-          minimumTrackTintColor="#dc2626"
-          maximumTrackTintColor="#450a0a"
-          thumbTintColor="#dc2626"
-          step={0.1}
-          value={pitch}
-          onValueChange={value => dispatch(setSpeechPitchHandler(value))}
-        />
-        <TouchableOpacity
-          activeOpacity={0.4}
-          style={styles.checkBtn}
-          onPress={checkVoiceHandler}>
-          <Text style={styles.checktxt}>Click To Check Voice</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.4}
-          style={styles.resetBtn}
-          onPress={resetHandler}>
-          <Text style={styles.resetTxt}>Reset Settings</Text>
-        </TouchableOpacity>
+        <View
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}>
+          <Slider
+            style={{width: '88%', height: 45}}
+            minimumValue={0.5}
+            maximumValue={2.0}
+            minimumTrackTintColor="#dc2626"
+            maximumTrackTintColor="#450a0a"
+            thumbTintColor="#dc2626"
+            step={0.1}
+            value={pitch}
+            onValueChange={value => dispatch(setSpeechPitchHandler(value))}
+          />
+          <TouchableOpacity
+            activeOpacity={0.4}
+            style={styles.checkBtn}
+            onPress={checkVoiceHandler}>
+            <Ionicons name="volume-high-outline" color="#000000" size={24} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.contactArea}>
           <Text
             style={styles.contactTxt}
@@ -208,8 +244,6 @@ const styles = StyleSheet.create({
   checkBtn: {
     marginTop: 8,
     borderRadius: 6,
-    borderColor: '#dc2626',
-    borderWidth: 1.4,
   },
   checktxt: {
     paddingVertical: 6,

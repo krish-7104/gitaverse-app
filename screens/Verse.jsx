@@ -72,26 +72,31 @@ const Verse = ({route, navigation}) => {
     Tts.setDefaultRate(0.45);
     Tts.setDefaultPitch(1);
     Tts.speak(
-      `Verse ${route.params.chap_no}.${count} Slok ${versed[count]?.slok.slice(
-        0,
-        versed[count]?.slok.length - 7,
-      )}
+      `Verse ${route.params.chap_no}.${count} \n\n Slok ${versed[
+        count
+      ]?.slok.slice(0, versed[count]?.slok.length - 7)}
+      \n\n
     ${langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
     ${versed[count]?.[translationData?.author]?.[translationData?.type].replace(
       `${route.params.chap_no}.${count}`,
       '',
     )}
+    \n\n
     ${langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
     ${
       versed[count]?.[commentaryData?.author]?.[commentaryData?.type].includes(
-        'No Commentary',
+        'Commentary',
       )
-        ? `No Commentary by ${
-            data['verse_commentary_sources'][commentaryData?.author].author
-          }`
+        ? !versed[count]?.[commentaryData?.author]?.[
+            commentaryData?.type
+          ].includes('No Commentary')
+          ? versed[count]?.[commentaryData?.author]?.[
+              commentaryData?.type
+            ].split('Commentary')[1]
+          : `No Commentary By ${[
+              versed[count]?.[commentaryData?.author].author,
+            ]}`
         : versed[count]?.[commentaryData?.author]?.[commentaryData?.type]
-            .split('Commentary')[1]
-            ?.replace(`${route.params.chap_no}.${count}`, '')
     }`,
     );
   };
@@ -105,6 +110,7 @@ const Verse = ({route, navigation}) => {
 
   useEffect(() => {
     const current = route?.params?.current;
+    console.log(route.params.versed);
     if (current && current >= 1 && current <= route.params.versed) {
       setCount(current);
       const start = Math.max(current - Math.floor(versesPerPage / 2), 1);

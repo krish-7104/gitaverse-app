@@ -24,6 +24,7 @@ const Bookmark = () => {
 
   useEffect(() => {
     getData();
+    getAllChapters();
   }, [bookmarkData]);
 
   const removeBookMarkHandler = async key => {
@@ -51,6 +52,19 @@ const Bookmark = () => {
     if (!bookmarkData) {
       setData(null);
       return;
+    }
+  };
+
+  const [chapters, setChapters] = useState();
+
+  const getAllChapters = async () => {
+    try {
+      const response = await fetch('http://bhagavadgitaapi.in/chapters');
+      const data = await response.json();
+      setChapters(data);
+    } catch (error) {
+      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+      console.error(error);
     }
 
     const requests = Object.keys(bookmarkData).map(key => {
@@ -104,7 +118,7 @@ const Bookmark = () => {
                 onPress={() =>
                   navigation.navigate('Verse', {
                     chap_no: item.chapter,
-                    versed: item.chapter.verses_count,
+                    versed: chapters[item.chapter - 1].verses_count,
                     name:
                       languageData === 'Hindi'
                         ? item.chapter.name

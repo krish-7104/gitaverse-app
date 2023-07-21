@@ -29,6 +29,21 @@ const SummaryView = ({navigation, route}) => {
           </Text>
         );
       },
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Settings');
+          }}
+          style={{marginRight: 10}}
+          activeOpacity={0.4}>
+          <Ionicons
+            name="settings-outline"
+            size={20}
+            color="black"
+            style={{padding: 2}}
+          />
+        </TouchableOpacity>
+      ),
     });
   }, [navigation]);
 
@@ -41,16 +56,16 @@ const SummaryView = ({navigation, route}) => {
     Tts.setDefaultRate(0.45);
     Tts.setDefaultPitch(1);
     Tts.speak(
-      `${languageData === 'Hindi' ? `शीर्षक` : `Title`} ${'    '} 
+      `${languageData === 'Hindi' ? `शीर्षक` : `Title`} "\n"
         ${
           languageData === 'Hindi'
             ? route.params.data.name
             : route.params.data.translation
-        } ${'    '} ${languageData === 'Hindi' ? 'अर्थ' : 'Meaning'} ${
+        } "\n"${languageData === 'Hindi' ? 'अर्थ' : 'Meaning'} ${
         languageData === 'Hindi'
           ? route.params.data.meaning.hi
           : route.params.data.meaning.en
-      } ${'    '}   ${languageData === 'Hindi' ? 'सारांश' : 'Summary'}
+      } "\n"  ${languageData === 'Hindi' ? 'सारांश' : 'Summary'}
       ${
         languageData === 'Hindi'
           ? route.params.data.summary.hi
