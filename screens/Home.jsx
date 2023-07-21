@@ -10,6 +10,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   setBookmarkHandler,
   setCommentaryhandler,
+  setLanguageHandler,
   setLastReadHandler,
   setSpeechPitchHandler,
   setSpeechRateHandler,
@@ -54,13 +55,29 @@ const Home = ({navigation}) => {
 
   const getSettingsData = async () => {
     try {
-      const data = await AsyncStorage.getItem('Settings');
-      if (data !== null) {
-        dispatch(setSpeechPitchHandler(JSON.parse(data)?.pitch));
-        dispatch(setSpeechRateHandler(JSON.parse(data)?.rate));
-        dispatch(setLastReadHandler(JSON.parse(data)?.lastRead));
-        dispatch(setTranslationhandler(JSON.parse(data)?.translation));
-        dispatch(setCommentaryhandler(JSON.parse(data)?.commentary));
+      const Translation = await AsyncStorage.getItem('Translation');
+      if (Translation !== null) {
+        dispatch(setTranslationhandler(JSON.parse(Translation)));
+      }
+      const Commentary = await AsyncStorage.getItem('Commentary');
+      if (Commentary !== null) {
+        dispatch(setCommentaryhandler(JSON.parse(Commentary)));
+      }
+      const Pitch = await AsyncStorage.getItem('Pitch');
+      if (Pitch !== null) {
+        dispatch(setSpeechPitchHandler(Pitch));
+      }
+      const Rate = await AsyncStorage.getItem('Rate');
+      if (Rate !== null) {
+        dispatch(setSpeechRateHandler(Rate));
+      }
+      const Language = await AsyncStorage.getItem('Language');
+      if (Language !== null) {
+        dispatch(setLanguageHandler(Language));
+      }
+      const LastRead = await AsyncStorage.getItem('Last Read');
+      if (LastRead !== null) {
+        dispatch(setLastReadHandler(JSON.parse(LastRead)));
       }
     } catch (error) {
       console.error('Error retrieving data: ', error);

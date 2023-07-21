@@ -23,6 +23,7 @@ import {
   setTranslationhandler,
 } from '../redux/actions';
 import Tts from 'react-native-tts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Setting = () => {
   const commentaryData = useSelector(state => state.commentary);
@@ -32,7 +33,6 @@ const Setting = () => {
   const pitch = useSelector(state => state.pitch);
   const rate = useSelector(state => state.rate);
   const dispatch = useDispatch();
-
   const checkVoiceHandler = () => {
     Tts.setDefaultLanguage('hi-IN');
     Tts.setDefaultRate(rate);
@@ -47,6 +47,7 @@ const Setting = () => {
     dispatch(setSpeechRateHandler(0.5));
     dispatch(setLanguageHandler('English'));
     try {
+      ``;
       await AsyncStorage.setItem(
         'Translation',
         JSON.stringify({author: 'adi', type: 'et'}),
@@ -55,8 +56,8 @@ const Setting = () => {
         'Commentary',
         JSON.stringify({author: 'siva', type: 'ec'}),
       );
-      await AsyncStorage.setItem('Pitch', 1.0);
-      await AsyncStorage.setItem('Rate', 0.5);
+      await AsyncStorage.setItem('Pitch', '1.0');
+      await AsyncStorage.setItem('Rate', '0.5');
       await AsyncStorage.setItem('Langauge', 'English');
     } catch (error) {
       console.error('Error saving data: ', error);
@@ -83,142 +84,166 @@ const Setting = () => {
     );
   };
 
+  const pitchHandler = async value => {
+    dispatch(setSpeechPitchHandler(value));
+    await AsyncStorage.setItem('Pitch', JSON.stringify(value));
+  };
+
+  const rateHandler = async value => {
+    dispatch(setSpeechRateHandler(value));
+    await AsyncStorage.setItem('Rate', JSON.stringify(value));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.sectionTitle}>Translation Source</Text>
-        <TouchableOpacity
-          style={styles.selectedBtn}
-          onPress={() =>
-            navigation.navigate('LangChange', {
-              type: 'verse_translation_sources',
-            })
-          }>
-          <Text style={styles.selectedTxt}>
-            {data.verse_translation_sources[translationData.author].language}{' '}
-            Translation By{' '}
-            {data.verse_translation_sources[translationData.author].author}
-          </Text>
-          <Ionicons name={'chevron-down-outline'} color="#00000080" size={20} />
-        </TouchableOpacity>
-        <Text style={styles.sectionTitle}>Commentary Source</Text>
-        <TouchableOpacity
-          style={styles.selectedBtn}
-          onPress={() =>
-            navigation.navigate('LangChange', {
-              type: 'verse_commentary_sources',
-            })
-          }>
-          <Text style={styles.selectedTxt}>
-            {data.verse_commentary_sources[commentaryData.author].language}{' '}
-            Commentary By{' '}
-            {data.verse_commentary_sources[commentaryData.author].author}
-          </Text>
-          <Ionicons name={'chevron-down-outline'} color="#00000080" size={20} />
-        </TouchableOpacity>
-        <Text style={styles.sectionTitle}>Select Language</Text>
-        <TouchableOpacity
-          style={styles.selectedBtn}
-          onPress={() =>
-            navigation.navigate('LangChange', {
-              type: 'language',
-            })
-          }>
-          <Text style={styles.selectedTxt}>{langauageData}</Text>
-          <Ionicons name={'chevron-down-outline'} color="#00000080" size={20} />
-        </TouchableOpacity>
-        <Text style={[styles.sectionTitle, {marginTop: 14}]}>
-          Set Speech Rate
-        </Text>
-        <View
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}>
-          <Slider
-            style={{width: '88%', height: 45}}
-            minimumValue={0.01}
-            maximumValue={2.0}
-            minimumTrackTintColor="#dc2626"
-            maximumTrackTintColor="#450a0a"
-            thumbTintColor="#dc2626"
-            step={0.01}
-            value={rate}
-            onValueChange={value => dispatch(setSpeechRateHandler(value))}
-          />
+      {translationData && commentaryData && (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}>
+          <Text style={styles.sectionTitle}>Translation Source</Text>
           <TouchableOpacity
-            activeOpacity={0.4}
-            style={styles.checkBtn}
-            onPress={checkVoiceHandler}>
-            <Ionicons name="volume-high-outline" color="#000000" size={24} />
+            style={styles.selectedBtn}
+            onPress={() =>
+              navigation.navigate('LangChange', {
+                type: 'verse_translation_sources',
+              })
+            }>
+            <Text style={styles.selectedTxt}>
+              {data.verse_translation_sources[translationData.author].language}{' '}
+              Translation By{' '}
+              {data.verse_translation_sources[translationData.author].author}
+            </Text>
+            <Ionicons
+              name={'chevron-down-outline'}
+              color="#00000080"
+              size={20}
+            />
           </TouchableOpacity>
-        </View>
-        <Text style={styles.sectionTitle}>Set Pitch Value</Text>
-        <View
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}>
-          <Slider
-            style={{width: '88%', height: 45}}
-            minimumValue={0.5}
-            maximumValue={2.0}
-            minimumTrackTintColor="#dc2626"
-            maximumTrackTintColor="#450a0a"
-            thumbTintColor="#dc2626"
-            step={0.1}
-            value={pitch}
-            onValueChange={value => dispatch(setSpeechPitchHandler(value))}
-          />
+          <Text style={styles.sectionTitle}>Commentary Source</Text>
           <TouchableOpacity
-            activeOpacity={0.4}
-            style={styles.checkBtn}
-            onPress={checkVoiceHandler}>
-            <Ionicons name="volume-high-outline" color="#000000" size={24} />
+            style={styles.selectedBtn}
+            onPress={() =>
+              navigation.navigate('LangChange', {
+                type: 'verse_commentary_sources',
+              })
+            }>
+            <Text style={styles.selectedTxt}>
+              {data.verse_commentary_sources[commentaryData.author].language}{' '}
+              Commentary By{' '}
+              {data.verse_commentary_sources[commentaryData.author].author}
+            </Text>
+            <Ionicons
+              name={'chevron-down-outline'}
+              color="#00000080"
+              size={20}
+            />
           </TouchableOpacity>
-        </View>
-        <View style={styles.contactArea}>
-          <Text
-            style={styles.contactTxt}
+          <Text style={styles.sectionTitle}>Select Language</Text>
+          <TouchableOpacity
+            style={styles.selectedBtn}
             onPress={() =>
-              Linking.openURL(
-                'https://krishjotaniya.netlify.app/contactme?ref=GitaVerse',
-              )
+              navigation.navigate('LangChange', {
+                type: 'language',
+              })
             }>
-            Give Feedback
+            <Text style={styles.selectedTxt}>{langauageData}</Text>
+            <Ionicons
+              name={'chevron-down-outline'}
+              color="#00000080"
+              size={20}
+            />
+          </TouchableOpacity>
+          <Text style={[styles.sectionTitle, {marginTop: 14}]}>
+            Set Speech Rate
           </Text>
-          <Text
-            style={styles.contactTxt}
-            onPress={() =>
-              Linking.openURL('https://krishjotaniya.netlify.app/')
-            }>
-            Developed By{' '}
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Slider
+              style={{width: '88%', height: 45}}
+              minimumValue={0.01}
+              maximumValue={2.0}
+              minimumTrackTintColor="#dc2626"
+              maximumTrackTintColor="#450a0a"
+              thumbTintColor="#dc2626"
+              step={0.01}
+              value={Number(rate)}
+              onValueChange={value => rateHandler(value)}
+            />
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.checkBtn}
+              onPress={checkVoiceHandler}>
+              <Ionicons name="volume-high-outline" color="#000000" size={24} />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.sectionTitle}>Set Pitch Value</Text>
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Slider
+              style={{width: '88%', height: 45}}
+              minimumValue={0.5}
+              maximumValue={2.0}
+              minimumTrackTintColor="#dc2626"
+              maximumTrackTintColor="#450a0a"
+              thumbTintColor="#dc2626"
+              step={0.1}
+              value={Number(pitch)}
+              onValueChange={value => pitchHandler(value)}
+            />
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.checkBtn}
+              onPress={checkVoiceHandler}>
+              <Ionicons name="volume-high-outline" color="#000000" size={24} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.contactArea}>
             <Text
-              style={{
-                color: '#dc2626',
-              }}>
-              Krish Jotaniya
+              style={styles.contactTxt}
+              onPress={() =>
+                Linking.openURL(
+                  'https://krishjotaniya.netlify.app/contactme?ref=GitaVerse',
+                )
+              }>
+              Give Feedback
             </Text>
-          </Text>
-          <Text
-            style={styles.contactTxt}
-            onPress={() => Linking.openURL('https://bhagavadgitaapi.in/')}>
-            Data By{' '}
             <Text
-              style={{
-                color: '#dc2626',
-              }}>
-              Bhagavad Gita API
+              style={styles.contactTxt}
+              onPress={() =>
+                Linking.openURL('https://krishjotaniya.netlify.app/')
+              }>
+              Developed By{' '}
+              <Text
+                style={{
+                  color: '#dc2626',
+                }}>
+                Krish Jotaniya
+              </Text>
             </Text>
-          </Text>
-        </View>
-      </ScrollView>
+            <Text
+              style={styles.contactTxt}
+              onPress={() => Linking.openURL('https://bhagavadgitaapi.in/')}>
+              Data By{' '}
+              <Text
+                style={{
+                  color: '#dc2626',
+                }}>
+                Bhagavad Gita API
+              </Text>
+            </Text>
+          </View>
+        </ScrollView>
+      )}
       <TouchableOpacity
         activeOpacity={0.4}
         style={styles.resetBtn}
