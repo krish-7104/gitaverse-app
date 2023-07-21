@@ -1,6 +1,6 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, Alert, Linking} from 'react-native';
 import React, {useEffect, useLayoutEffect} from 'react';
-
+import link from '../util';
 const Splash = ({navigation}) => {
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -9,10 +9,35 @@ const Splash = ({navigation}) => {
   }, [navigation]);
 
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('Home');
-    }, 1300);
+    checkUpdate();
   }, []);
+
+  const checkUpdate = async () => {
+    const data = await fetch(link);
+    const jsonData = await data.json();
+    if (jsonData.Update.Update && jsonData.Update.Version === 1) {
+      Alert.alert(
+        'Update Available',
+        'Update app to get more features and better experience',
+        [
+          {
+            text: 'Later',
+            onPress: () => navigation.replace('Home'),
+            style: 'cancel',
+          },
+          {
+            text: 'Update Now',
+            onPress: () => Linking.openURL(jsonData.Update.Link),
+          },
+        ],
+        {cancelable: false},
+      );
+    } else {
+      setTimeout(() => {
+        navigation.replace('Home');
+      }, 1200);
+    }
+  };
 
   return (
     <View style={styles.container}>

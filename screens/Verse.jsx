@@ -69,7 +69,6 @@ const Verse = ({route, navigation}) => {
 
   const startSpeechHandler = () => {
     setPlay(true);
-    setSpeechCount(0);
     Tts.setDefaultRate(0.45);
     Tts.setDefaultPitch(1);
     Tts.setDefaultLanguage('hi-IN');

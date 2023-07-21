@@ -214,7 +214,6 @@ const styles = StyleSheet.create({
   },
   lastReadCard: {
     backgroundColor: 'white',
-    width: '100%',
     marginTop: 16,
     borderBottomColor: '#18181870',
     borderBottomWidth: 1.5,

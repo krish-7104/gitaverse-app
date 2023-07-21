@@ -33,10 +33,11 @@ const Setting = () => {
   const pitch = useSelector(state => state.pitch);
   const rate = useSelector(state => state.rate);
   const dispatch = useDispatch();
+
   const checkVoiceHandler = () => {
     Tts.setDefaultLanguage('hi-IN');
-    Tts.setDefaultRate(rate);
-    Tts.setDefaultPitch(pitch);
+    Tts.setDefaultRate(Number(rate));
+    Tts.setDefaultPitch(Number(pitch));
     Tts.speak('श्रीमद्भगवदगीता');
   };
 
@@ -47,7 +48,6 @@ const Setting = () => {
     dispatch(setSpeechRateHandler(0.5));
     dispatch(setLanguageHandler('English'));
     try {
-      ``;
       await AsyncStorage.setItem(
         'Translation',
         JSON.stringify({author: 'adi', type: 'et'}),
