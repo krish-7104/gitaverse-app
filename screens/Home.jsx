@@ -6,9 +6,10 @@ import Setting from './Setting';
 import Bookmark from './Bookmark';
 import Summary from './Summary';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setBookmarkHandler} from '../redux/actions';
 const Home = ({navigation}) => {
+  const langauge = useSelector(state => state.langauge);
   const dispatch = useDispatch();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -21,6 +22,12 @@ const Home = ({navigation}) => {
     bookmark: 'Bookmarks',
     summary: 'Summary of All Chapters',
     settings: 'Settings',
+  };
+  const navTitleHindi = {
+    home: 'GitaVerse',
+    bookmark: 'बुकमार्क',
+    summary: 'सभी अध्यायों का सारांश',
+    settings: 'सेटिंग्स',
   };
   useEffect(() => {
     getData();
@@ -39,7 +46,9 @@ const Home = ({navigation}) => {
   return (
     <>
       <View style={styles.navDiv}>
-        <Text style={styles.navTitle}>{navTitle[active]}</Text>
+        <Text style={styles.navTitle}>
+          {langauge === 'Hindi' ? navTitleHindi[active] : navTitle[active]}
+        </Text>
       </View>
       {active === 'home' && <Chapter />}
       {active === 'bookmark' && <Bookmark />}

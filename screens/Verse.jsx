@@ -40,7 +40,9 @@ const Verse = ({route, navigation}) => {
               color: '#000',
               fontFamily: 'Poppins-SemiBold',
             }}>
-            Chapter {route.params.chap_no}
+            {langaugeData === 'Hindi'
+              ? `${route.params.chap_no} अध्याय`
+              : `Chapter ${route.params.chap_no}`}
           </Text>
         );
       },
@@ -60,7 +62,7 @@ const Verse = ({route, navigation}) => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, showList]);
+  }, [navigation, showList, langaugeData]);
 
   useEffect(() => {
     Tts.addEventListener('tts-finish', () => setPlay(false));
@@ -110,7 +112,6 @@ const Verse = ({route, navigation}) => {
 
   useEffect(() => {
     const current = route?.params?.current;
-    console.log(route.params.versed);
     if (current && current >= 1 && current <= route.params.versed) {
       setCount(current);
       const start = Math.max(current - Math.floor(versesPerPage / 2), 1);
@@ -269,13 +270,21 @@ const Verse = ({route, navigation}) => {
                 source={require('../assets/flower.png')}
                 style={styles.image}
               />
-              <Text style={styles.sectionTitle}>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  langaugeData === 'Hindi' && {fontSize: 18},
+                ]}>
                 {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
               </Text>
               <Text style={styles.sectionTxt}>
                 {versed[count]?.transliteration}
               </Text>
-              <Text style={styles.sectionTitle}>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  langaugeData === 'Hindi' && {fontSize: 18},
+                ]}>
                 {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
               </Text>
               <Text style={styles.sectionTxt}>
@@ -285,7 +294,11 @@ const Verse = ({route, navigation}) => {
                   ?.replace(`${route.params.chap_no}.${count}`, '')
                   .replaceAll('  ', ' ')}
               </Text>
-              <Text style={styles.sectionTitle}>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  langaugeData === 'Hindi' && {fontSize: 18},
+                ]}>
                 {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
               </Text>
               <Text style={styles.sectionTxt}>

@@ -25,7 +25,9 @@ const SummaryView = ({navigation, route}) => {
               color: '#000',
               fontFamily: 'Poppins-SemiBold',
             }}>
-            Summary of Chapter {route.params.data.chapter_number}
+            {languageData === 'Hindi'
+              ? `${route.params.data.chapter_number} अध्याय का सारांश`
+              : `Summary of Chapter ${route.params.data.chapter_number}`}
           </Text>
         );
       },
@@ -45,7 +47,7 @@ const SummaryView = ({navigation, route}) => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [navigation, languageData]);
 
   useEffect(() => {
     Tts.addEventListener('tts-finish', () => setPlay(false));
@@ -84,26 +86,62 @@ const SummaryView = ({navigation, route}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.sectionTitle}>
+        <Text
+          style={[
+            styles.sectionTitle,
+            languageData === 'Hindi' && {fontSize: 18},
+          ]}>
           {languageData === 'Hindi' ? `शीर्षक` : `Title`}
         </Text>
-        <Text style={styles.sectionTxt}>
+        <Text
+          style={[
+            styles.sectionTxt,
+            languageData === 'Hindi' && {
+              fontSize: 20,
+              letterSpacing: 2,
+              lineHeight: 34,
+            },
+          ]}>
           {languageData === 'Hindi'
             ? route.params.data.name
             : route.params.data.translation}
         </Text>
-        <Text style={styles.sectionTitle}>
+        <Text
+          style={[
+            styles.sectionTitle,
+            languageData === 'Hindi' && {fontSize: 18},
+          ]}>
           {languageData === 'Hindi' ? 'अर्थ' : 'Meaning'}
         </Text>
-        <Text style={styles.sectionTxt}>
+        <Text
+          style={[
+            styles.sectionTxt,
+            languageData === 'Hindi' && {
+              fontSize: 20,
+              letterSpacing: 2,
+              lineHeight: 34,
+            },
+          ]}>
           {languageData === 'Hindi'
             ? route.params.data.meaning.hi
             : route.params.data.meaning.en}
         </Text>
-        <Text style={styles.sectionTitle}>
+        <Text
+          style={[
+            styles.sectionTitle,
+            languageData === 'Hindi' && {fontSize: 18},
+          ]}>
           {languageData === 'Hindi' ? 'सारांश' : 'Summary'}
         </Text>
-        <Text style={styles.sectionTxt}>
+        <Text
+          style={[
+            styles.sectionTxt,
+            languageData === 'Hindi' && {
+              fontSize: 20,
+              letterSpacing: 2,
+              lineHeight: 34,
+            },
+          ]}>
           {languageData === 'Hindi'
             ? route.params.data.summary.hi
             : route.params.data.summary.en}
@@ -147,7 +185,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: 'black',
     fontSize: 14,
-    fontFamily: 'Inter-ExtraBold',
+    fontFamily: 'Inter-Bold',
     textTransform: 'uppercase',
     marginVertical: 14,
     letterSpacing: 1,
@@ -156,7 +194,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     fontSize: 16,
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Inter-Regular',
     lineHeight: 26,
     paddingHorizontal: 20,
     marginBottom: 10,
