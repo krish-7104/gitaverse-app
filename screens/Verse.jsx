@@ -64,13 +64,8 @@ const Verse = ({route, navigation}) => {
   }, [navigation, showList, langaugeData]);
 
   useEffect(() => {
-    Tts.addEventListener(
-      'tts-finish',
-      () => speechCount === 3 && setPlay(false),
-    );
+    Tts.addEventListener('tts-finish', () => setPlay(false));
   }, []);
-
-  const [speechCount, setSpeechCount] = useState(0);
 
   const startSpeechHandler = () => {
     setPlay(true);
@@ -78,33 +73,20 @@ const Verse = ({route, navigation}) => {
     Tts.setDefaultRate(0.45);
     Tts.setDefaultPitch(1);
     Tts.setDefaultLanguage('hi-IN');
-    Tts.speak(
-      `Verse ${route.params.chap_no}.${count} \n\n Slok ${versed[
-        count
-      ]?.slok.slice(0, versed[count]?.slok.length - 7)}`,
-    );
-    setSpeechCount(1);
-    Tts.setDefaultLanguage(
-      `${
-        [translationData?.author]?.[translationData?.type] === 'ht'
-          ? 'hi'
-          : 'en'
-      }-IN`,
-    );
-    Tts.speak(
-      ` ${langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
-      ${versed[count]?.[translationData?.author]?.[
-        translationData?.type
-      ].replace(`${route.params.chap_no}.${count}`, '')}`,
-    );
-    setSpeechCount(2);
-    Tts.setDefaultLanguage(
-      `${
-        [commentaryData?.author]?.[commentaryData?.type] === 'hc' ? 'hi' : 'en'
-      }-IN`,
-    );
-    Tts.speak(`${langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
-    ${
+
+    const verseText = `Verse ${route.params.chap_no}.${count}\n\nSlok ${versed[
+      count
+    ]?.slok.slice(0, versed[count]?.slok.length - 7)}`;
+
+    const translationText = `${
+      langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'
+    }\n${versed[count]?.[translationData?.author]?.[translationData?.type]
+      .replace(`${route.params.chap_no}.${count}`, '')
+      .replaceAll('  ', ' ')}`;
+
+    const commentaryText = `${
+      langaugeData === 'Hindi' ? 'टीका' : 'Commentary'
+    } ${
       versed[count]?.[commentaryData?.author]?.[commentaryData?.type].includes(
         'Commentary',
       )
@@ -118,8 +100,10 @@ const Verse = ({route, navigation}) => {
               versed[count]?.[commentaryData?.author].author,
             ]}`
         : versed[count]?.[commentaryData?.author]?.[commentaryData?.type]
-    }`);
-    setSpeechCount(3);
+    }`;
+
+    const fullText = `${verseText}\n\n${translationText}\n\n${commentaryText}`;
+    Tts.speak(fullText);
   };
 
   const stopSpeechHandler = () => {
@@ -233,6 +217,7 @@ const Verse = ({route, navigation}) => {
   };
 
   const selectVerseFromTable = i => {
+    stopSpeechHandler();
     const current = i;
     if (current && current >= 1 && current <= route.params.versed) {
       setCount(current);

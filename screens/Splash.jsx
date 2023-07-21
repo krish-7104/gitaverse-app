@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 
 const Splash = ({navigation}) => {
   useLayoutEffect(() => {
@@ -7,6 +7,12 @@ const Splash = ({navigation}) => {
       headerShown: false,
     });
   }, [navigation]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.replace('Home');
+    }, 1300);
+  }, []);
 
   return (
     <View style={styles.container}>
