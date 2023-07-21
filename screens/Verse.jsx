@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octiocon from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {setBookmarkHandler} from '../redux/actions';
+import {setBookmarkHandler, setLastReadHandler} from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
 const Verse = ({route, navigation}) => {
@@ -120,6 +120,10 @@ const Verse = ({route, navigation}) => {
   const versesPerPage = 4;
 
   useEffect(() => {
+    lastReadHandler(`${route?.params?.chap_no}.${count}`);
+  }, [count]);
+
+  useEffect(() => {
     const current = route?.params?.current;
     if (current && current >= 1 && current <= route.params.versed) {
       setCount(current);
@@ -147,17 +151,21 @@ const Verse = ({route, navigation}) => {
           ),
         );
       }
-
       const responses = await Promise.all(requests);
       const data = responses.reduce((acc, responseData, index) => {
         acc[start + index] = responseData;
         return acc;
       }, {});
-
       setVersed(prevData => ({...prevData, ...data}));
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const lastReadHandler = async value => {
+    console.log(value);
+    await AsyncStorage.setItem('Last Read', value);
+    dispatch(setLastReadHandler(value));
   };
 
   const handleIncrement = () => {

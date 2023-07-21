@@ -39,22 +39,14 @@ const Home = ({navigation}) => {
   };
   useEffect(() => {
     getData();
-    getSettingsData();
   }, []);
 
   const getData = async () => {
     try {
-      const data = await AsyncStorage.getItem('BookMark');
-      if (data !== null) {
-        dispatch(setBookmarkHandler(JSON.parse(data)));
+      const bookmark = await AsyncStorage.getItem('BookMark');
+      if (bookmark !== null) {
+        dispatch(setBookmarkHandler(JSON.parse(bookmark)));
       }
-    } catch (error) {
-      console.error('Error retrieving data: ', error);
-    }
-  };
-
-  const getSettingsData = async () => {
-    try {
       const Translation = await AsyncStorage.getItem('Translation');
       if (Translation !== null) {
         dispatch(setTranslationhandler(JSON.parse(Translation)));
