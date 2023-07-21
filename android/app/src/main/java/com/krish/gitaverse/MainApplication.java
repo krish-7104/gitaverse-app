@@ -1,4 +1,4 @@
-package com.gitaverse;
+package com.krish.gitaverse;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

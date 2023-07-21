@@ -13,6 +13,7 @@ import {
   setLanguageHandler,
   setTranslationhandler,
 } from '../redux/actions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const LangChange = ({navigation, route}) => {
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -36,11 +37,29 @@ const LangChange = ({navigation, route}) => {
     });
   }, [navigation]);
   const dispatch = useDispatch();
-  const changeHandler = (author, langaugeType, type) => {
+  const changeHandler = async (author, langaugeType, type) => {
     if (type === 'Translation') {
       dispatch(setTranslationhandler({author, type: langaugeType}));
+      try {
+        await AsyncStorage.setItem(
+          'Translation',
+          JSON.stringify({author, type: langaugeType}),
+        );
+        console.log('Data saved successfully.');
+      } catch (error) {
+        console.error('Error saving data: ', error);
+      }
     } else {
       dispatch(setCommentaryhandler({author, type: langaugeType}));
+      try {
+        await AsyncStorage.setItem(
+          'Commentary',
+          JSON.stringify({author, type: langaugeType}),
+        );
+        console.log('Data saved successfully.');
+      } catch (error) {
+        console.error('Error saving data: ', error);
+      }
     }
     navigation.goBack();
   };

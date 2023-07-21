@@ -53,10 +53,10 @@ const SummaryView = ({navigation, route}) => {
     Tts.addEventListener('tts-finish', () => setPlay(false));
   }, []);
   const startSpeechHandler = () => {
-    setPlay(!play);
-    Tts.setDefaultLanguage('hi-IN');
+    setPlay(true);
     Tts.setDefaultRate(0.45);
     Tts.setDefaultPitch(1);
+    Tts.setDefaultLanguage(`${languageData === 'Hindi' ? 'hi' : 'en'}-IN`);
     Tts.speak(
       `${languageData === 'Hindi' ? `शीर्षक` : `Title`} "\n"
         ${
@@ -78,7 +78,7 @@ const SummaryView = ({navigation, route}) => {
 
   const stopSpeechHandler = () => {
     Tts.stop();
-    setPlay(!play);
+    setPlay(false);
   };
 
   return (
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '96%',
     paddingVertical: 16,
-    paddingBottom: 60,
+    paddingBottom: 70,
   },
   sectionTitle: {
     color: 'black',

@@ -7,7 +7,14 @@ import Bookmark from './Bookmark';
 import Summary from './Summary';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {setBookmarkHandler} from '../redux/actions';
+import {
+  setBookmarkHandler,
+  setCommentaryhandler,
+  setLastReadHandler,
+  setSpeechPitchHandler,
+  setSpeechRateHandler,
+  setTranslationhandler,
+} from '../redux/actions';
 const Home = ({navigation}) => {
   const langauge = useSelector(state => state.langauge);
   const dispatch = useDispatch();
@@ -31,6 +38,7 @@ const Home = ({navigation}) => {
   };
   useEffect(() => {
     getData();
+    getSettingsData();
   }, []);
 
   const getData = async () => {
@@ -38,6 +46,21 @@ const Home = ({navigation}) => {
       const data = await AsyncStorage.getItem('BookMark');
       if (data !== null) {
         dispatch(setBookmarkHandler(JSON.parse(data)));
+      }
+    } catch (error) {
+      console.error('Error retrieving data: ', error);
+    }
+  };
+
+  const getSettingsData = async () => {
+    try {
+      const data = await AsyncStorage.getItem('Settings');
+      if (data !== null) {
+        dispatch(setSpeechPitchHandler(JSON.parse(data)?.pitch));
+        dispatch(setSpeechRateHandler(JSON.parse(data)?.rate));
+        dispatch(setLastReadHandler(JSON.parse(data)?.lastRead));
+        dispatch(setTranslationhandler(JSON.parse(data)?.translation));
+        dispatch(setCommentaryhandler(JSON.parse(data)?.commentary));
       }
     } catch (error) {
       console.error('Error retrieving data: ', error);

@@ -43,7 +43,7 @@ const Splash = ({navigation}) => {
         style={{height: 140, objectFit: 'contain'}}
       />
       <Text style={styles.mainTxt}>GitaVerse</Text>
-      <Text style={styles.subTxt}>The Ultimate Gyan Of Gita</Text>
+      <Text style={styles.subTxt}>The Ultimate Gyan Of Bhagavad Gita</Text>
     </View>
   );
 };

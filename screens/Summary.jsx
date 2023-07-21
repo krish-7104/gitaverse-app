@@ -20,8 +20,6 @@ const Summary = () => {
     getAllChapters();
   }, []);
 
-  const [count, setCount] = useState(0);
-
   const getAllChapters = async () => {
     try {
       const response = await fetch('http://bhagavadgitaapi.in/chapters');

@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
   ToastAndroid,
 } from 'react-native';
 import React from 'react';
@@ -16,6 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
 import {
   setCommentaryhandler,
+  setLanguageHandler,
   setSpeechPitchHandler,
   setSpeechRateHandler,
   setTranslationhandler,
@@ -38,18 +40,34 @@ const Setting = () => {
     Tts.speak('श्रीमद्भगवदगीता');
   };
 
-  const resetHandler = () => {
+  const resetHandler = async () => {
     dispatch(setTranslationhandler({author: 'adi', type: 'et'}));
     dispatch(setCommentaryhandler({author: 'siva', type: 'ec'}));
     dispatch(setSpeechPitchHandler(1.0));
     dispatch(setSpeechRateHandler(0.5));
+    dispatch(setLanguageHandler('English'));
+    try {
+      await AsyncStorage.setItem(
+        'Translation',
+        JSON.stringify({author: 'adi', type: 'et'}),
+      );
+      await AsyncStorage.setItem(
+        'Commentary',
+        JSON.stringify({author: 'siva', type: 'ec'}),
+      );
+      await AsyncStorage.setItem('Pitch', 1.0);
+      await AsyncStorage.setItem('Rate', 0.5);
+      await AsyncStorage.setItem('Langauge', 'English');
+    } catch (error) {
+      console.error('Error saving data: ', error);
+    }
     ToastAndroid.show('Reset Done!', ToastAndroid.CENTER);
   };
 
   const confirmAlert = () => {
     Alert.alert(
       'Are You Sure?',
-      'Reset settings will set all setting to default',
+      'Reset settings will set all changes to default',
       [
         {
           text: 'No',
@@ -201,6 +219,12 @@ const Setting = () => {
           </Text>
         </View>
       </ScrollView>
+      <TouchableOpacity
+        activeOpacity={0.4}
+        style={styles.resetBtn}
+        onPress={confirmAlert}>
+        <Ionicons name="refresh-outline" color="#fff" size={24} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -258,9 +282,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   resetBtn: {
-    marginTop: 30,
-    borderRadius: 6,
+    position: 'absolute',
+    padding: 16,
     backgroundColor: '#dc2626',
+    borderRadius: 50,
+    bottom: 30,
+    right: 35,
+    elevation: 10,
+    shadowColor: '#dc2626',
   },
   resetTxt: {
     paddingVertical: 8,
