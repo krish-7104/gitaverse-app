@@ -54,11 +54,20 @@ const Summary = () => {
                   });
                 }}>
                 <View style={styles.chapDataDiv}>
-                  <Text style={styles.chapDataTitle}>
+                  <Text
+                    style={[
+                      styles.chapDataTitle,
+                      languageData === 'Hindi' && {fontSize: 18},
+                    ]}>
                     {chap.chapter_number}.{' '}
                     {languageData === 'Hindi' ? chap.name : chap.translation}
                   </Text>
-                  <Text style={styles.chapDataSubtitle} numberOfLines={2}>
+                  <Text
+                    style={[
+                      styles.chapDataSubtitle,
+                      languageData === 'Hindi' && {fontSize: 16},
+                    ]}
+                    numberOfLines={2}>
                     {languageData === 'Hindi'
                       ? chap.summary.hi
                       : chap.summary.en}

@@ -40,7 +40,7 @@ const Verse = ({route, navigation}) => {
               fontFamily: 'Poppins-SemiBold',
             }}>
             {langaugeData === 'Hindi'
-              ? `${route.params.chap_no} अध्याय`
+              ? `अध्याय ${route.params.chap_no}`
               : `Chapter ${route.params.chap_no}`}
           </Text>
         );

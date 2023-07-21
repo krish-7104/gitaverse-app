@@ -15,10 +15,18 @@ import {useNavigation} from '@react-navigation/native';
 const Chapter = () => {
   const navigation = useNavigation();
   const [chapters, setChapters] = useState();
+  const [lastReadData, setLastReadData] = useState();
   const language = useSelector(state => state.language);
+  const lastRead = useSelector(state => state.lastread);
+  const translationData = useSelector(state => state.translation);
+
   useEffect(() => {
     getAllChapters();
   }, []);
+
+  useEffect(() => {
+    lastRead && getLastReadData();
+  }, [lastRead]);
 
   const getAllChapters = async () => {
     try {
@@ -30,6 +38,27 @@ const Chapter = () => {
       console.error(error);
     }
   };
+
+  const getLastReadData = async () => {
+    try {
+      const response = await fetch(
+        `http://bhagavadgitaapi.in/slok/${
+          lastRead.split('.')[0] + '/' + lastRead.split('.')[1]
+        }`,
+      );
+
+      if (!response.ok) {
+        throw new Error('Error fetching data from API');
+      }
+
+      const data = await response.json();
+      setLastReadData(data);
+    } catch (error) {
+      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+      console.error('Error fetching last read data: ', error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {!chapters && (
@@ -42,6 +71,48 @@ const Chapter = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{width: '94%'}}>
+          {lastReadData && (
+            <TouchableOpacity
+              activeOpacity={0.4}
+              style={styles.lastReadCard}
+              onPress={() =>
+                navigation.push('Verse', {
+                  chap_no: lastRead.split('.')[0],
+                  versed: chapters[lastRead.split('.')[0] - 1].verses_count,
+                  name:
+                    language === 'Hindi'
+                      ? chapters[lastRead.split('.')[0] - 1].name
+                      : chapters[lastRead.split('.')[0] - 1].translation,
+                  current: lastRead.split('.')[1],
+                })
+              }>
+              <View style={styles.lastreadTopDiv}>
+                <Text
+                  style={[
+                    styles.lastReadLabel,
+                    language === 'Hindi' && {fontSize: 16},
+                  ]}>
+                  {language === 'Hindi' ? 'अंतिम पढ़ा' : 'Last Read'}
+                </Text>
+                <Text
+                  style={[
+                    styles.lastReadVerse,
+                    language === 'Hindi' && {fontSize: 16},
+                  ]}>
+                  {language === 'Hindi' ? 'कविता' : 'Verse'} {lastRead}
+                </Text>
+              </View>
+              <Text style={styles.lastReadSlok} numberOfLines={4}>
+                {JSON.stringify(
+                  lastReadData?.[translationData?.author]?.[
+                    translationData?.type
+                  ],
+                  null,
+                  2,
+                )}
+              </Text>
+            </TouchableOpacity>
+          )}
           {chapters.map(chap => {
             return (
               <TouchableOpacity
@@ -59,10 +130,18 @@ const Chapter = () => {
                   <Text style={styles.chapCountTxt}>{chap.chapter_number}</Text>
                 </View>
                 <View style={styles.chapDataDiv}>
-                  <Text style={styles.chapDataTitle}>
+                  <Text
+                    style={[
+                      styles.chapDataTitle,
+                      language === 'Hindi' && {fontSize: 18},
+                    ]}>
                     {language === 'Hindi' ? chap.name : chap.translation}
                   </Text>
-                  <Text style={styles.chapDataSubtitle}>
+                  <Text
+                    style={[
+                      styles.chapDataSubtitle,
+                      language === 'Hindi' && {fontSize: 16},
+                    ]}>
                     {chap.verses_count}{' '}
                     {language === 'Hindi' ? 'छंद' : 'verses'}
                   </Text>
@@ -132,5 +211,38 @@ const styles = StyleSheet.create({
   rightIcon: {
     width: '10%',
     padding: 10,
+  },
+  lastReadCard: {
+    backgroundColor: 'white',
+    width: '100%',
+    marginTop: 16,
+    borderBottomColor: '#18181870',
+    borderBottomWidth: 1.5,
+    paddingBottom: 16,
+    paddingHorizontal: 6,
+  },
+  lastreadTopDiv: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  lastReadLabel: {
+    color: 'black',
+    fontFamily: 'Inter-Bold',
+    fontSize: 15,
+    color: '#dc2626',
+  },
+  lastReadVerse: {
+    color: 'black',
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 15,
+  },
+  lastReadSlok: {
+    marginTop: 10,
+    color: 'black',
+    fontFamily: 'Inter-Regular',
+    fontSize: 14,
+    lineHeight: 20,
   },
 });

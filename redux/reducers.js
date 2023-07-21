@@ -5,7 +5,7 @@ const initialState = {
     translation: { author: "adi", type: "et" },
     commentary: { author: "siva", type: "ec" },
     bookmark: {},
-    lastread: {},
+    lastread: "",
     pitch: 1.0,
     rate: 0.5,
 }

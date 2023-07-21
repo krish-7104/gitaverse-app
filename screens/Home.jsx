@@ -45,31 +45,64 @@ const Home = ({navigation}) => {
     try {
       const bookmark = await AsyncStorage.getItem('BookMark');
       if (bookmark !== null) {
-        dispatch(setBookmarkHandler(JSON.parse(bookmark)));
+        try {
+          dispatch(setBookmarkHandler(JSON.parse(bookmark)));
+        } catch (error) {
+          console.error('Error parsing bookmark data: ', error);
+        }
       }
+
       const Translation = await AsyncStorage.getItem('Translation');
       if (Translation !== null) {
-        dispatch(setTranslationhandler(JSON.parse(Translation)));
+        try {
+          dispatch(setTranslationhandler(JSON.parse(Translation)));
+        } catch (error) {
+          console.error('Error parsing translation data: ', error);
+        }
       }
+
       const Commentary = await AsyncStorage.getItem('Commentary');
       if (Commentary !== null) {
-        dispatch(setCommentaryhandler(JSON.parse(Commentary)));
+        try {
+          dispatch(setCommentaryhandler(JSON.parse(Commentary)));
+        } catch (error) {
+          console.error('Error parsing commentary data: ', error);
+        }
       }
+
       const Pitch = await AsyncStorage.getItem('Pitch');
       if (Pitch !== null) {
-        dispatch(setSpeechPitchHandler(Pitch));
+        try {
+          dispatch(setSpeechPitchHandler(Pitch));
+        } catch (error) {
+          console.error('Error parsing pitch data: ', error);
+        }
       }
+
       const Rate = await AsyncStorage.getItem('Rate');
       if (Rate !== null) {
-        dispatch(setSpeechRateHandler(Rate));
+        try {
+          dispatch(setSpeechRateHandler(Rate));
+        } catch (error) {
+          console.error('Error parsing rate data: ', error);
+        }
       }
       const Language = await AsyncStorage.getItem('Language');
       if (Language !== null) {
-        dispatch(setLanguageHandler(Language));
+        try {
+          dispatch(setLanguageHandler(Language));
+        } catch (error) {
+          console.error('Error parsing language data: ', error);
+        }
       }
+
       const LastRead = await AsyncStorage.getItem('Last Read');
       if (LastRead !== null) {
-        dispatch(setLastReadHandler(JSON.parse(LastRead)));
+        try {
+          dispatch(setLastReadHandler(LastRead));
+        } catch (error) {
+          console.error('Error parsing last read data: ', error);
+        }
       }
     } catch (error) {
       console.error('Error retrieving data: ', error);
