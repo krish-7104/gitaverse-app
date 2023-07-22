@@ -20,6 +20,8 @@ const Verse = ({route, navigation}) => {
   const commentaryData = useSelector(state => state.commentary);
   const bookmarkData = useSelector(state => state.bookmark);
   const langaugeData = useSelector(state => state.language);
+  const rateData = useSelector(state => state.rate);
+  const pitchData = useSelector(state => state.pitch);
   const dispatch = useDispatch();
   const [versed, setVersed] = useState({});
   const [count, setCount] = useState(1);
@@ -69,8 +71,8 @@ const Verse = ({route, navigation}) => {
 
   const startSpeechHandler = () => {
     setPlay(true);
-    Tts.setDefaultRate(0.45);
-    Tts.setDefaultPitch(1);
+    Tts.setDefaultRate(rateData);
+    Tts.setDefaultPitch(pitchData);
     Tts.setDefaultLanguage('hi-IN');
 
     const verseText = `Verse ${route.params.chap_no}.${count}\n\nSlok ${versed[
