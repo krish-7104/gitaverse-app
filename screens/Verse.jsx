@@ -304,11 +304,18 @@ const Verse = ({route, navigation}) => {
               <Text
                 style={[
                   styles.sectionTitle,
-                  langaugeData === 'Hindi' && {fontSize: 18},
+                  langaugeData === 'Hindi' && {fontSize: 16},
                 ]}>
                 {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
               </Text>
-              <Text style={styles.sectionTxt}>
+              <Text
+                style={[
+                  styles.sectionTxt,
+                  commentaryData?.type === 'hc' && {
+                    fontSize: 18,
+                    lineHeight: 30,
+                  },
+                ]}>
                 {versed[count]?.[translationData?.author]?.[
                   translationData?.type
                 ]
@@ -318,7 +325,7 @@ const Verse = ({route, navigation}) => {
               <Text
                 style={[
                   styles.sectionTitle,
-                  langaugeData === 'Hindi' && {fontSize: 18},
+                  langaugeData === 'Hindi' && {fontSize: 16},
                 ]}>
                 {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
               </Text>
