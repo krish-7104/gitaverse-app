@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useLayoutEffect} from 'react';
 import data from '../data.json';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   setCommentaryhandler,
   setLanguageHandler,
@@ -16,6 +16,7 @@ import {
 } from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const LangChange = ({navigation, route}) => {
+  const languageData = useSelector(state => state.language);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -23,14 +24,22 @@ const LangChange = ({navigation, route}) => {
         return (
           <Text
             style={{
-              fontSize: 18,
+              fontSize: languageData === 'Hindi' ? 20 : 18,
               marginTop: 6,
               marginLeft: -16,
               color: '#000',
               fontFamily: 'Inter-SemiBold',
             }}>
             {route.params.type === 'verse_commentary_sources'
-              ? 'Verse Commentary Source'
+              ? languageData === 'Hindi'
+                ? 'टिप्पणी स्रोत'
+                : 'Verse Commentary Source'
+              : route.params.type === 'language'
+              ? languageData === 'Hindi'
+                ? 'भाषा चुने'
+                : 'Select Language'
+              : languageData === 'Hindi'
+              ? 'अनुवाद स्रोत'
               : 'Verse Translation Source'}
           </Text>
         );
