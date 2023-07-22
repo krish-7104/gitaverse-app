@@ -27,7 +27,6 @@ const Summary = () => {
       setData(data);
     } catch (error) {
       ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
-      console.error(error);
     }
   };
 

@@ -42,7 +42,6 @@ const Bookmark = () => {
         return newData;
       });
       ToastAndroid.show('Bookmark Removed!', ToastAndroid.CENTER);
-      console.log('Data saved successfully.');
     } catch (error) {
       console.error('Error saving data: ', error);
     }
@@ -64,7 +63,6 @@ const Bookmark = () => {
       setChapters(data);
     } catch (error) {
       ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
-      console.error(error);
     }
 
     const requests = Object.keys(bookmarkData).map(key => {
@@ -88,7 +86,7 @@ const Bookmark = () => {
       }, {});
       setData(data);
     } catch (error) {
-      console.error(error);
+      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
     }
   };
 

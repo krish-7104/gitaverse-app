@@ -3,6 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
 } from 'react-native';
 import React, {useLayoutEffect} from 'react';
@@ -45,9 +46,8 @@ const LangChange = ({navigation, route}) => {
           'Translation',
           JSON.stringify({author, type: langaugeType}),
         );
-        console.log('Data saved successfully.');
       } catch (error) {
-        console.error('Error saving data: ', error);
+        ToastAndroid.show('Something Went Wrong!', ToastAndroid.BOTTOM);
       }
     } else {
       dispatch(setCommentaryhandler({author, type: langaugeType}));
@@ -56,9 +56,8 @@ const LangChange = ({navigation, route}) => {
           'Commentary',
           JSON.stringify({author, type: langaugeType}),
         );
-        console.log('Data saved successfully.');
       } catch (error) {
-        console.error('Error saving data: ', error);
+        ToastAndroid.show('Something Went Wrong!', ToastAndroid.BOTTOM);
       }
     }
     navigation.goBack();

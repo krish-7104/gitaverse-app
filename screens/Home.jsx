@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, ToastAndroid} from 'react-native';
 import React, {useLayoutEffect, useState, useEffect} from 'react';
 import BottomNav from '../components/BottomNav';
 import Chapter from './Chapter';
@@ -48,7 +48,7 @@ const Home = ({navigation}) => {
         try {
           dispatch(setBookmarkHandler(JSON.parse(bookmark)));
         } catch (error) {
-          console.error('Error parsing bookmark data: ', error);
+          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
       }
 
@@ -57,7 +57,7 @@ const Home = ({navigation}) => {
         try {
           dispatch(setTranslationhandler(JSON.parse(Translation)));
         } catch (error) {
-          console.error('Error parsing translation data: ', error);
+          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
       }
 
@@ -66,7 +66,7 @@ const Home = ({navigation}) => {
         try {
           dispatch(setCommentaryhandler(JSON.parse(Commentary)));
         } catch (error) {
-          console.error('Error parsing commentary data: ', error);
+          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
       }
 
@@ -75,7 +75,7 @@ const Home = ({navigation}) => {
         try {
           dispatch(setSpeechPitchHandler(Pitch));
         } catch (error) {
-          console.error('Error parsing pitch data: ', error);
+          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
       }
 
@@ -84,7 +84,7 @@ const Home = ({navigation}) => {
         try {
           dispatch(setSpeechRateHandler(Rate));
         } catch (error) {
-          console.error('Error parsing rate data: ', error);
+          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
       }
       const Language = await AsyncStorage.getItem('Language');
@@ -92,7 +92,7 @@ const Home = ({navigation}) => {
         try {
           dispatch(setLanguageHandler(Language));
         } catch (error) {
-          console.error('Error parsing language data: ', error);
+          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
       }
 
@@ -101,11 +101,11 @@ const Home = ({navigation}) => {
         try {
           dispatch(setLastReadHandler(LastRead));
         } catch (error) {
-          console.error('Error parsing last read data: ', error);
+          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
       }
     } catch (error) {
-      console.error('Error retrieving data: ', error);
+      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
     }
   };
   return (

@@ -191,9 +191,8 @@ const Verse = ({route, navigation}) => {
     dispatch(setBookmarkHandler(updatedBookmarkData));
     try {
       await AsyncStorage.setItem('BookMark', JSON.stringify(bookmarkData));
-      console.log('Data saved successfully.');
     } catch (error) {
-      console.error('Error saving data: ', error);
+      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
     }
   };
 
@@ -208,10 +207,18 @@ const Verse = ({route, navigation}) => {
       }),
     );
     try {
-      await AsyncStorage.setItem('BookMark', JSON.stringify(bookmarkData));
-      console.log('Data saved successfully.');
+      await AsyncStorage.setItem(
+        'BookMark',
+        JSON.stringify({
+          ...bookmarkData,
+          [route.params.chap_no + '.' + count]: {
+            slok: versed[count]?.slok,
+            title: versed[count]?.title,
+          },
+        }),
+      );
     } catch (error) {
-      console.error('Error saving data: ', error);
+      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
     }
   };
 

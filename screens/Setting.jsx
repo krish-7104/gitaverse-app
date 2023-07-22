@@ -60,7 +60,7 @@ const Setting = () => {
       await AsyncStorage.setItem('Rate', '0.5');
       await AsyncStorage.setItem('Langauge', 'English');
     } catch (error) {
-      console.error('Error saving data: ', error);
+      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
     }
     ToastAndroid.show('Reset Done!', ToastAndroid.CENTER);
   };
@@ -72,7 +72,6 @@ const Setting = () => {
       [
         {
           text: 'No',
-          onPress: () => console.log('No Pressed'),
           style: 'cancel',
         },
         {
