@@ -99,7 +99,9 @@ const Bookmark = () => {
       )}
 
       {data && Object.keys(data).length === 0 && (
-        <Text style={styles.noBookTxt}>No Bookmarks!</Text>
+        <Text style={styles.noBookTxt}>
+          {languageData === 'Hindi' ? 'कोई बुकमार्क नहीं' : 'No Bookmarks'}
+        </Text>
       )}
 
       {data && Object.keys(data).length !== 0 && (
@@ -126,9 +128,12 @@ const Bookmark = () => {
                 }>
                 <Text
                   numberOfLines={4}
-                  style={
-                    styles.bookmarkLabelTxt
-                  }>{`Verse ${item.chapter}.${item.verse}`}</Text>
+                  style={[
+                    styles.bookmarkLabelTxt,
+                    languageData === 'Hindi' && {fontSize: 17},
+                  ]}>{`${languageData === 'Hindi' ? 'स्लोक' : 'Verse'} ${
+                  item.chapter
+                }.${item.verse}`}</Text>
                 <Text style={styles.bookmarkTxt}>{item.slok}</Text>
                 <TouchableOpacity
                   style={styles.bottomBtnDiv}

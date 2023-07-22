@@ -17,7 +17,7 @@ import {
   setTranslationhandler,
 } from '../redux/actions';
 const Home = ({navigation}) => {
-  const langauge = useSelector(state => state.langauge);
+  const language = useSelector(state => state.language);
   const dispatch = useDispatch();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -32,7 +32,7 @@ const Home = ({navigation}) => {
     settings: 'Settings',
   };
   const navTitleHindi = {
-    home: 'GitaVerse',
+    home: 'गीतावर्स',
     bookmark: 'बुकमार्क',
     summary: 'सभी अध्यायों का सारांश',
     settings: 'सेटिंग्स',
@@ -111,8 +111,11 @@ const Home = ({navigation}) => {
   return (
     <>
       <View style={styles.navDiv}>
-        <Text style={styles.navTitle}>
-          {langauge === 'Hindi' ? navTitleHindi[active] : navTitle[active]}
+        <Text
+          style={[styles.navTitle, language === 'Hindi' && {fontSize: 22}]}
+          key={`${active}_${language}`}
+          s>
+          {language === 'Hindi' ? navTitleHindi[active] : navTitle[active]}
         </Text>
       </View>
       {active === 'home' && <Chapter />}

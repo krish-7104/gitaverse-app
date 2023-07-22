@@ -99,7 +99,13 @@ const Setting = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContainer}>
-          <Text style={styles.sectionTitle}>Translation Source</Text>
+          <Text
+            style={[
+              styles.sectionTitle,
+              langauageData === 'Hindi' && {fontSize: 17},
+            ]}>
+            {langauageData === 'Hindi' ? 'अनुवाद स्रोत' : 'Translation Source'}
+          </Text>
           <TouchableOpacity
             style={styles.selectedBtn}
             onPress={() =>
@@ -118,7 +124,13 @@ const Setting = () => {
               size={20}
             />
           </TouchableOpacity>
-          <Text style={styles.sectionTitle}>Commentary Source</Text>
+          <Text
+            style={[
+              styles.sectionTitle,
+              langauageData === 'Hindi' && {fontSize: 17},
+            ]}>
+            {langauageData === 'Hindi' ? 'टिप्पणी स्रोत' : 'Commentary Source'}
+          </Text>
           <TouchableOpacity
             style={styles.selectedBtn}
             onPress={() =>
@@ -137,7 +149,13 @@ const Setting = () => {
               size={20}
             />
           </TouchableOpacity>
-          <Text style={styles.sectionTitle}>Select Language</Text>
+          <Text
+            style={[
+              styles.sectionTitle,
+              langauageData === 'Hindi' && {fontSize: 17},
+            ]}>
+            {langauageData === 'Hindi' ? 'भाषा चुने' : 'Select Language'}
+          </Text>
           <TouchableOpacity
             style={styles.selectedBtn}
             onPress={() =>
@@ -152,8 +170,15 @@ const Setting = () => {
               size={20}
             />
           </TouchableOpacity>
-          <Text style={[styles.sectionTitle, {marginTop: 14}]}>
-            Set Speech Rate
+          <Text
+            style={[
+              styles.sectionTitle,
+              langauageData === 'Hindi' && {fontSize: 17},
+              {marginTop: 14},
+            ]}>
+            {langauageData === 'Hindi'
+              ? 'भाषण की गति निर्धारित करें'
+              : 'Set Speech Speed'}
           </Text>
           <View
             style={{
@@ -180,7 +205,15 @@ const Setting = () => {
               <Ionicons name="volume-high-outline" color="#000000" size={24} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.sectionTitle}>Set Pitch Value</Text>
+          <Text
+            style={[
+              styles.sectionTitle,
+              langauageData === 'Hindi' && {fontSize: 17},
+            ]}>
+            {langauageData === 'Hindi'
+              ? 'भाषण पिच सेट करें'
+              : 'Set Speech Pitch'}
+          </Text>
           <View
             style={{
               display: 'flex',

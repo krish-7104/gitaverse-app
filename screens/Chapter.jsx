@@ -98,7 +98,7 @@ const Chapter = () => {
                     styles.lastReadVerse,
                     language === 'Hindi' && {fontSize: 16},
                   ]}>
-                  {language === 'Hindi' ? 'कविता' : 'Verse'} {lastRead}
+                  {language === 'Hindi' ? 'स्लोक' : 'Verse'} {lastRead}
                 </Text>
               </View>
               <Text style={styles.lastReadSlok} numberOfLines={4}>
