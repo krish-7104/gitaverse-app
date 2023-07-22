@@ -73,7 +73,7 @@ const Home = ({navigation}) => {
       const Pitch = await AsyncStorage.getItem('Pitch');
       if (Pitch !== null) {
         try {
-          dispatch(setSpeechPitchHandler(Pitch));
+          dispatch(setSpeechPitchHandler(Number(Pitch)));
         } catch (error) {
           ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
@@ -82,7 +82,7 @@ const Home = ({navigation}) => {
       const Rate = await AsyncStorage.getItem('Rate');
       if (Rate !== null) {
         try {
-          dispatch(setSpeechRateHandler(Rate));
+          dispatch(setSpeechRateHandler(Number(Rate)));
         } catch (error) {
           ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }

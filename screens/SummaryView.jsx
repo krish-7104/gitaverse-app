@@ -12,6 +12,8 @@ import Tts from 'react-native-tts';
 const SummaryView = ({navigation, route}) => {
   const languageData = useSelector(state => state.language);
   const [play, setPlay] = useState(false);
+  const rateData = useSelector(state => state.rate);
+  const pitchData = useSelector(state => state.pitch);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -54,8 +56,8 @@ const SummaryView = ({navigation, route}) => {
   }, []);
   const startSpeechHandler = () => {
     setPlay(true);
-    Tts.setDefaultRate(0.45);
-    Tts.setDefaultPitch(1);
+    Tts.setDefaultRate(rateData);
+    Tts.setDefaultPitch(pitchData);
     Tts.setDefaultLanguage(`${languageData === 'Hindi' ? 'hi' : 'en'}-IN`);
     Tts.speak(
       `${languageData === 'Hindi' ? `शीर्षक` : `Title`} "\n"
