@@ -145,12 +145,12 @@ const styles = StyleSheet.create({
   chapDataTitle: {
     color: 'black',
     fontFamily: 'Inter-SemiBold',
-    fontSize: 17,
+    fontSize: 16,
   },
   chapDataSubtitle: {
     color: '#00000090',
     fontFamily: 'Inter-Regular',
-    fontSize: 15,
+    fontSize: 14,
     marginTop: 6,
   },
 });

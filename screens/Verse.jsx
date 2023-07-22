@@ -320,7 +320,14 @@ const Verse = ({route, navigation}) => {
                 ]}>
                 {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
               </Text>
-              <Text style={styles.sectionTxt}>
+              <Text
+                style={[
+                  styles.sectionTxt,
+                  commentaryData?.type === 'hc' && {
+                    fontSize: 18,
+                    lineHeight: 30,
+                  },
+                ]}>
                 {versed[count]?.[commentaryData?.author]?.[
                   commentaryData?.type
                 ].includes('Commentary')

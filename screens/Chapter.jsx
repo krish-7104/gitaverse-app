@@ -91,7 +91,7 @@ const Chapter = () => {
                     styles.lastReadLabel,
                     language === 'Hindi' && {fontSize: 16},
                   ]}>
-                  {language === 'Hindi' ? 'अंतिम पढ़ा' : 'Last Read'}
+                  {language === 'Hindi' ? 'अंतिम वाचन' : 'Last Read'}
                 </Text>
                 <Text
                   style={[
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: 'black',
     fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 22,
   },
 });

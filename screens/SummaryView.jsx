@@ -137,7 +137,7 @@ const SummaryView = ({navigation, route}) => {
           style={[
             styles.sectionTxt,
             languageData === 'Hindi' && {
-              fontSize: 20,
+              fontSize: 19,
               letterSpacing: 2,
               lineHeight: 34,
             },
