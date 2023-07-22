@@ -76,13 +76,13 @@ const Chapter = () => {
               style={styles.lastReadCard}
               onPress={() =>
                 navigation.push('Verse', {
-                  chap_no: lastRead.split('.')[0],
+                  chap_no: Number(lastRead.split('.')[0]),
                   versed: chapters[lastRead.split('.')[0] - 1].verses_count,
                   name:
                     language === 'Hindi'
                       ? chapters[lastRead.split('.')[0] - 1].name
                       : chapters[lastRead.split('.')[0] - 1].translation,
-                  current: lastRead.split('.')[1],
+                  current: Number(lastRead.split('.')[1]),
                 })
               }>
               <View style={styles.lastreadTopDiv}>
