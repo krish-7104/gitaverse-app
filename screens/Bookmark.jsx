@@ -114,7 +114,7 @@ const Bookmark = () => {
                 style={styles.bookmarkCard}
                 activeOpacity={0.4}
                 onPress={() =>
-                  navigation.navigate('Verse', {
+                  navigation.push('Verse', {
                     chap_no: item.chapter,
                     versed: chapters[item.chapter - 1].verses_count,
                     name:
@@ -125,6 +125,7 @@ const Bookmark = () => {
                   })
                 }>
                 <Text
+                  numberOfLines={4}
                   style={
                     styles.bookmarkLabelTxt
                   }>{`Verse ${item.chapter}.${item.verse}`}</Text>

@@ -106,8 +106,6 @@ const Chapter = () => {
                   lastReadData?.[translationData?.author]?.[
                     translationData?.type
                   ],
-                  null,
-                  2,
                 )}
               </Text>
             </TouchableOpacity>
