@@ -29,8 +29,7 @@ Key Features:
 
 ## 🚀 Download App
 
-https://drive.google.com/file/d/1GOLurfkIjw_yDrcjkzNSiU3h66JN6gPZ/view
-
+https://drive.google.com/file/d/1wvxHAgPX0B-lWQlQ6TJp4nhdhVcPh2ZN/view?usp=drive_link
 
 
 ## 🚧 Tech Stack
