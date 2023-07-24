@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {setBookmarkHandler, setLastReadHandler} from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
+import apiKey from '../apiKey';
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
   const commentaryData = useSelector(state => state.commentary);
@@ -66,45 +67,15 @@ const Verse = ({route, navigation}) => {
   }, [navigation, showList, langaugeData]);
 
   useEffect(() => {
+    Tts.setDefaultRate(rateData);
+    Tts.setDefaultPitch(pitchData);
+    Tts.setDefaultLanguage('hi-IN');
     Tts.addEventListener('tts-finish', () => setPlay(false));
   }, []);
 
   const startSpeechHandler = () => {
     setPlay(true);
-    Tts.setDefaultRate(rateData);
-    Tts.setDefaultPitch(pitchData);
-    Tts.setDefaultLanguage('hi-IN');
-
-    const verseText = `Verse ${route.params.chap_no}.${count}\n\nSlok ${versed[
-      count
-    ]?.slok.slice(0, versed[count]?.slok.length - 7)}`;
-
-    const translationText = `${
-      langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'
-    }\n${versed[count]?.[translationData?.author]?.[translationData?.type]
-      .replace(`${route.params.chap_no}.${count}`, '')
-      .replaceAll('  ', ' ')}`;
-
-    const commentaryText = `${
-      langaugeData === 'Hindi' ? 'टीका' : 'Commentary'
-    } ${
-      versed[count]?.[commentaryData?.author]?.[commentaryData?.type].includes(
-        'Commentary',
-      )
-        ? !versed[count]?.[commentaryData?.author]?.[
-            commentaryData?.type
-          ].includes('No Commentary')
-          ? versed[count]?.[commentaryData?.author]?.[
-              commentaryData?.type
-            ].split('Commentary')[1]
-          : `No Commentary By ${[
-              versed[count]?.[commentaryData?.author].author,
-            ]}`
-        : versed[count]?.[commentaryData?.author]?.[commentaryData?.type]
-    }`;
-
-    const fullText = `${verseText}\n\n${translationText}\n\n${commentaryText}`;
-    Tts.speak(fullText);
+    Tts.speak(versed[count].commentaries[0].description);
   };
 
   const stopSpeechHandler = () => {
@@ -131,19 +102,24 @@ const Verse = ({route, navigation}) => {
   }, []);
 
   const fetchData = async (start, end) => {
+    const apiKey = apiKey;
+    const urlBase = `https://bhagavad-gita3.p.rapidapi.com/v2/chapters/${route.params.chap_no}/verses/`;
+    const headers = {
+      'X-RapidAPI-Key': apiKey,
+      'X-RapidAPI-Host': 'bhagavad-gita3.p.rapidapi.com',
+    };
+
     try {
-      const {chap_no} = route.params;
       const requests = [];
       for (let i = start; i <= end; i++) {
+        const url = `${urlBase}${i}/`;
         requests.push(
-          fetch(`http://bhagavadgitaapi.in/slok/${chap_no}/${i}`).then(
-            response => {
-              if (!response.ok) {
-                throw new Error('Network response was not ok');
-              }
-              return response.json();
-            },
-          ),
+          fetch(url, {headers}).then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          }),
         );
       }
       const responses = await Promise.all(requests);
@@ -304,23 +280,22 @@ const Verse = ({route, navigation}) => {
               <Text
                 style={[
                   styles.sectionTitle,
-                  langaugeData === 'Hindi' && {fontSize: 16},
+                  langaugeData === 'Hindi' && {fontSize: 18},
                 ]}>
-                {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
+                {langaugeData === 'Hindi' ? 'शब्दार्थ' : 'Word Meaning'}
+              </Text>
+              <Text style={styles.sectionTxt}>
+                {versed[count]?.word_meanings.replaceAll('—', ': ')}
               </Text>
               <Text
                 style={[
-                  styles.sectionTxt,
-                  commentaryData?.type === 'hc' && {
-                    fontSize: 18,
-                    lineHeight: 30,
-                  },
+                  styles.sectionTitle,
+                  langaugeData === 'Hindi' && {fontSize: 18},
                 ]}>
-                {versed[count]?.[translationData?.author]?.[
-                  translationData?.type
-                ]
-                  ?.replace(`${route.params.chap_no}.${count}`, '')
-                  .replaceAll('  ', ' ')}
+                {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
+              </Text>
+              <Text style={[styles.sectionTxt]}>
+                {versed[count].translations[0].description}
               </Text>
               <Text
                 style={[
@@ -329,33 +304,8 @@ const Verse = ({route, navigation}) => {
                 ]}>
                 {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
               </Text>
-              <Text
-                style={[
-                  styles.sectionTxt,
-                  commentaryData?.type === 'hc' && {
-                    fontSize: 18,
-                    lineHeight: 30,
-                  },
-                ]}>
-                {versed[count]?.[commentaryData?.author]?.[
-                  commentaryData?.type
-                ].includes('Commentary')
-                  ? !versed[count]?.[commentaryData?.author]?.[
-                      commentaryData?.type
-                    ].includes('No Commentary')
-                    ? versed[count]?.[commentaryData?.author]?.[
-                        commentaryData?.type
-                      ].split('Commentary')[0] +
-                      '\n\n' +
-                      versed[count]?.[commentaryData?.author]?.[
-                        commentaryData?.type
-                      ].split('Commentary')[1]
-                    : `No Commentary By ${[
-                        versed[count]?.[commentaryData?.author].author,
-                      ]}`
-                  : versed[count]?.[commentaryData?.author]?.[
-                      commentaryData?.type
-                    ]}
+              <Text style={[styles.sectionTxt]}>
+                {versed[count].commentaries[0].description}
               </Text>
             </View>
           </ScrollView>

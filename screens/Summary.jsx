@@ -11,7 +11,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-
+import apiKey from '../apiKey';
 const Summary = () => {
   const [data, setData] = useState();
   const languageData = useSelector(state => state.language);
@@ -21,15 +21,23 @@ const Summary = () => {
   }, []);
 
   const getAllChapters = async () => {
+    const url = 'https://bhagavad-gita3.p.rapidapi.com/v2/chapters/?limit=18';
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': apiKey,
+        'X-RapidAPI-Host': 'bhagavad-gita3.p.rapidapi.com',
+      },
+    };
     try {
-      const response = await fetch('http://bhagavadgitaapi.in/chapters');
-      const data = await response.json();
-      setData(data);
+      const response = await fetch(url, options);
+      const result = await response.json();
+      setData(result);
     } catch (error) {
       ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+      console.error(error);
     }
   };
-
   return (
     <SafeAreaView style={styles.container}>
       {!data && (
@@ -59,7 +67,9 @@ const Summary = () => {
                       languageData === 'Hindi' && {fontSize: 18},
                     ]}>
                     {chap.chapter_number}.{' '}
-                    {languageData === 'Hindi' ? chap.name : chap.translation}
+                    {languageData === 'Hindi'
+                      ? chap.name
+                      : chap.name_translated}
                   </Text>
                   <Text
                     style={[
@@ -68,8 +78,8 @@ const Summary = () => {
                     ]}
                     numberOfLines={2}>
                     {languageData === 'Hindi'
-                      ? chap.summary.hi
-                      : chap.summary.en}
+                      ? chap.chapter_summary_hindi
+                      : chap.chapter_summary_hindi}
                   </Text>
                 </View>
               </TouchableOpacity>

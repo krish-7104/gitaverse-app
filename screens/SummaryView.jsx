@@ -60,20 +60,14 @@ const SummaryView = ({navigation, route}) => {
     Tts.setDefaultPitch(pitchData);
     Tts.setDefaultLanguage(`${languageData === 'Hindi' ? 'hi' : 'en'}-IN`);
     Tts.speak(
-      `${languageData === 'Hindi' ? `शीर्षक` : `Title`} "\n"
-        ${
-          languageData === 'Hindi'
-            ? route.params.data.name
-            : route.params.data.translation
-        } "\n"${languageData === 'Hindi' ? 'अर्थ' : 'Meaning'} ${
+      `${
         languageData === 'Hindi'
-          ? route.params.data.meaning.hi
-          : route.params.data.meaning.en
-      } "\n"  ${languageData === 'Hindi' ? 'सारांश' : 'Summary'}
-      ${
+          ? route.params.data.name_translated
+          : route.params.data.name
+      }${
         languageData === 'Hindi'
-          ? route.params.data.summary.hi
-          : route.params.data.summary.en
+          ? route.params.data.chapter_summary_hindi
+          : route.params.data.chapter_summary
       } `,
     );
   };
@@ -106,9 +100,9 @@ const SummaryView = ({navigation, route}) => {
           ]}>
           {languageData === 'Hindi'
             ? route.params.data.name
-            : route.params.data.translation}
+            : route.params.data.name_translated}
         </Text>
-        <Text
+        {/* <Text
           style={[
             styles.sectionTitle,
             languageData === 'Hindi' && {fontSize: 18},
@@ -125,9 +119,9 @@ const SummaryView = ({navigation, route}) => {
             },
           ]}>
           {languageData === 'Hindi'
-            ? route.params.data.meaning.hi
-            : route.params.data.meaning.en}
-        </Text>
+            ? route.params.data.chapter_summary_hindi
+            : route.params.data.chapter_summary}
+        </Text> */}
         <Text
           style={[
             styles.sectionTitle,
@@ -145,8 +139,8 @@ const SummaryView = ({navigation, route}) => {
             },
           ]}>
           {languageData === 'Hindi'
-            ? route.params.data.summary.hi
-            : route.params.data.summary.en}
+            ? route.params.data.chapter_summary_hindi
+            : route.params.data.chapter_summary}
         </Text>
       </ScrollView>
       {play && (

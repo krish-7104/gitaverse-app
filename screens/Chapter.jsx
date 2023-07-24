@@ -12,6 +12,7 @@ import React, {useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import apiKey from '../apiKey';
 const Chapter = () => {
   const navigation = useNavigation();
   const [chapters, setChapters] = useState();
@@ -29,10 +30,18 @@ const Chapter = () => {
   }, [lastRead]);
 
   const getAllChapters = async () => {
+    const url = 'https://bhagavad-gita3.p.rapidapi.com/v2/chapters/?limit=18';
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': apiKey,
+        'X-RapidAPI-Host': 'bhagavad-gita3.p.rapidapi.com',
+      },
+    };
     try {
-      const response = await fetch('http://bhagavadgitaapi.in/chapters');
-      const data = await response.json();
-      setChapters(data);
+      const response = await fetch(url, options);
+      const result = await response.json();
+      setChapters(result);
     } catch (error) {
       ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
       console.error(error);
@@ -120,7 +129,8 @@ const Chapter = () => {
                   navigation.push('Verse', {
                     chap_no: chap.chapter_number,
                     versed: chap.verses_count,
-                    name: language === 'Hindi' ? chap.name : chap.translation,
+                    name:
+                      language === 'Hindi' ? chap.name : chap.name_translated,
                   })
                 }>
                 <View style={styles.chapCountDiv}>
@@ -132,7 +142,7 @@ const Chapter = () => {
                       styles.chapDataTitle,
                       language === 'Hindi' && {fontSize: 18},
                     ]}>
-                    {language === 'Hindi' ? chap.name : chap.translation}
+                    {language === 'Hindi' ? chap.name : chap.name_translated}
                   </Text>
                   <Text
                     style={[
@@ -140,7 +150,7 @@ const Chapter = () => {
                       language === 'Hindi' && {fontSize: 16},
                     ]}>
                     {chap.verses_count}{' '}
-                    {language === 'Hindi' ? 'छंद' : 'verses'}
+                    {language === 'Hindi' ? 'स्लोक' : 'verses'}
                   </Text>
                 </View>
                 <View style={styles.rightIcon}>
