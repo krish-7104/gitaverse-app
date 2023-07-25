@@ -50,7 +50,6 @@ const Splash = ({navigation}) => {
         source={require('../assets/logo.png')}
         style={{height: 140, objectFit: 'contain'}}
       />
-      <Text style={styles.mainTxt}>GitaVerse</Text>
       <Modal animationType="slide" transparent={true} visible={isModalVisible}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -80,11 +79,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
-  },
-  mainTxt: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 40,
-    color: '#dc2626',
   },
   modalContainer: {
     flex: 1,

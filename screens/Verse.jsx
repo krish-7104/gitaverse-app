@@ -17,7 +17,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
 import apiKey from '../apiKey';
 import data from '../data.json';
-import {useIsFocused} from '@react-navigation/native';
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
   const commentaryData = useSelector(state => state.commentary);
@@ -82,17 +81,14 @@ const Verse = ({route, navigation}) => {
       .trim()
       .replaceAll(`।।`, '')
       .replace(`${route.params.chap_no}.${count}`, '');
-    let translation = versed[count].translations[
-      data.Translation.findIndex(item => item.id === translationData.id)
-    ].description
-      .trim()
+    let translation = versed[count].translations
+      .find(item => item.author_name === translationData.author)
+      .description.trim()
       .replaceAll(`।।`, '')
-      .replace(`${route.params.chap_no}.${count}`, '')
-      .replaceAll(':', '');
-    let commentary = versed[count].commentaries[
-      data.Commentary.findIndex(item => item.id === commentaryData.id)
-    ].description
-      .trim()
+      .replace(`${route.params.chap_no}.${count}`, '');
+    let commentary = versed[count].commentaries
+      .find(item => item.author_name === commentaryData.author)
+      .description.trim()
       .replaceAll(`।।`, '')
       .replace(`${route.params.chap_no}.${count}`, '')
       .replaceAll(':', '');
@@ -243,6 +239,21 @@ const Verse = ({route, navigation}) => {
     setShowList(false);
   };
 
+  const ReturnDescriptionHandler = () => {
+    versed[count].translations.forEach((element, index) => {
+      if (element.id === translationData.id) {
+        return (
+          <Text>
+            {versed[count].translations[index].description
+              .trim()
+              .replaceAll(`।।`, '')
+              .replace(`${route.params.chap_no}.${count}`, '')}
+          </Text>
+        );
+      }
+    });
+  };
+
   const VerseTableTxt = () => {
     let arr = [];
     for (let i = 1; i <= route.params.versed; i++) {
@@ -297,20 +308,6 @@ const Verse = ({route, navigation}) => {
                 styles.sectionTitle,
                 langaugeData === 'Hindi' && {fontSize: 17},
               ]}>
-              {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
-            </Text>
-            <Text
-              style={[
-                styles.sectionTxt,
-                langaugeData === 'Hindi' && {fontSize: 18, lineHeight: 32},
-              ]}>
-              {versed[count]?.transliteration.trim()}
-            </Text>
-            <Text
-              style={[
-                styles.sectionTitle,
-                langaugeData === 'Hindi' && {fontSize: 17},
-              ]}>
               {langaugeData === 'Hindi' ? 'शब्दार्थ' : 'Word Meaning'}
             </Text>
             <Text style={styles.sectionTxt}>
@@ -326,14 +323,15 @@ const Verse = ({route, navigation}) => {
             <Text
               style={[
                 styles.sectionTxt,
-                langaugeData === 'Hindi' && {fontSize: 18, lineHeight: 32},
+                (langaugeData === 'Hindi' ||
+                  translationData.type === 'Hindi') && {
+                  fontSize: 18,
+                  lineHeight: 32,
+                },
               ]}>
-              {versed[count].translations[
-                data.Translation.findIndex(
-                  item => item.id === translationData.id,
-                )
-              ].description
-                .trim()
+              {versed[count].translations
+                .find(item => item.author_name === translationData.author)
+                .description.trim()
                 .replaceAll(`।।`, '')
                 .replace(`${route.params.chap_no}.${count}`, '')}
             </Text>
@@ -347,12 +345,15 @@ const Verse = ({route, navigation}) => {
             <Text
               style={[
                 styles.sectionTxt,
-                langaugeData === 'Hindi' && {fontSize: 18, lineHeight: 32},
+                (langaugeData === 'Hindi' ||
+                  commentaryData.type === 'Hindi') && {
+                  fontSize: 18,
+                  lineHeight: 32,
+                },
               ]}>
-              {versed[count].commentaries[
-                data.Commentary.findIndex(item => item.id === commentaryData.id)
-              ].description
-                .trim()
+              {versed[count].commentaries
+                .find(item => item.author_name === commentaryData.author)
+                .description.trim()
                 .replaceAll(`।।`, '')
                 .replace(`${route.params.chap_no}.${count}`, '')}
             </Text>

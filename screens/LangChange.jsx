@@ -62,7 +62,7 @@ const LangChange = ({navigation, route}) => {
       dispatch(setCommentaryhandler({author, type: langaugeType, id}));
       try {
         await AsyncStorage.setItem(
-          'Commentary',
+          'Commentary Source',
           JSON.stringify({author, type: langaugeType, id}),
         );
       } catch (error) {

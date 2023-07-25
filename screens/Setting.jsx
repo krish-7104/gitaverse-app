@@ -13,7 +13,6 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Slider from '@react-native-community/slider';
 import {
   setCommentaryhandler,
   setLanguageHandler,
@@ -34,12 +33,6 @@ const Setting = () => {
   const rate = useSelector(state => state.rate);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-  const checkVoiceHandler = () => {
-    Tts.setDefaultLanguage('hi-IN');
-    Tts.setDefaultRate(Number(rate));
-    Tts.setDefaultPitch(Number(pitch));
-    Tts.speak('श्रीमद्भगवदगीता');
-  };
 
   useEffect(() => {
     Tts.stop();
@@ -49,14 +42,14 @@ const Setting = () => {
     dispatch(
       setTranslationhandler({
         author: 'Swami Adidevananda',
-        language: 'English',
+        type: 'English',
         id: 3,
       }),
     );
     dispatch(
       setCommentaryhandler({
         author: 'Swami Sivananda',
-        language: 'English',
+        type: 'English',
         id: 16,
       }),
     );
@@ -66,11 +59,11 @@ const Setting = () => {
     try {
       await AsyncStorage.setItem(
         'Translation Source',
-        JSON.stringify({author: 'Swami Adidevananda', language: 'english'}),
+        JSON.stringify({author: 'Swami Adidevananda', type: 'English', id: 3}),
       );
       await AsyncStorage.setItem(
         'Commentary Source',
-        JSON.stringify({author: 'Swami Sivananda', language: 'english'}),
+        JSON.stringify({author: 'Swami Sivananda', type: 'English', id: 16}),
       );
       await AsyncStorage.setItem('Pitch', '1.0');
       await AsyncStorage.setItem('Rate', '0.5');
@@ -97,16 +90,6 @@ const Setting = () => {
       ],
       {cancelable: false},
     );
-  };
-
-  const pitchHandler = async value => {
-    dispatch(setSpeechPitchHandler(value));
-    await AsyncStorage.setItem('Pitch', JSON.stringify(value));
-  };
-
-  const rateHandler = async value => {
-    dispatch(setSpeechRateHandler(value));
-    await AsyncStorage.setItem('Rate', JSON.stringify(value));
   };
 
   return (
@@ -182,75 +165,6 @@ const Setting = () => {
               size={20}
             />
           </TouchableOpacity>
-          <Text
-            style={[
-              styles.sectionTitle,
-              langauageData === 'Hindi' && {fontSize: 17},
-              {marginTop: 14},
-            ]}>
-            {langauageData === 'Hindi'
-              ? 'भाषण की गति निर्धारित करें'
-              : 'Set Speech Speed'}
-          </Text>
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
-            <Slider
-              style={{width: '88%', height: 45}}
-              minimumValue={0.01}
-              maximumValue={2.0}
-              minimumTrackTintColor="#dc2626"
-              maximumTrackTintColor="#450a0a"
-              thumbTintColor="#dc2626"
-              step={0.01}
-              value={Number(rate)}
-              onValueChange={value => rateHandler(value)}
-            />
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.checkBtn}
-              onPress={checkVoiceHandler}>
-              <Ionicons name="volume-high-outline" color="#000000" size={24} />
-            </TouchableOpacity>
-          </View>
-          <Text
-            style={[
-              styles.sectionTitle,
-              langauageData === 'Hindi' && {fontSize: 17},
-            ]}>
-            {langauageData === 'Hindi'
-              ? 'भाषण पिच सेट करें'
-              : 'Set Speech Pitch'}
-          </Text>
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
-            <Slider
-              style={{width: '88%', height: 45}}
-              minimumValue={0.5}
-              maximumValue={2.0}
-              minimumTrackTintColor="#dc2626"
-              maximumTrackTintColor="#450a0a"
-              thumbTintColor="#dc2626"
-              step={0.1}
-              value={Number(pitch)}
-              onValueChange={value => pitchHandler(value)}
-            />
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={styles.checkBtn}
-              onPress={checkVoiceHandler}>
-              <Ionicons name="volume-high-outline" color="#000000" size={24} />
-            </TouchableOpacity>
-          </View>
           <View style={styles.contactArea}>
             <Text
               style={styles.contactTxt}
