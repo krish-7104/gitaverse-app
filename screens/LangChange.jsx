@@ -30,7 +30,7 @@ const LangChange = ({navigation, route}) => {
               color: '#000',
               fontFamily: 'Inter-SemiBold',
             }}>
-            {route.params.type === 'verse_commentary_sources'
+            {route.params.type === 'Commentary'
               ? languageData === 'Hindi'
                 ? 'टिप्पणी स्रोत'
                 : 'Verse Commentary Source'
@@ -89,7 +89,7 @@ const LangChange = ({navigation, route}) => {
                   changeHandler(
                     item,
                     data[route.params.type][item].symbol,
-                    route.params.type === 'verse_commentary_sources'
+                    route.params.type === 'Commentary'
                       ? 'Commentary'
                       : 'Translation',
                   )
@@ -98,7 +98,7 @@ const LangChange = ({navigation, route}) => {
                 key={index}>
                 <Text style={styles.textArea}>
                   {data[route.params.type][item].language}{' '}
-                  {route.params.type === 'verse_commentary_sources'
+                  {route.params.type === 'Commentary'
                     ? 'Commentary'
                     : 'Translation'}{' '}
                   By {data[route.params.type][item].author}

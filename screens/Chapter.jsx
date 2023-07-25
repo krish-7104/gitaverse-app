@@ -49,21 +49,23 @@ const Chapter = () => {
   };
 
   const getLastReadData = async () => {
+    const url = `https://bhagavad-gita3.p.rapidapi.com/v2/chapters/${
+      lastRead.split('.')[0]
+    }/verses/${lastRead.split('.')[1]}/`;
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': apiKey,
+        'X-RapidAPI-Host': 'bhagavad-gita3.p.rapidapi.com',
+      },
+    };
+
     try {
-      const response = await fetch(
-        `http://bhagavadgitaapi.in/slok/${
-          lastRead.split('.')[0] + '/' + lastRead.split('.')[1]
-        }`,
-      );
-
-      if (!response.ok) {
-        throw new Error('Error fetching data from API');
-      }
-
-      const data = await response.json();
-      setLastReadData(data);
+      const response = await fetch(url, options);
+      const result = await response.json();
+      setLastReadData(result);
     } catch (error) {
-      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+      console.error(error);
     }
   };
 
@@ -90,7 +92,7 @@ const Chapter = () => {
                   name:
                     language === 'Hindi'
                       ? chapters[lastRead.split('.')[0] - 1].name
-                      : chapters[lastRead.split('.')[0] - 1].translation,
+                      : chapters[lastRead.split('.')[0] - 1].name_translated,
                   current: Number(lastRead.split('.')[1]),
                 })
               }>
@@ -111,11 +113,7 @@ const Chapter = () => {
                 </Text>
               </View>
               <Text style={styles.lastReadSlok} numberOfLines={4}>
-                {JSON.stringify(
-                  lastReadData?.[translationData?.author]?.[
-                    translationData?.type
-                  ],
-                )}
+                {lastReadData?.translations[0].description}
               </Text>
             </TouchableOpacity>
           )}

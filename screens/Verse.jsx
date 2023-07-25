@@ -102,7 +102,6 @@ const Verse = ({route, navigation}) => {
   }, []);
 
   const fetchData = async (start, end) => {
-    const apiKey = apiKey;
     const urlBase = `https://bhagavad-gita3.p.rapidapi.com/v2/chapters/${route.params.chap_no}/verses/`;
     const headers = {
       'X-RapidAPI-Key': apiKey,
@@ -243,73 +242,69 @@ const Verse = ({route, navigation}) => {
           <ActivityIndicator size="large" color="#e11d48" />
         </View>
       )}
-      {!showList &&
-        translationData &&
-        commentaryData &&
-        versed &&
-        versed[count] && (
-          <ScrollView
-            ref={scrollViewRef}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'white',
-              paddingBottom: 10,
-              minHeight: '95%',
-            }}>
-            <View style={styles.container}>
-              <Text style={styles.chapSlokNum}>
-                {route.params.chap_no}.{count}
-              </Text>
-              <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
-              <Image
-                source={require('../assets/flower.png')}
-                style={styles.image}
-              />
-              <Text
-                style={[
-                  styles.sectionTitle,
-                  langaugeData === 'Hindi' && {fontSize: 18},
-                ]}>
-                {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
-              </Text>
-              <Text style={styles.sectionTxt}>
-                {versed[count]?.transliteration}
-              </Text>
-              <Text
-                style={[
-                  styles.sectionTitle,
-                  langaugeData === 'Hindi' && {fontSize: 18},
-                ]}>
-                {langaugeData === 'Hindi' ? 'शब्दार्थ' : 'Word Meaning'}
-              </Text>
-              <Text style={styles.sectionTxt}>
-                {versed[count]?.word_meanings.replaceAll('—', ': ')}
-              </Text>
-              <Text
-                style={[
-                  styles.sectionTitle,
-                  langaugeData === 'Hindi' && {fontSize: 18},
-                ]}>
-                {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
-              </Text>
-              <Text style={[styles.sectionTxt]}>
-                {versed[count].translations[0].description}
-              </Text>
-              <Text
-                style={[
-                  styles.sectionTitle,
-                  langaugeData === 'Hindi' && {fontSize: 16},
-                ]}>
-                {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
-              </Text>
-              <Text style={[styles.sectionTxt]}>
-                {versed[count].commentaries[0].description}
-              </Text>
-            </View>
-          </ScrollView>
-        )}
+      {!showList && versed && versed[count] && (
+        <ScrollView
+          ref={scrollViewRef}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'white',
+            paddingBottom: 10,
+            minHeight: '95%',
+          }}>
+          <View style={styles.container}>
+            <Text style={styles.chapSlokNum}>
+              {route.params.chap_no}.{count}
+            </Text>
+            <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
+            <Image
+              source={require('../assets/flower.png')}
+              style={styles.image}
+            />
+            <Text
+              style={[
+                styles.sectionTitle,
+                langaugeData === 'Hindi' && {fontSize: 18},
+              ]}>
+              {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
+            </Text>
+            <Text style={styles.sectionTxt}>
+              {versed[count]?.transliteration}
+            </Text>
+            <Text
+              style={[
+                styles.sectionTitle,
+                langaugeData === 'Hindi' && {fontSize: 18},
+              ]}>
+              {langaugeData === 'Hindi' ? 'शब्दार्थ' : 'Word Meaning'}
+            </Text>
+            <Text style={styles.sectionTxt}>
+              {versed[count]?.word_meanings.replaceAll('—', ': ')}
+            </Text>
+            <Text
+              style={[
+                styles.sectionTitle,
+                langaugeData === 'Hindi' && {fontSize: 18},
+              ]}>
+              {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
+            </Text>
+            <Text style={[styles.sectionTxt]}>
+              {versed[count].translations[0].description}
+            </Text>
+            <Text
+              style={[
+                styles.sectionTitle,
+                langaugeData === 'Hindi' && {fontSize: 16},
+              ]}>
+              {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
+            </Text>
+            <Text style={[styles.sectionTxt]}>
+              {versed[count].commentaries[0].description}
+            </Text>
+          </View>
+        </ScrollView>
+      )}
       {!showList && (
         <View style={styles.bottomNavDiv}>
           <TouchableOpacity

@@ -49,12 +49,12 @@ const Setting = () => {
     dispatch(setLanguageHandler('English'));
     try {
       await AsyncStorage.setItem(
-        'Translation',
-        JSON.stringify({author: 'adi', type: 'et'}),
+        'Translation Source',
+        JSON.stringify({author: 'Swami Adidevananda', language: 'english'}),
       );
       await AsyncStorage.setItem(
-        'Commentary',
-        JSON.stringify({author: 'siva', type: 'ec'}),
+        'Commentary Source',
+        JSON.stringify({author: 'Swami Sivananda', language: 'english'}),
       );
       await AsyncStorage.setItem('Pitch', '1.0');
       await AsyncStorage.setItem('Rate', '0.5');
@@ -110,14 +110,10 @@ const Setting = () => {
             style={styles.selectedBtn}
             onPress={() =>
               navigation.navigate('LangChange', {
-                type: 'verse_translation_sources',
+                type: 'Translation',
               })
             }>
-            <Text style={styles.selectedTxt}>
-              {data.verse_translation_sources[translationData.author].language}{' '}
-              Translation By{' '}
-              {data.verse_translation_sources[translationData.author].author}
-            </Text>
+            <Text style={styles.selectedTxt}>{translationData.author}</Text>
             <Ionicons
               name={'chevron-down-outline'}
               color="#00000080"
@@ -135,14 +131,10 @@ const Setting = () => {
             style={styles.selectedBtn}
             onPress={() =>
               navigation.navigate('LangChange', {
-                type: 'verse_commentary_sources',
+                type: 'Commentary',
               })
             }>
-            <Text style={styles.selectedTxt}>
-              {data.verse_commentary_sources[commentaryData.author].language}{' '}
-              Commentary By{' '}
-              {data.verse_commentary_sources[commentaryData.author].author}
-            </Text>
+            <Text style={styles.selectedTxt}>{commentaryData.author}</Text>
             <Ionicons
               name={'chevron-down-outline'}
               color="#00000080"

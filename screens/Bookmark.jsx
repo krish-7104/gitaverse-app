@@ -57,36 +57,48 @@ const Bookmark = () => {
   const [chapters, setChapters] = useState();
 
   const getAllChapters = async () => {
+    const url = 'https://bhagavad-gita3.p.rapidapi.com/v2/chapters/?limit=18';
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': apiKey,
+        'X-RapidAPI-Host': 'bhagavad-gita3.p.rapidapi.com',
+      },
+    };
     try {
-      const response = await fetch('http://bhagavadgitaapi.in/chapters');
-      const data = await response.json();
-      setChapters(data);
+      const response = await fetch(url, options);
+      const result = await response.json();
+      setChapters(result);
     } catch (error) {
       ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+      console.error(error);
     }
-
-    const requests = Object.keys(bookmarkData).map(key => {
-      const [chap_no, verse_no] = key.split('.');
-      return fetch(`http://bhagavadgitaapi.in/slok/${chap_no}/${verse_no}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .catch(error => console.error(error));
-    });
-
+    const headers = {
+      'X-RapidAPI-Key': apiKey,
+      'X-RapidAPI-Host': 'bhagavad-gita3.p.rapidapi.com',
+    };
     try {
+      const requests = Object.keys(bookmarkData).map(key => {
+        const [chap_no, verse_no] = key.split('.');
+        const url = `https://bhagavad-gita3.p.rapidapi.com/v2/chapters/${chap_no}/verses/${verse_no}/`;
+        return fetch(url, {headers})
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .catch(error => console.error(error));
+      });
       const responses = await Promise.all(requests);
       const data = responses.reduce((acc, responseData, index) => {
         const key = Object.keys(bookmarkData)[index];
         acc[key] = responseData;
         return acc;
       }, {});
-      setData(data);
+      setData(prevData => ({...prevData, ...data}));
     } catch (error) {
-      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+      console.error(error);
     }
   };
 
@@ -112,29 +124,30 @@ const Bookmark = () => {
             const item = data[key];
             return (
               <TouchableOpacity
-                key={`Verse ${item.chapter}.${item.verse}`}
+                key={`Verse ${item.chapter_number}.${item.verse_number}`}
                 style={styles.bookmarkCard}
                 activeOpacity={0.4}
                 onPress={() =>
                   navigation.push('Verse', {
-                    chap_no: item.chapter,
-                    versed: chapters[item.chapter - 1].verses_count,
+                    chap_no: item.chapter_number,
+                    versed: chapters[item.chapter_number - 1].verses_count,
                     name:
                       languageData === 'Hindi'
-                        ? item.chapter.name
-                        : item.chapter.translation,
+                        ? chapters[item.chapter_number - 1].name_translated
+                        : chapters[item.chapter_number - 1].name,
                     current: item.verse,
                   })
                 }>
                 <Text
-                  numberOfLines={4}
                   style={[
                     styles.bookmarkLabelTxt,
                     languageData === 'Hindi' && {fontSize: 17},
                   ]}>{`${languageData === 'Hindi' ? 'स्लोक' : 'Verse'} ${
-                  item.chapter
-                }.${item.verse}`}</Text>
-                <Text style={styles.bookmarkTxt}>{item.slok}</Text>
+                  item.chapter_number
+                }.${item.verse_number}`}</Text>
+                <Text style={styles.bookmarkTxt} numberOfLines={4}>
+                  {item.translations[0].description}
+                </Text>
                 <TouchableOpacity
                   style={styles.bottomBtnDiv}
                   activeOpacity={0.9}
@@ -189,13 +202,13 @@ const styles = StyleSheet.create({
     marginBottom: -4,
   },
   bookmarkTxt: {
-    marginTop: 8,
+    marginTop: 12,
     fontFamily: 'Inter-Medium',
     color: '#000000',
-    fontSize: 17,
-    lineHeight: 28,
+    fontSize: 15,
+    lineHeight: 24,
     textAlign: 'center',
-    paddingTop: 5,
+    paddingHorizontal: 6,
   },
   noBookTxt: {
     fontFamily: 'Inter-Medium',
