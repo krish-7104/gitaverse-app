@@ -16,6 +16,8 @@ import {setBookmarkHandler, setLastReadHandler} from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
 import apiKey from '../apiKey';
+import data from '../data.json';
+
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
   const commentaryData = useSelector(state => state.commentary);
@@ -75,7 +77,31 @@ const Verse = ({route, navigation}) => {
 
   const startSpeechHandler = () => {
     setPlay(true);
-    Tts.speak(versed[count].commentaries[0].description);
+    let slok = versed[count]?.text
+      .trim()
+      .replace(`।।${route.params.chap_no}.${count}।।`, '');
+    let translation = versed[count].translations[
+      data.Translation.findIndex(item => item.id === translationData.id)
+    ].description
+      .trim()
+      .replace(`।।${route.params.chap_no}.${count}।।`, '')
+      .replaceAll(':', '');
+    let commentary = versed[count].commentaries[
+      data.Commentary.findIndex(item => item.id === commentaryData.id)
+    ].description
+      .trim()
+      .replace(`।।${route.params.chap_no}.${count}।।`, '')
+      .replaceAll(':', '');
+    Tts.speak(
+      'Slok ' +
+        slok +
+        '\r\n\r\n' +
+        (langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation') +
+        translation +
+        '\r\n\r\n' +
+        (langaugeData === 'Hindi' ? 'टीका' : 'Commentary') +
+        commentary,
+    );
   };
 
   const stopSpeechHandler = () => {
@@ -257,7 +283,7 @@ const Verse = ({route, navigation}) => {
             <Text style={styles.chapSlokNum}>
               {route.params.chap_no}.{count}
             </Text>
-            <Text style={styles.slokTxt}>{versed[count]?.slok}</Text>
+            <Text style={styles.slokTxt}>{versed[count]?.text.trim()}</Text>
             <Image
               source={require('../assets/flower.png')}
               style={styles.image}
@@ -265,42 +291,64 @@ const Verse = ({route, navigation}) => {
             <Text
               style={[
                 styles.sectionTitle,
-                langaugeData === 'Hindi' && {fontSize: 18},
+                langaugeData === 'Hindi' && {fontSize: 17},
               ]}>
               {langaugeData === 'Hindi' ? 'लिप्यंतरण' : 'Transliteration'}
             </Text>
-            <Text style={styles.sectionTxt}>
-              {versed[count]?.transliteration}
+            <Text
+              style={[
+                styles.sectionTxt,
+                langaugeData === 'Hindi' && {fontSize: 18, lineHeight: 32},
+              ]}>
+              {versed[count]?.transliteration.trim()}
             </Text>
             <Text
               style={[
                 styles.sectionTitle,
-                langaugeData === 'Hindi' && {fontSize: 18},
+                langaugeData === 'Hindi' && {fontSize: 17},
               ]}>
               {langaugeData === 'Hindi' ? 'शब्दार्थ' : 'Word Meaning'}
             </Text>
             <Text style={styles.sectionTxt}>
-              {versed[count]?.word_meanings.replaceAll('—', ': ')}
+              {versed[count]?.word_meanings.replaceAll('—', ': ').trim()}
             </Text>
             <Text
               style={[
                 styles.sectionTitle,
-                langaugeData === 'Hindi' && {fontSize: 18},
+                langaugeData === 'Hindi' && {fontSize: 17},
               ]}>
               {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
             </Text>
-            <Text style={[styles.sectionTxt]}>
-              {versed[count].translations[0].description}
+            <Text
+              style={[
+                styles.sectionTxt,
+                langaugeData === 'Hindi' && {fontSize: 18, lineHeight: 32},
+              ]}>
+              {versed[count].translations[
+                data.Translation.findIndex(
+                  item => item.id === translationData.id,
+                )
+              ].description
+                .trim()
+                .replace(`।।${route.params.chap_no}.${count}।।`, '')}
             </Text>
             <Text
               style={[
                 styles.sectionTitle,
-                langaugeData === 'Hindi' && {fontSize: 16},
+                langaugeData === 'Hindi' && {fontSize: 17},
               ]}>
               {langaugeData === 'Hindi' ? 'टीका' : 'Commentary'}
             </Text>
-            <Text style={[styles.sectionTxt]}>
-              {versed[count].commentaries[0].description}
+            <Text
+              style={[
+                styles.sectionTxt,
+                langaugeData === 'Hindi' && {fontSize: 18, lineHeight: 32},
+              ]}>
+              {versed[count].commentaries[
+                data.Commentary.findIndex(item => item.id === commentaryData.id)
+              ].description
+                .trim()
+                .replace(`।।${route.params.chap_no}.${count}।।`, '')}
             </Text>
           </View>
         </ScrollView>
@@ -410,8 +458,9 @@ const styles = StyleSheet.create({
   slokTxt: {
     color: '#dc2626',
     fontFamily: 'Inter-SemiBold',
-    lineHeight: 38,
+    lineHeight: 20,
     fontSize: 17,
+    paddingVertical: 10,
     textAlign: 'center',
   },
   sectionTitle: {

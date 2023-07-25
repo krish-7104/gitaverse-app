@@ -13,6 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import apiKey from '../apiKey';
+import data from '../data.json';
 const Chapter = () => {
   const navigation = useNavigation();
   const [chapters, setChapters] = useState();
@@ -20,7 +21,6 @@ const Chapter = () => {
   const language = useSelector(state => state.language);
   const lastRead = useSelector(state => state.lastread);
   const translationData = useSelector(state => state.translation);
-
   useEffect(() => {
     getAllChapters();
   }, []);
@@ -113,7 +113,11 @@ const Chapter = () => {
                 </Text>
               </View>
               <Text style={styles.lastReadSlok} numberOfLines={4}>
-                {lastReadData?.translations[0].description}
+                {lastReadData?.translations[
+                  data.Translation.findIndex(
+                    item => item.id === translationData.id,
+                  )
+                ].description.trim()}
               </Text>
             </TouchableOpacity>
           )}

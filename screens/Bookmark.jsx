@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {setBookmarkHandler} from '../redux/actions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import authorData from '../data.json';
 
 const Bookmark = () => {
   const [data, setData] = useState(null);
@@ -21,6 +22,7 @@ const Bookmark = () => {
   const languageData = useSelector(state => state.language);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const translationData = useSelector(state => state.translation);
 
   useEffect(() => {
     getData();
@@ -146,7 +148,16 @@ const Bookmark = () => {
                   item.chapter_number
                 }.${item.verse_number}`}</Text>
                 <Text style={styles.bookmarkTxt} numberOfLines={4}>
-                  {item.translations[0].description}
+                  {item.translations[
+                    authorData.Translation.findIndex(
+                      item => item.id === translationData.id,
+                    )
+                  ].description
+                    .replace(
+                      `।।${item.chapter_number}.${item.verse_number}।।`,
+                      '',
+                    )
+                    .trim()}
                 </Text>
                 <TouchableOpacity
                   style={styles.bottomBtnDiv}
@@ -207,7 +218,6 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 15,
     lineHeight: 24,
-    textAlign: 'center',
     paddingHorizontal: 6,
   },
   noBookTxt: {

@@ -2,8 +2,8 @@ import { BOOKMARK, COMMENTARY, LANGUAGE, LASTREAD, SPEECH_PITCH, SPEECH_RATE, TR
 
 const initialState = {
     language: "English",
-    translation: { author: 'Swami Adidevananda', language: 'english' },
-    commentary: { author: 'Swami Sivananda', language: 'english' },
+    translation: { author: 'Swami Adidevananda', type: 'English', id: 3 },
+    commentary: { author: 'Swami Sivananda', type: 'English', id: 16 },
     bookmark: {},
     lastread: "",
     pitch: 1.0,

@@ -47,23 +47,23 @@ const LangChange = ({navigation, route}) => {
     });
   }, [navigation]);
   const dispatch = useDispatch();
-  const changeHandler = async (author, langaugeType, type) => {
+  const changeHandler = async (author, langaugeType, type, id) => {
     if (type === 'Translation') {
-      dispatch(setTranslationhandler({author, type: langaugeType}));
+      dispatch(setTranslationhandler({author, type: langaugeType, id}));
       try {
         await AsyncStorage.setItem(
           'Translation',
-          JSON.stringify({author, type: langaugeType}),
+          JSON.stringify({author, type: langaugeType, id}),
         );
       } catch (error) {
         ToastAndroid.show('Something Went Wrong!', ToastAndroid.BOTTOM);
       }
     } else {
-      dispatch(setCommentaryhandler({author, type: langaugeType}));
+      dispatch(setCommentaryhandler({author, type: langaugeType, id}));
       try {
         await AsyncStorage.setItem(
           'Commentary',
-          JSON.stringify({author, type: langaugeType}),
+          JSON.stringify({author, type: langaugeType, id}),
         );
       } catch (error) {
         ToastAndroid.show('Something Went Wrong!', ToastAndroid.BOTTOM);
@@ -87,11 +87,12 @@ const LangChange = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() =>
                   changeHandler(
-                    item,
-                    data[route.params.type][item].symbol,
+                    data[route.params.type][item].author_name,
+                    data[route.params.type][item].language,
                     route.params.type === 'Commentary'
                       ? 'Commentary'
                       : 'Translation',
+                    data[route.params.type][item].id,
                   )
                 }
                 style={styles.nameCard}
@@ -101,7 +102,7 @@ const LangChange = ({navigation, route}) => {
                   {route.params.type === 'Commentary'
                     ? 'Commentary'
                     : 'Translation'}{' '}
-                  By {data[route.params.type][item].author}
+                  By {data[route.params.type][item].author_name}
                 </Text>
               </TouchableOpacity>
             );

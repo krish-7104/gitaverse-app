@@ -55,11 +55,7 @@ const Home = ({navigation}) => {
       const Translation = await AsyncStorage.getItem('Translation Source');
       if (Translation !== null) {
         try {
-          if (typeof Translation === 'object') {
-            dispatch(setTranslationhandler('Swami Adidevananda'));
-          } else {
-            dispatch(setTranslationhandler(JSON.parse(Translation)));
-          }
+          dispatch(setTranslationhandler(JSON.parse(Translation)));
         } catch (error) {
           ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
@@ -68,11 +64,7 @@ const Home = ({navigation}) => {
       const Commentary = await AsyncStorage.getItem('Commentary Source');
       if (Commentary !== null) {
         try {
-          if (typeof Commentary === 'object') {
-            dispatch(setCommentaryhandler('Swami Sivananda'));
-          } else {
-            dispatch(setCommentaryhandler(JSON.parse(Commentary)));
-          }
+          dispatch(setCommentaryhandler(JSON.parse(Commentary)));
         } catch (error) {
           ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
@@ -103,7 +95,6 @@ const Home = ({navigation}) => {
           ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
       }
-
       const LastRead = await AsyncStorage.getItem('Last Read');
       if (LastRead !== null) {
         try {

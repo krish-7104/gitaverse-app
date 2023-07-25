@@ -79,7 +79,7 @@ const Summary = () => {
                     numberOfLines={2}>
                     {languageData === 'Hindi'
                       ? chap.chapter_summary_hindi
-                      : chap.chapter_summary_hindi}
+                      : chap.chapter_summary}
                   </Text>
                 </View>
               </TouchableOpacity>

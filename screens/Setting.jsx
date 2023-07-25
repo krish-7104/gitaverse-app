@@ -42,8 +42,20 @@ const Setting = () => {
   };
 
   const resetHandler = async () => {
-    dispatch(setTranslationhandler({author: 'adi', type: 'et'}));
-    dispatch(setCommentaryhandler({author: 'siva', type: 'ec'}));
+    dispatch(
+      setTranslationhandler({
+        author: 'Swami Adidevananda',
+        language: 'English',
+        id: 3,
+      }),
+    );
+    dispatch(
+      setCommentaryhandler({
+        author: 'Swami Sivananda',
+        language: 'English',
+        id: 16,
+      }),
+    );
     dispatch(setSpeechPitchHandler(1.0));
     dispatch(setSpeechRateHandler(0.5));
     dispatch(setLanguageHandler('English'));
@@ -113,7 +125,9 @@ const Setting = () => {
                 type: 'Translation',
               })
             }>
-            <Text style={styles.selectedTxt}>{translationData.author}</Text>
+            <Text style={styles.selectedTxt}>
+              {translationData.author} ({translationData.type})
+            </Text>
             <Ionicons
               name={'chevron-down-outline'}
               color="#00000080"
@@ -134,7 +148,9 @@ const Setting = () => {
                 type: 'Commentary',
               })
             }>
-            <Text style={styles.selectedTxt}>{commentaryData.author}</Text>
+            <Text style={styles.selectedTxt}>
+              {commentaryData.author} ({commentaryData.type})
+            </Text>
             <Ionicons
               name={'chevron-down-outline'}
               color="#00000080"
@@ -256,7 +272,7 @@ const Setting = () => {
             </Text>
             <Text
               style={styles.contactTxt}
-              onPress={() => Linking.openURL('https://bhagavadgitaapi.in/')}>
+              onPress={() => Linking.openURL('https://bhagavadgita.io/api/')}>
               Data By{' '}
               <Text
                 style={{
