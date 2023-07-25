@@ -3,7 +3,7 @@ import {
   Text,
   View,
   Image,
-  Alert,
+  SafeAreaView,
   Linking,
   Modal,
   TouchableOpacity,
@@ -41,7 +41,11 @@ const Splash = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <Image
+        source={require('../assets/bg.jpg')}
+        style={{height: '100%', objectFit: 'cover', position: 'absolute'}}
+      />
       <Image
         source={require('../assets/logo.png')}
         style={{height: 140, objectFit: 'contain'}}
@@ -63,7 +67,7 @@ const Splash = ({navigation}) => {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 

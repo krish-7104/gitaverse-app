@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
 import apiKey from '../apiKey';
 import data from '../data.json';
-
+import {useIsFocused} from '@react-navigation/native';
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
   const commentaryData = useSelector(state => state.commentary);
@@ -31,6 +31,7 @@ const Verse = ({route, navigation}) => {
   const [play, setPlay] = useState(false);
   const scrollViewRef = useRef();
   const [showList, setShowList] = useState(false);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -79,18 +80,21 @@ const Verse = ({route, navigation}) => {
     setPlay(true);
     let slok = versed[count]?.text
       .trim()
-      .replace(`।।${route.params.chap_no}.${count}।।`, '');
+      .replaceAll(`।।`, '')
+      .replace(`${route.params.chap_no}.${count}`, '');
     let translation = versed[count].translations[
       data.Translation.findIndex(item => item.id === translationData.id)
     ].description
       .trim()
-      .replace(`।।${route.params.chap_no}.${count}।।`, '')
+      .replaceAll(`।।`, '')
+      .replace(`${route.params.chap_no}.${count}`, '')
       .replaceAll(':', '');
     let commentary = versed[count].commentaries[
       data.Commentary.findIndex(item => item.id === commentaryData.id)
     ].description
       .trim()
-      .replace(`।।${route.params.chap_no}.${count}।।`, '')
+      .replaceAll(`।।`, '')
+      .replace(`${route.params.chap_no}.${count}`, '')
       .replaceAll(':', '');
     Tts.speak(
       'Slok ' +
@@ -330,7 +334,8 @@ const Verse = ({route, navigation}) => {
                 )
               ].description
                 .trim()
-                .replace(`।।${route.params.chap_no}.${count}।।`, '')}
+                .replaceAll(`।।`, '')
+                .replace(`${route.params.chap_no}.${count}`, '')}
             </Text>
             <Text
               style={[
@@ -348,7 +353,8 @@ const Verse = ({route, navigation}) => {
                 data.Commentary.findIndex(item => item.id === commentaryData.id)
               ].description
                 .trim()
-                .replace(`।।${route.params.chap_no}.${count}।।`, '')}
+                .replaceAll(`।।`, '')
+                .replace(`${route.params.chap_no}.${count}`, '')}
             </Text>
           </View>
         </ScrollView>

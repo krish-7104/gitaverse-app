@@ -9,8 +9,7 @@ import {
   Alert,
   ToastAndroid,
 } from 'react-native';
-import React from 'react';
-import data from '../data.json';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,6 +23,7 @@ import {
 } from '../redux/actions';
 import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused} from '@react-navigation/native';
 
 const Setting = () => {
   const commentaryData = useSelector(state => state.commentary);
@@ -33,13 +33,17 @@ const Setting = () => {
   const pitch = useSelector(state => state.pitch);
   const rate = useSelector(state => state.rate);
   const dispatch = useDispatch();
-
+  const isFocused = useIsFocused();
   const checkVoiceHandler = () => {
     Tts.setDefaultLanguage('hi-IN');
     Tts.setDefaultRate(Number(rate));
     Tts.setDefaultPitch(Number(pitch));
     Tts.speak('श्रीमद्भगवदगीता');
   };
+
+  useEffect(() => {
+    Tts.stop();
+  }, [isFocused]);
 
   const resetHandler = async () => {
     dispatch(

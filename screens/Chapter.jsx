@@ -14,6 +14,8 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import apiKey from '../apiKey';
 import data from '../data.json';
+import Tts from 'react-native-tts';
+import {useIsFocused} from '@react-navigation/native';
 const Chapter = () => {
   const navigation = useNavigation();
   const [chapters, setChapters] = useState();
@@ -21,6 +23,12 @@ const Chapter = () => {
   const language = useSelector(state => state.language);
   const lastRead = useSelector(state => state.lastread);
   const translationData = useSelector(state => state.translation);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    Tts.stop();
+  }, [isFocused]);
+
   useEffect(() => {
     getAllChapters();
   }, []);
