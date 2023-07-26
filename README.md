@@ -29,7 +29,7 @@ Key Features:
 
 ## 🚀 Download App
 
-https://bit.ly/44WPcaC
+https://bit.ly/451BdQZ
 
 
 ## 🚧 Tech Stack
