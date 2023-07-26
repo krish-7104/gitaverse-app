@@ -12,13 +12,22 @@ import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import apiKey from '../apiKey';
+import {useIsFocused} from '@react-navigation/native';
+import Tts from 'react-native-tts';
+
 const Summary = () => {
   const [data, setData] = useState();
   const languageData = useSelector(state => state.language);
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     getAllChapters();
   }, []);
+
+  useEffect(() => {
+    Tts.stop();
+  }, [isFocused]);
 
   const getAllChapters = async () => {
     const url = 'https://bhagavad-gita3.p.rapidapi.com/v2/chapters/?limit=18';
