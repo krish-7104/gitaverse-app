@@ -137,7 +137,7 @@ const Bookmark = () => {
                       languageData === 'Hindi'
                         ? chapters[item.chapter_number - 1].name_translated
                         : chapters[item.chapter_number - 1].name,
-                    current: item.verse,
+                    current: item.verse_number,
                   })
                 }>
                 <Text

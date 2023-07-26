@@ -54,9 +54,7 @@ const Splash = ({navigation}) => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Update Available</Text>
-            <Text style={styles.modalSubTitle}>
-              Update app to get more features and better experience
-            </Text>
+            {data && <Text style={styles.modalSubTitle}>{data.Text}</Text>}
             <TouchableOpacity onPress={() => Linking.openURL(data.Link)}>
               <Text style={styles.updateBtn}>Update Now</Text>
             </TouchableOpacity>

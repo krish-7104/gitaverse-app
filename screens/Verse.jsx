@@ -85,13 +85,14 @@ const Verse = ({route, navigation}) => {
       .find(item => item.author_name === translationData.author)
       .description.trim()
       .replaceAll(`।।`, '')
+      .replaceAll(':', '')
       .replace(`${route.params.chap_no}.${count}`, '');
     let commentary = versed[count].commentaries
       .find(item => item.author_name === commentaryData.author)
       .description.trim()
       .replaceAll(`।।`, '')
-      .replace(`${route.params.chap_no}.${count}`, '')
-      .replaceAll(':', '');
+      .replace(`${route.params.chap_no}.${count}`, '');
+
     Tts.speak(
       'Slok ' +
         slok +
@@ -237,21 +238,6 @@ const Verse = ({route, navigation}) => {
       fetchData(1, versesPerPage);
     }
     setShowList(false);
-  };
-
-  const ReturnDescriptionHandler = () => {
-    versed[count].translations.forEach((element, index) => {
-      if (element.id === translationData.id) {
-        return (
-          <Text>
-            {versed[count].translations[index].description
-              .trim()
-              .replaceAll(`।।`, '')
-              .replace(`${route.params.chap_no}.${count}`, '')}
-          </Text>
-        );
-      }
-    });
   };
 
   const VerseTableTxt = () => {
