@@ -29,7 +29,7 @@ Key Features:
 
 ## 🚀 Download App
 
-https://bit.ly/451BdQZ
+https://play.google.com/store/apps/details?id=com.krish.gitaverse
 
 
 ## 🚧 Tech Stack
