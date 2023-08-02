@@ -9,7 +9,7 @@ import {
   Alert,
   ToastAndroid,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,15 +24,37 @@ import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 
-const Setting = () => {
+const Setting = ({navigation}) => {
   const commentaryData = useSelector(state => state.commentary);
   const translationData = useSelector(state => state.translation);
-  const langauageData = useSelector(state => state.language);
-  const navigation = useNavigation();
+  const languageData = useSelector(state => state.language);
   const pitch = useSelector(state => state.pitch);
   const rate = useSelector(state => state.rate);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTintColor: 'black',
+      headerTitle: () => (
+        <Text
+          style={{
+            fontSize: languageData === 'Hindi' ? 20 : 18,
+            marginTop: 6,
+            color: '#000',
+            fontFamily: 'Inter-SemiBold',
+          }}>
+          {languageData === 'Hindi' ? 'सेटिंग्स' : 'Settings'}
+        </Text>
+      ),
+      headerStyle: {
+        elevation: 10,
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+    });
+  }, [navigation, languageData]);
 
   useEffect(() => {
     Tts.stop();
@@ -101,9 +123,9 @@ const Setting = () => {
           <Text
             style={[
               styles.sectionTitle,
-              langauageData === 'Hindi' && {fontSize: 17},
+              languageData === 'Hindi' && {fontSize: 17},
             ]}>
-            {langauageData === 'Hindi' ? 'अनुवाद स्रोत' : 'Translation Source'}
+            {languageData === 'Hindi' ? 'अनुवाद स्रोत' : 'Translation Source'}
           </Text>
           <TouchableOpacity
             style={styles.selectedBtn}
@@ -124,9 +146,9 @@ const Setting = () => {
           <Text
             style={[
               styles.sectionTitle,
-              langauageData === 'Hindi' && {fontSize: 17},
+              languageData === 'Hindi' && {fontSize: 17},
             ]}>
-            {langauageData === 'Hindi' ? 'टिप्पणी स्रोत' : 'Commentary Source'}
+            {languageData === 'Hindi' ? 'टिप्पणी स्रोत' : 'Commentary Source'}
           </Text>
           <TouchableOpacity
             style={styles.selectedBtn}
@@ -147,9 +169,9 @@ const Setting = () => {
           <Text
             style={[
               styles.sectionTitle,
-              langauageData === 'Hindi' && {fontSize: 17},
+              languageData === 'Hindi' && {fontSize: 17},
             ]}>
-            {langauageData === 'Hindi' ? 'भाषा चुने' : 'Select Language'}
+            {languageData === 'Hindi' ? 'भाषा चुने' : 'Select Language'}
           </Text>
           <TouchableOpacity
             style={styles.selectedBtn}
@@ -158,7 +180,7 @@ const Setting = () => {
                 type: 'language',
               })
             }>
-            <Text style={styles.selectedTxt}>{langauageData}</Text>
+            <Text style={styles.selectedTxt}>{languageData}</Text>
             <Ionicons
               name={'chevron-down-outline'}
               color="#00000080"

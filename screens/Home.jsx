@@ -1,12 +1,12 @@
 import {StyleSheet, Text, View, ToastAndroid} from 'react-native';
 import React, {useLayoutEffect, useState, useEffect} from 'react';
-import BottomNav from '../components/BottomNav';
 import Chapter from './Chapter';
 import Setting from './Setting';
 import Bookmark from './Bookmark';
 import Summary from './Summary';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   setBookmarkHandler,
   setCommentaryhandler,
@@ -16,27 +16,17 @@ import {
   setSpeechRateHandler,
   setTranslationhandler,
 } from '../redux/actions';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 const Home = ({navigation}) => {
-  const language = useSelector(state => state.language);
-  const dispatch = useDispatch();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, [navigation]);
-  const [active, setActive] = useState('home');
-  const navTitle = {
-    home: 'GitaVerse',
-    bookmark: 'Bookmarks',
-    summary: 'Summary of All Chapters',
-    settings: 'Settings',
-  };
-  const navTitleHindi = {
-    home: 'गीतावर्स',
-    bookmark: 'बुकमार्क',
-    summary: 'सभी अध्यायों का सारांश',
-    settings: 'सेटिंग्स',
-  };
+  const language = useSelector(state => state.language);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     getData();
   }, []);
@@ -107,21 +97,57 @@ const Home = ({navigation}) => {
       ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
     }
   };
+  const Tab = createBottomTabNavigator();
   return (
     <>
-      <View style={styles.navDiv}>
-        <Text
-          style={[styles.navTitle, language === 'Hindi' && {fontSize: 22}]}
-          key={`${active}_${language}`}
-          s>
-          {language === 'Hindi' ? navTitleHindi[active] : navTitle[active]}
-        </Text>
-      </View>
-      {active === 'home' && <Chapter />}
-      {active === 'bookmark' && <Bookmark />}
-      {active === 'summary' && <Summary />}
-      {active === 'settings' && <Setting />}
-      <BottomNav active={active} setActive={setActive} />
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          tabBarIcon: ({focused, color}) => {
+            let iconName;
+            if (route.name === 'GitaVerse' || route.name === 'गीतावर्स') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'Settings' || route.name === 'सेटिंग्स') {
+              iconName = focused ? 'settings' : 'settings-outline';
+            } else if (route.name === 'सारांश' || route.name === 'Summary') {
+              iconName = focused ? 'bulb' : 'bulb-outline';
+            } else if (
+              route.name === 'Bookmarks' ||
+              route.name === 'बुकमार्क'
+            ) {
+              iconName = focused ? 'bookmark' : 'bookmark-outline';
+            }
+            return <Ionicons name={iconName} size={24} color={color} />;
+          },
+          tabBarActiveTintColor: '#e11d48',
+          tabBarInactiveTintColor: 'gray',
+          gestureEnabled: true,
+          swipeEnabled: true,
+          tabBarStyle: {
+            height: 60,
+            padding: 10,
+            paddingBottom: 8,
+          },
+          tabBarLabelStyle: {
+            fontFamily: 'Inter-Medium',
+          },
+        })}>
+        <Tab.Screen
+          name={language === 'Hindi' ? 'गीतावर्स' : 'GitaVerse'}
+          component={Chapter}
+        />
+        <Tab.Screen
+          name={language === 'Hindi' ? 'बुकमार्क' : 'Bookmarks'}
+          component={Bookmark}
+        />
+        <Tab.Screen
+          name={language === 'Hindi' ? 'सारांश' : 'Summary'}
+          component={Summary}
+        />
+        <Tab.Screen
+          name={language === 'Hindi' ? 'सेटिंग्स' : 'Settings'}
+          component={Setting}
+        />
+      </Tab.Navigator>
     </>
   );
 };

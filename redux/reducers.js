@@ -1,4 +1,3 @@
-import { BOOKMARK, COMMENTARY, LANGUAGE, LASTREAD, SPEECH_PITCH, SPEECH_RATE, TRANSLATION } from "./action";
 
 const initialState = {
     language: "English",
@@ -12,19 +11,19 @@ const initialState = {
 
 export const Reducers = (state = initialState, action) => {
     switch (action.type) {
-        case LANGUAGE:
+        case "LANGUAGE":
             return { ...state, language: action.payload }
-        case TRANSLATION:
+        case "TRANSLATION":
             return { ...state, translation: action.payload }
-        case COMMENTARY:
+        case "COMMENTARY":
             return { ...state, commentary: action.payload }
-        case BOOKMARK:
+        case "BOOKMARK":
             return { ...state, bookmark: action.payload }
-        case LASTREAD:
+        case "LASTREAD":
             return { ...state, lastread: action.payload }
-        case SPEECH_PITCH:
+        case "SPEECH_PITCH":
             return { ...state, pitch: action.payload }
-        case SPEECH_RATE:
+        case "SPEECH_RATE":
             return { ...state, rate: action.payload }
         default:
             return state;

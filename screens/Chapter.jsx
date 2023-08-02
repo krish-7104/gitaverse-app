@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   ToastAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -24,6 +24,32 @@ const Chapter = () => {
   const lastRead = useSelector(state => state.lastread);
   const translationData = useSelector(state => state.translation);
   const isFocused = useIsFocused();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTintColor: 'black',
+      headerTitle: () => (
+        <Text
+          style={{
+            fontSize: language === 'Hindi' ? 20 : 18,
+            marginTop: 6,
+            color: '#000',
+            fontFamily: 'Inter-SemiBold',
+          }}>
+          {language === 'Hindi'
+            ? 'गीतावर्स - सभी अध्याय'
+            : 'Gita Verse - All Chapters'}
+        </Text>
+      ),
+      headerStyle: {
+        elevation: 10,
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+    });
+  }, [navigation, language]);
 
   useEffect(() => {
     Tts.stop();
