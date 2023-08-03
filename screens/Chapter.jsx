@@ -12,10 +12,14 @@ import React, {useEffect, useState, useLayoutEffect} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import apiKey from '../apiKey';
+import apiKey from '../utils/apiKey';
 import data from '../data.json';
 import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import {CHAPTER_LIST_BANNER} from '../utils/adsList';
+
+const adUnitId = __DEV__ ? TestIds.BANNER : CHAPTER_LIST_BANNER;
 const Chapter = () => {
   const navigation = useNavigation();
   const [chapters, setChapters] = useState();
@@ -114,7 +118,7 @@ const Chapter = () => {
       {chapters && (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{width: '94%'}}>
+          contentContainerStyle={{width: '96%', alignItems: 'center'}}>
           {lastReadData && (
             <TouchableOpacity
               activeOpacity={0.4}
@@ -199,6 +203,15 @@ const Chapter = () => {
               </TouchableOpacity>
             );
           })}
+          <View style={{marginVertical: 10}}>
+            <BannerAd
+              unitId={adUnitId}
+              size={BannerAdSize.BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          </View>
         </ScrollView>
       )}
     </SafeAreaView>
@@ -261,7 +274,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#18181870',
     borderBottomWidth: 1.5,
     paddingBottom: 16,
-    paddingHorizontal: 6,
+    paddingHorizontal: 4,
   },
   lastreadTopDiv: {
     display: 'flex',

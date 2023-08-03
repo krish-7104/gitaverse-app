@@ -15,7 +15,18 @@ import {setBookmarkHandler} from '../redux/actions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authorData from '../data.json';
+import {
+  InterstitialAd,
+  TestIds,
+  AdEventType,
+} from 'react-native-google-mobile-ads';
+import {BOOKMARK_INTERSTITIAL} from '../utils/adsList';
 
+const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : BOOKMARK_INTERSTITIAL;
+
+const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+  requestNonPersonalizedAdsOnly: true,
+});
 const Bookmark = () => {
   const [data, setData] = useState(null);
   const bookmarkData = useSelector(state => state.bookmark);
@@ -52,6 +63,19 @@ const Bookmark = () => {
     getData();
     getAllChapters();
   }, [bookmarkData]);
+
+  useEffect(() => {
+    const unsubscribe = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        interstitial.show();
+      },
+    );
+
+    interstitial.load();
+
+    return unsubscribe;
+  }, []);
 
   const removeBookMarkHandler = async key => {
     try {
@@ -194,6 +218,13 @@ const Bookmark = () => {
           })}
         </ScrollView>
       )}
+      <View
+        style={{
+          marginVertical: 10,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}></View>
     </SafeAreaView>
   );
 };
@@ -208,7 +239,6 @@ const styles = StyleSheet.create({
   loaderContainer: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'white',
   },
   scrollContainer: {
     alignSelf: 'center',

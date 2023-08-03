@@ -21,10 +21,6 @@ export const Reducers = (state = initialState, action) => {
             return { ...state, bookmark: action.payload }
         case "LASTREAD":
             return { ...state, lastread: action.payload }
-        case "SPEECH_PITCH":
-            return { ...state, pitch: action.payload }
-        case "SPEECH_RATE":
-            return { ...state, rate: action.payload }
         default:
             return state;
     }

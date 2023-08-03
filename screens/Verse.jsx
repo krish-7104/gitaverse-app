@@ -15,8 +15,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {setBookmarkHandler, setLastReadHandler} from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
-import apiKey from '../apiKey';
-import data from '../data.json';
+import apiKey from '../utils/apiKey';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import {VERSE_SHOW_BANNER} from '../utils/adsList';
+
+const adUnitId = __DEV__ ? TestIds.BANNER : VERSE_SHOW_BANNER;
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
   const commentaryData = useSelector(state => state.commentary);
@@ -343,6 +346,15 @@ const Verse = ({route, navigation}) => {
                 .replaceAll(`।।`, '')
                 .replace(`${route.params.chap_no}.${count}`, '')}
             </Text>
+          </View>
+          <View style={{marginVertical: 10}}>
+            <BannerAd
+              unitId={adUnitId}
+              size={BannerAdSize.BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
           </View>
         </ScrollView>
       )}

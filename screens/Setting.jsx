@@ -16,8 +16,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   setCommentaryhandler,
   setLanguageHandler,
-  setSpeechPitchHandler,
-  setSpeechRateHandler,
   setTranslationhandler,
 } from '../redux/actions';
 import Tts from 'react-native-tts';
@@ -28,8 +26,6 @@ const Setting = ({navigation}) => {
   const commentaryData = useSelector(state => state.commentary);
   const translationData = useSelector(state => state.translation);
   const languageData = useSelector(state => state.language);
-  const pitch = useSelector(state => state.pitch);
-  const rate = useSelector(state => state.rate);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
@@ -75,8 +71,6 @@ const Setting = ({navigation}) => {
         id: 16,
       }),
     );
-    dispatch(setSpeechPitchHandler(1.0));
-    dispatch(setSpeechRateHandler(0.5));
     dispatch(setLanguageHandler('English'));
     try {
       await AsyncStorage.setItem(

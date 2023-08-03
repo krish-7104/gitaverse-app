@@ -7,6 +7,7 @@ import Home from './screens/Home';
 import Verse from './screens/Verse';
 import LangChange from './screens/LangChange';
 import SummaryView from './screens/SummaryView';
+import Setting from './screens/Setting';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -19,6 +20,7 @@ const App = () => {
           <Stack.Screen name="Verse" component={Verse} />
           <Stack.Screen name="LangChange" component={LangChange} />
           <Stack.Screen name="SummaryView" component={SummaryView} />
+          <Stack.Screen name="Settings" component={Setting} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

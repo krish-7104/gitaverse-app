@@ -59,24 +59,6 @@ const Home = ({navigation}) => {
           ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
       }
-
-      const Pitch = await AsyncStorage.getItem('Pitch');
-      if (Pitch !== null) {
-        try {
-          dispatch(setSpeechPitchHandler(Number(Pitch)));
-        } catch (error) {
-          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
-        }
-      }
-
-      const Rate = await AsyncStorage.getItem('Rate');
-      if (Rate !== null) {
-        try {
-          dispatch(setSpeechRateHandler(Number(Rate)));
-        } catch (error) {
-          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
-        }
-      }
       const Language = await AsyncStorage.getItem('Language');
       if (Language !== null) {
         try {

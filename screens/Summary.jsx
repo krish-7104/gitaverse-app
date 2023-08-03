@@ -11,10 +11,13 @@ import {
 import React, {useEffect, useState, useLayoutEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import apiKey from '../apiKey';
+import apiKey from '../utils/apiKey';
 import {useIsFocused} from '@react-navigation/native';
 import Tts from 'react-native-tts';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import {SUMMARY_LIST_BANNER} from '../utils/adsList';
 
+const adUnitId = __DEV__ ? TestIds.BANNER : SUMMARY_LIST_BANNER;
 const Summary = () => {
   const [data, setData] = useState();
   const languageData = useSelector(state => state.language);
@@ -82,41 +85,60 @@ const Summary = () => {
       {data && (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{width: '94%'}}>
-          {data.map(chap => {
+          contentContainerStyle={{width: '100%'}}>
+          {data.map((chap, index) => {
             return (
-              <TouchableOpacity
-                activeOpacity={0.9}
-                key={chap.chapter_number}
-                style={styles.mainChapDiv}
-                onPress={() => {
-                  navigation.push('SummaryView', {
-                    data: chap,
-                  });
-                }}>
-                <View style={styles.chapDataDiv}>
-                  <Text
-                    style={[
-                      styles.chapDataTitle,
-                      languageData === 'Hindi' && {fontSize: 18},
-                    ]}>
-                    {chap.chapter_number}.{' '}
-                    {languageData === 'Hindi'
-                      ? chap.name
-                      : chap.name_translated}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.chapDataSubtitle,
-                      languageData === 'Hindi' && {fontSize: 16},
-                    ]}
-                    numberOfLines={2}>
-                    {languageData === 'Hindi'
-                      ? chap.chapter_summary_hindi
-                      : chap.chapter_summary}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              <>
+                {(index === 5 || index === 13) && (
+                  <View
+                    style={{
+                      marginVertical: 10,
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <BannerAd
+                      unitId={adUnitId}
+                      size={BannerAdSize.BANNER}
+                      requestOptions={{
+                        requestNonPersonalizedAdsOnly: true,
+                      }}
+                    />
+                  </View>
+                )}
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  key={chap.chapter_number}
+                  style={styles.mainChapDiv}
+                  onPress={() => {
+                    navigation.push('SummaryView', {
+                      data: chap,
+                    });
+                  }}>
+                  <View style={styles.chapDataDiv}>
+                    <Text
+                      style={[
+                        styles.chapDataTitle,
+                        languageData === 'Hindi' && {fontSize: 18},
+                      ]}>
+                      {chap.chapter_number}.{' '}
+                      {languageData === 'Hindi'
+                        ? chap.name
+                        : chap.name_translated}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.chapDataSubtitle,
+                        languageData === 'Hindi' && {fontSize: 16},
+                      ]}
+                      numberOfLines={2}>
+                      {languageData === 'Hindi'
+                        ? chap.chapter_summary_hindi
+                        : chap.chapter_summary}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </>
             );
           })}
         </ScrollView>
@@ -131,7 +153,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 10,
+    backgroundColor: 'white',
   },
   scrollContainer: {
     alignSelf: 'center',
@@ -175,14 +197,12 @@ const styles = StyleSheet.create({
   },
   mainChapDiv: {
     flexDirection: 'row',
-    marginBottom: 10,
     alignItems: 'center',
     paddingVertical: 16,
     backgroundColor: 'white',
     paddingHorizontal: 16,
-    borderRadius: 6,
-    elevation: 4,
-    shadowColor: '#00000080',
+    borderBottomColor: '#00000020',
+    borderBottomWidth: 1.4,
   },
   chapDataDiv: {
     width: '100%',

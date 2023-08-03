@@ -72,6 +72,53 @@ const LangChange = ({navigation, route}) => {
     navigation.goBack();
   };
   const changeLangHandler = lang => {
+    if (lang === 'Hindi') {
+      dispatch(
+        setTranslationhandler({
+          author: 'Swami Tejomayananda',
+          type: 'Hindi',
+          id: 2,
+        }),
+      );
+      dispatch(
+        setCommentaryhandler({
+          author: 'Swami Chinmayananda',
+          type: 'Hindi',
+          id: 2,
+        }),
+      );
+      AsyncStorage.setItem(
+        'Translation Source',
+        JSON.stringify({author: 'Swami Tejomayananda', type: 'Hindi', id: 2}),
+      );
+      AsyncStorage.setItem(
+        'Commentary Source',
+        JSON.stringify({author: 'Swami Chinmayananda', type: 'Hindi', id: 2}),
+      );
+    } else {
+      dispatch(
+        setTranslationhandler({
+          author: 'Swami Adidevananda',
+          type: 'English',
+          id: 3,
+        }),
+      );
+      dispatch(
+        setCommentaryhandler({
+          author: 'Swami Sivananda',
+          type: 'English',
+          id: 16,
+        }),
+      );
+      AsyncStorage.setItem(
+        'Translation Source',
+        JSON.stringify({author: 'Swami Adidevananda', type: 'English', id: 3}),
+      );
+      AsyncStorage.setItem(
+        'Commentary Source',
+        JSON.stringify({author: 'Swami Sivananda', type: 'English', id: 16}),
+      );
+    }
     dispatch(setLanguageHandler(lang));
     navigation.goBack();
   };

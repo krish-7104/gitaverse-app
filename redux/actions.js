@@ -24,13 +24,3 @@ export const setLastReadHandler = (data) => ({
     type: "LASTREAD",
     payload: data
 })
-
-export const setSpeechPitchHandler = (data) => ({
-    type: "SPEECH_PITCH",
-    payload: data
-})
-
-export const setSpeechRateHandler = (data) => ({
-    type: "SPEECH_RATE",
-    payload: data
-})
