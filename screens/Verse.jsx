@@ -59,7 +59,7 @@ const Verse = ({route, navigation}) => {
           activeOpacity={0.4}>
           <Octiocon
             name={showList ? 'x' : 'rows'}
-            size={showList ? 26 : 20}
+            size={showList ? 32 : 24}
             color="black"
             style={{padding: 2}}
           />

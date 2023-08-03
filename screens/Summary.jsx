@@ -130,7 +130,6 @@ export default Summary;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'white',
     alignItems: 'center',
     paddingTop: 10,
   },
@@ -178,10 +177,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 10,
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 16,
     backgroundColor: 'white',
-    paddingHorizontal: 14,
-    borderRadius: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    elevation: 4,
+    shadowColor: '#00000080',
   },
   chapDataDiv: {
     width: '100%',
@@ -189,12 +190,12 @@ const styles = StyleSheet.create({
   chapDataTitle: {
     color: 'black',
     fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
+    fontSize: 17,
   },
   chapDataSubtitle: {
     color: '#00000090',
     fontFamily: 'Inter-Regular',
     fontSize: 14,
-    marginTop: 6,
+    marginTop: 8,
   },
 });

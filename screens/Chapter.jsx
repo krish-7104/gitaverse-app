@@ -146,7 +146,7 @@ const Chapter = () => {
                   {language === 'Hindi' ? 'स्लोक' : 'Verse'} {lastRead}
                 </Text>
               </View>
-              <Text style={styles.lastReadSlok} numberOfLines={4}>
+              <Text style={styles.lastReadSlok} numberOfLines={3}>
                 {lastReadData?.translations[
                   data.Translation.findIndex(
                     item => item.id === translationData.id,
