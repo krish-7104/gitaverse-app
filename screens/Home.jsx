@@ -12,8 +12,6 @@ import {
   setCommentaryhandler,
   setLanguageHandler,
   setLastReadHandler,
-  setSpeechPitchHandler,
-  setSpeechRateHandler,
   setTranslationhandler,
 } from '../redux/actions';
 import Ionicons from 'react-native-vector-icons/Ionicons';

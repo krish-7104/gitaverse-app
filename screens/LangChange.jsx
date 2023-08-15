@@ -119,6 +119,7 @@ const LangChange = ({navigation, route}) => {
         JSON.stringify({author: 'Swami Sivananda', type: 'English', id: 16}),
       );
     }
+    AsyncStorage.setItem('Language', lang);
     dispatch(setLanguageHandler(lang));
     navigation.goBack();
   };

@@ -14,10 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import apiKey from '../utils/apiKey';
 import {useIsFocused} from '@react-navigation/native';
 import Tts from 'react-native-tts';
-import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
-import {SUMMARY_LIST_BANNER} from '../utils/adsList';
 
-const adUnitId = __DEV__ ? TestIds.BANNER : SUMMARY_LIST_BANNER;
 const Summary = () => {
   const [data, setData] = useState();
   const languageData = useSelector(state => state.language);
@@ -88,57 +85,38 @@ const Summary = () => {
           contentContainerStyle={{width: '100%'}}>
           {data.map((chap, index) => {
             return (
-              <>
-                {(index === 5 || index === 13) && (
-                  <View
-                    style={{
-                      marginVertical: 10,
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <BannerAd
-                      unitId={adUnitId}
-                      size={BannerAdSize.BANNER}
-                      requestOptions={{
-                        requestNonPersonalizedAdsOnly: true,
-                      }}
-                    />
-                  </View>
-                )}
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  key={chap.chapter_number}
-                  style={styles.mainChapDiv}
-                  onPress={() => {
-                    navigation.push('SummaryView', {
-                      data: chap,
-                    });
-                  }}>
-                  <View style={styles.chapDataDiv}>
-                    <Text
-                      style={[
-                        styles.chapDataTitle,
-                        languageData === 'Hindi' && {fontSize: 18},
-                      ]}>
-                      {chap.chapter_number}.{' '}
-                      {languageData === 'Hindi'
-                        ? chap.name
-                        : chap.name_translated}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.chapDataSubtitle,
-                        languageData === 'Hindi' && {fontSize: 16},
-                      ]}
-                      numberOfLines={2}>
-                      {languageData === 'Hindi'
-                        ? chap.chapter_summary_hindi
-                        : chap.chapter_summary}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                key={chap.chapter_number}
+                style={styles.mainChapDiv}
+                onPress={() => {
+                  navigation.push('SummaryView', {
+                    data: chap,
+                  });
+                }}>
+                <View style={styles.chapDataDiv}>
+                  <Text
+                    style={[
+                      styles.chapDataTitle,
+                      languageData === 'Hindi' && {fontSize: 18},
+                    ]}>
+                    {chap.chapter_number}.{' '}
+                    {languageData === 'Hindi'
+                      ? chap.name
+                      : chap.name_translated}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.chapDataSubtitle,
+                      languageData === 'Hindi' && {fontSize: 16},
+                    ]}
+                    numberOfLines={2}>
+                    {languageData === 'Hindi'
+                      ? chap.chapter_summary_hindi
+                      : chap.chapter_summary}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             );
           })}
         </ScrollView>

@@ -16,10 +16,7 @@ import apiKey from '../utils/apiKey';
 import data from '../data.json';
 import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
-import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
-import {CHAPTER_LIST_BANNER} from '../utils/adsList';
 
-const adUnitId = __DEV__ ? TestIds.BANNER : CHAPTER_LIST_BANNER;
 const Chapter = () => {
   const navigation = useNavigation();
   const [chapters, setChapters] = useState();
@@ -203,15 +200,6 @@ const Chapter = () => {
               </TouchableOpacity>
             );
           })}
-          <View style={{marginVertical: 10}}>
-            <BannerAd
-              unitId={adUnitId}
-              size={BannerAdSize.BANNER}
-              requestOptions={{
-                requestNonPersonalizedAdsOnly: true,
-              }}
-            />
-          </View>
         </ScrollView>
       )}
     </SafeAreaView>
