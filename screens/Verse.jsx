@@ -15,7 +15,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {setBookmarkHandler, setLastReadHandler} from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
-import apiKey from '../utils/apiKey';
+import apiKey, {VERSE_SHOW} from '../utils/apiKey';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+
+const adUnitId = __DEV__ ? TestIds.BANNER : VERSE_SHOW;
 
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
@@ -321,6 +324,15 @@ const Verse = ({route, navigation}) => {
                 .replaceAll(`।।`, '')
                 .replace(`${route.params.chap_no}.${count}`, '')}
             </Text>
+            <View style={{marginTop: 12}}>
+              <BannerAd
+                unitId={adUnitId}
+                size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+              />
+            </View>
             <Text
               style={[
                 styles.sectionTitle,

@@ -15,6 +15,15 @@ import {setBookmarkHandler} from '../redux/actions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authorData from '../data.json';
+import {
+  InterstitialAd,
+  TestIds,
+  AdEventType,
+  BannerAd,
+  BannerAdSize,
+} from 'react-native-google-mobile-ads';
+import {BOOKMARK, BOOKMARK_BANNER} from '../utils/apiKey';
+
 const Bookmark = () => {
   const [data, setData] = useState(null);
   const bookmarkData = useSelector(state => state.bookmark);
@@ -22,7 +31,21 @@ const Bookmark = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const translationData = useSelector(state => state.translation);
-
+  const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : BOOKMARK;
+  const adUnitIdBanner = __DEV__ ? TestIds.BANNER : BOOKMARK_BANNER;
+  const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+    requestNonPersonalizedAdsOnly: true,
+  });
+  useEffect(() => {
+    const unsubscribe = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        interstitial.show();
+      },
+    );
+    interstitial.load();
+    return unsubscribe;
+  }, []);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: 'black',
@@ -128,79 +151,81 @@ const Bookmark = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {!data && (
-        <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="#e11d48" />
-        </View>
-      )}
-
-      {data && Object.keys(data).length === 0 && (
-        <Text style={styles.noBookTxt}>
-          {languageData === 'Hindi' ? 'कोई बुकमार्क नहीं' : 'No Bookmarks'}
-        </Text>
-      )}
-
-      {data && Object.keys(data).length !== 0 && (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContainer}>
-          {Object.keys(data).map(key => {
-            const item = data[key];
-            return (
-              <TouchableOpacity
-                key={`Verse ${item.chapter_number}.${item.verse_number}`}
-                style={styles.bookmarkCard}
-                activeOpacity={0.4}
-                onPress={() =>
-                  navigation.push('Verse', {
-                    chap_no: item.chapter_number,
-                    versed: chapters[item.chapter_number - 1].verses_count,
-                    name:
-                      languageData === 'Hindi'
-                        ? chapters[item.chapter_number - 1].name_translated
-                        : chapters[item.chapter_number - 1].name,
-                    current: item.verse_number,
-                  })
-                }>
-                <Text
-                  style={[
-                    styles.bookmarkLabelTxt,
-                    languageData === 'Hindi' && {fontSize: 17},
-                  ]}>{`${languageData === 'Hindi' ? 'स्लोक' : 'Verse'} ${
-                  item.chapter_number
-                }.${item.verse_number}`}</Text>
-                <Text style={styles.bookmarkTxt} numberOfLines={4}>
-                  {item.translations[
-                    authorData.Translation.findIndex(
-                      item => item.id === translationData.id,
-                    )
-                  ].description
-                    .replace(
-                      `।।${item.chapter_number}.${item.verse_number}।।`,
-                      '',
-                    )
-                    .trim()}
-                </Text>
+    <>
+      <SafeAreaView style={styles.container}>
+        {!data && (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color="#e11d48" />
+          </View>
+        )}
+        {data && Object.keys(data).length === 0 && (
+          <Text style={styles.noBookTxt}>
+            {languageData === 'Hindi' ? 'कोई बुकमार्क नहीं' : 'No Bookmarks'}
+          </Text>
+        )}
+        {data && Object.keys(data).length !== 0 && (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}>
+            {Object.keys(data).map(key => {
+              const item = data[key];
+              return (
                 <TouchableOpacity
-                  style={styles.bottomBtnDiv}
-                  activeOpacity={0.9}
-                  onPress={() => removeBookMarkHandler(key)}>
-                  <FontAwesome name="bookmark" color="#000000" size={24} />
+                  key={`Verse ${item.chapter_number}.${item.verse_number}`}
+                  style={styles.bookmarkCard}
+                  activeOpacity={0.4}
+                  onPress={() =>
+                    navigation.push('Verse', {
+                      chap_no: item.chapter_number,
+                      versed: chapters[item.chapter_number - 1].verses_count,
+                      name:
+                        languageData === 'Hindi'
+                          ? chapters[item.chapter_number - 1].name_translated
+                          : chapters[item.chapter_number - 1].name,
+                      current: item.verse_number,
+                    })
+                  }>
+                  <Text
+                    style={[
+                      styles.bookmarkLabelTxt,
+                      languageData === 'Hindi' && {fontSize: 17},
+                    ]}>{`${languageData === 'Hindi' ? 'स्लोक' : 'Verse'} ${
+                    item.chapter_number
+                  }.${item.verse_number}`}</Text>
+                  <Text style={styles.bookmarkTxt} numberOfLines={4}>
+                    {item.translations[
+                      authorData.Translation.findIndex(
+                        item => item.id === translationData.id,
+                      )
+                    ].description
+                      .replace(
+                        `।।${item.chapter_number}.${item.verse_number}।।`,
+                        '',
+                      )
+                      .trim()}
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.bottomBtnDiv}
+                    activeOpacity={0.9}
+                    onPress={() => removeBookMarkHandler(key)}>
+                    <FontAwesome name="bookmark" color="#000000" size={24} />
+                  </TouchableOpacity>
                 </TouchableOpacity>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-      )}
-      <View
-        style={{
-          marginVertical: 10,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}></View>
-    </SafeAreaView>
+              );
+            })}
+          </ScrollView>
+        )}
+      </SafeAreaView>
+      <View>
+        <BannerAd
+          unitId={adUnitIdBanner}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
+      </View>
+    </>
   );
 };
 

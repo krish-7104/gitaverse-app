@@ -12,10 +12,13 @@ import React, {useEffect, useState, useLayoutEffect} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import apiKey from '../utils/apiKey';
+import apiKey, {CHAPTER} from '../utils/apiKey';
 import data from '../data.json';
 import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+
+const adUnitId = __DEV__ ? TestIds.BANNER : CHAPTER;
 
 const Chapter = () => {
   const navigation = useNavigation();
@@ -200,6 +203,15 @@ const Chapter = () => {
               </TouchableOpacity>
             );
           })}
+          <View>
+            <BannerAd
+              unitId={adUnitId}
+              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+            />
+          </View>
         </ScrollView>
       )}
     </SafeAreaView>

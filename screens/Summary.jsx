@@ -14,6 +14,9 @@ import {useNavigation} from '@react-navigation/native';
 import apiKey from '../utils/apiKey';
 import {useIsFocused} from '@react-navigation/native';
 import Tts from 'react-native-tts';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+
+const adUnitId = __DEV__ ? TestIds.BANNER : CHAPTER;
 
 const Summary = () => {
   const [data, setData] = useState();
@@ -121,6 +124,15 @@ const Summary = () => {
           })}
         </ScrollView>
       )}
+      <View style={{marginTop: 12}}>
+        <BannerAd
+          unitId={adUnitId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 };
