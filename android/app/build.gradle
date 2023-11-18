@@ -91,10 +91,10 @@ android {
         }
         release
         {
-            storeFile file('krish.keystore')
-            storePassword 'krishbudhu'
-            keyAlias 'krish'
-            keyPassword 'krishbudhu'
+            storeFile file('gitaverse.keystore')
+            storePassword 'gitaverse'
+            keyAlias 'gitaverse'
+            keyPassword 'gitaverse'
         }
     }
     buildTypes {
