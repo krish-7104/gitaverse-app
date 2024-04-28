@@ -15,10 +15,6 @@ import {setBookmarkHandler} from '../redux/actions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authorData from '../data.json';
-import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
-import {BOOKMARK_BANNER} from '../utils/apiKey';
-
-const adUnitId = __DEV__ ? TestIds.BANNER : BOOKMARK_BANNER;
 
 const Bookmark = () => {
   const [data, setData] = useState(null);
@@ -198,23 +194,6 @@ const Bookmark = () => {
           })}
         </ScrollView>
       )}
-      <View
-        style={{
-          marginVertical: 10,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <BannerAd
-          unitId={adUnitId}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-          onError={() => setAdLoaded(false)}
-          onAdFailedToLoad={() => setAdLoaded(false)}
-        />
-      </View>
     </SafeAreaView>
   );
 };

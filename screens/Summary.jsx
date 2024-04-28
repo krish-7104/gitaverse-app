@@ -11,38 +11,15 @@ import {
 import React, {useEffect, useState, useLayoutEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import apiKey, {SUMMARY_INTERSTITIAL} from '../utils/apiKey';
+import apiKey from '../utils/apiKey';
 import {useIsFocused} from '@react-navigation/native';
 import Tts from 'react-native-tts';
-import {
-  InterstitialAd,
-  TestIds,
-  AdEventType,
-} from 'react-native-google-mobile-ads';
 
-const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : SUMMARY_INTERSTITIAL;
-
-const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-  requestNonPersonalizedAdsOnly: true,
-});
 const Summary = () => {
   const [data, setData] = useState();
   const languageData = useSelector(state => state.language);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-
-  useEffect(() => {
-    const unsubscribe = interstitial.addAdEventListener(
-      AdEventType.LOADED,
-      () => {
-        interstitial.show();
-      },
-    );
-
-    interstitial.load();
-
-    return unsubscribe;
-  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({

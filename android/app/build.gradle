@@ -79,8 +79,8 @@ android {
         applicationId "com.krish.gitaverse"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "1.5"
+        versionCode 7
+        versionName "1.7"
     }
     signingConfigs {
         debug {
@@ -130,3 +130,4 @@ dependencies {
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply plugin: 'com.google.gms.google-services'
