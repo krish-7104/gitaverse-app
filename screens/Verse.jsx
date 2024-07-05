@@ -15,7 +15,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {setBookmarkHandler, setLastReadHandler} from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
-import apiKey from '../utils/apiKey';
+import apiKey, {VERSE_SHOW} from '../utils/apiKey';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+const adUnitId = __DEV__ ? TestIds.BANNER : VERSE_SHOW;
 
 const Verse = ({route, navigation}) => {
   const translationData = useSelector(state => state.translation);
@@ -30,6 +32,7 @@ const Verse = ({route, navigation}) => {
   const [play, setPlay] = useState(false);
   const scrollViewRef = useRef();
   const [showList, setShowList] = useState(false);
+  const [adLoaded, setAdLoaded] = useState(true);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -306,6 +309,25 @@ const Verse = ({route, navigation}) => {
               ]}>
               {langaugeData === 'Hindi' ? 'अनुवाद' : 'Translation'}
             </Text>
+            {adLoaded && (
+              <View
+                style={{
+                  marginVertical: 10,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <BannerAd
+                  unitId={adUnitId}
+                  size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                  requestOptions={{
+                    requestNonPersonalizedAdsOnly: true,
+                  }}
+                  onError={() => setAdLoaded(false)}
+                  onAdFailedToLoad={() => setAdLoaded(false)}
+                />
+              </View>
+            )}
             <Text
               style={[
                 styles.sectionTxt,

@@ -4,12 +4,20 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import React, {useLayoutEffect, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Tts from 'react-native-tts';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import {SUMMARY} from '../utils/apiKey';
+
+const adUnitId = __DEV__ ? TestIds.BANNER : SUMMARY;
+
 const SummaryView = ({navigation, route}) => {
+  const [adLoaded, setAdLoaded] = useState(true);
+
   const languageData = useSelector(state => state.language);
   const [play, setPlay] = useState(false);
   const rateData = useSelector(state => state.rate);
@@ -142,6 +150,25 @@ const SummaryView = ({navigation, route}) => {
             ? route.params.data.chapter_summary_hindi
             : route.params.data.chapter_summary}
         </Text>
+        {adLoaded && (
+          <View
+            style={{
+              marginVertical: 10,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <BannerAd
+              unitId={adUnitId}
+              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true,
+              }}
+              onError={() => setAdLoaded(false)}
+              onAdFailedToLoad={() => setAdLoaded(false)}
+            />
+          </View>
+        )}
       </ScrollView>
       {play && (
         <TouchableOpacity
