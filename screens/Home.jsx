@@ -1,12 +1,10 @@
-import {StyleSheet, Text, View, ToastAndroid} from 'react-native';
-import React, {useLayoutEffect, useState, useEffect} from 'react';
+import React, {useLayoutEffect, useEffect} from 'react';
 import Chapter from './Chapter';
 import Setting from './Setting';
 import Bookmark from './Bookmark';
 import Summary from './Summary';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   setBookmarkHandler,
   setCommentaryhandler,
@@ -15,137 +13,113 @@ import {
   setTranslationhandler,
 } from '../redux/actions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {ToastAndroid} from 'react-native';
 
 const Home = ({navigation}) => {
+  const dispatch = useDispatch();
+  const language = useSelector(state => state.language);
+  const Tab = createMaterialTopTabNavigator();
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: false,
+      headerShown: true,
+      title: language === 'Hindi' ? 'गीतावर्स' : 'GitaVerse',
     });
-  }, [navigation]);
-  const language = useSelector(state => state.language);
-  const dispatch = useDispatch();
+  }, [navigation, language]);
 
   useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = async () => {
-    try {
-      const bookmark = await AsyncStorage.getItem('BookMark');
-      if (bookmark !== null) {
-        try {
+    const getData = async () => {
+      try {
+        const bookmark = await AsyncStorage.getItem('BookMark');
+        if (bookmark) {
           dispatch(setBookmarkHandler(JSON.parse(bookmark)));
-        } catch (error) {
-          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
         }
-      }
 
-      const Translation = await AsyncStorage.getItem('Translation Source');
-      if (Translation !== null) {
-        try {
-          dispatch(setTranslationhandler(JSON.parse(Translation)));
-        } catch (error) {
-          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+        const translation = await AsyncStorage.getItem('Translation Source');
+        if (translation) {
+          dispatch(setTranslationhandler(JSON.parse(translation)));
         }
-      }
 
-      const Commentary = await AsyncStorage.getItem('Commentary Source');
-      if (Commentary !== null) {
-        try {
-          dispatch(setCommentaryhandler(JSON.parse(Commentary)));
-        } catch (error) {
-          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+        const commentary = await AsyncStorage.getItem('Commentary Source');
+        if (commentary) {
+          dispatch(setCommentaryhandler(JSON.parse(commentary)));
         }
-      }
-      const Language = await AsyncStorage.getItem('Language');
-      if (Language !== null) {
-        try {
-          dispatch(setLanguageHandler(Language));
-        } catch (error) {
-          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+
+        const language = await AsyncStorage.getItem('Language');
+        if (language) {
+          dispatch(setLanguageHandler(language));
         }
-      }
-      const LastRead = await AsyncStorage.getItem('Last Read');
-      if (LastRead !== null) {
-        try {
-          dispatch(setLastReadHandler(LastRead));
-        } catch (error) {
-          ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
+
+        const lastRead = await AsyncStorage.getItem('Last Read');
+        if (lastRead) {
+          dispatch(setLastReadHandler(lastRead));
         }
+      } catch (error) {
+        ToastAndroid.show('Error in Loading Data', ToastAndroid.BOTTOM);
       }
-    } catch (error) {
-      ToastAndroid.show('Error In Loading Data', ToastAndroid.BOTTOM);
-    }
-  };
-  const Tab = createBottomTabNavigator();
+    };
+
+    getData();
+  }, [dispatch]);
+
   return (
-    <>
-      <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color}) => {
-            let iconName;
-            if (route.name === 'GitaVerse' || route.name === 'गीतावर्स') {
+    <Tab.Navigator
+      tabBarPosition="bottom"
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color}) => {
+          let iconName;
+          switch (route.name) {
+            case 'GitaVerse':
+            case 'गीतावर्स':
               iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Settings' || route.name === 'सेटिंग्स') {
+              break;
+            case 'Settings':
+            case 'सेटिंग्स':
               iconName = focused ? 'settings' : 'settings-outline';
-            } else if (route.name === 'सारांश' || route.name === 'Summary') {
+              break;
+            case 'Summary':
+            case 'सारांश':
               iconName = focused ? 'bulb' : 'bulb-outline';
-            } else if (
-              route.name === 'Bookmarks' ||
-              route.name === 'बुकमार्क'
-            ) {
+              break;
+            case 'Bookmarks':
+            case 'बुकमार्क':
               iconName = focused ? 'bookmark' : 'bookmark-outline';
-            }
-            return <Ionicons name={iconName} size={24} color={color} />;
-          },
-          tabBarActiveTintColor: '#e11d48',
-          tabBarInactiveTintColor: 'gray',
-          gestureEnabled: true,
-          swipeEnabled: true,
-          tabBarStyle: {
-            height: 60,
-            padding: 10,
-            paddingBottom: 8,
-          },
-          tabBarLabelStyle: {
-            fontFamily: 'Inter-Medium',
-          },
-        })}>
-        <Tab.Screen
-          name={language === 'Hindi' ? 'गीतावर्स' : 'GitaVerse'}
-          component={Chapter}
-        />
-        <Tab.Screen
-          name={language === 'Hindi' ? 'बुकमार्क' : 'Bookmarks'}
-          component={Bookmark}
-        />
-        <Tab.Screen
-          name={language === 'Hindi' ? 'सारांश' : 'Summary'}
-          component={Summary}
-        />
-        <Tab.Screen
-          name={language === 'Hindi' ? 'सेटिंग्स' : 'Settings'}
-          component={Setting}
-        />
-      </Tab.Navigator>
-    </>
+              break;
+            default:
+              iconName = 'home-outline';
+          }
+          return <Ionicons name={iconName} size={22} color={color} />;
+        },
+        tabBarActiveTintColor: '#e11d48',
+        tabBarInactiveTintColor: 'gray',
+        tabBarIndicatorStyle: {
+          backgroundColor: '#e11d48',
+        },
+        tabBarLabelStyle: {
+          fontFamily: 'Inter-Medium',
+          textTransform: 'capitalize',
+          fontSize: 12,
+        },
+      })}>
+      <Tab.Screen
+        name={language === 'Hindi' ? 'गीतावर्स' : 'GitaVerse'}
+        component={Chapter}
+      />
+      <Tab.Screen
+        name={language === 'Hindi' ? 'बुकमार्क' : 'Bookmarks'}
+        component={Bookmark}
+      />
+      <Tab.Screen
+        name={language === 'Hindi' ? 'सारांश' : 'Summary'}
+        component={Summary}
+      />
+      <Tab.Screen
+        name={language === 'Hindi' ? 'सेटिंग्स' : 'Settings'}
+        component={Setting}
+      />
+    </Tab.Navigator>
   );
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-  navDiv: {
-    backgroundColor: 'white',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    elevation: 10,
-    zIndex: 20,
-    shadowColor: '#00000095',
-  },
-  navTitle: {
-    fontFamily: 'Inter-Bold',
-    color: 'black',
-    fontSize: 20,
-  },
-});
