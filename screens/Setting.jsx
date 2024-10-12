@@ -9,9 +9,8 @@ import {
   Alert,
   ToastAndroid,
 } from 'react-native';
-import React, {useEffect, useLayoutEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   setCommentaryhandler,
@@ -28,29 +27,6 @@ const Setting = ({navigation}) => {
   const languageData = useSelector(state => state.language);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTintColor: 'black',
-      headerTitle: () => (
-        <Text
-          style={{
-            fontSize: languageData === 'Hindi' ? 20 : 18,
-            marginTop: 6,
-            color: '#000',
-            fontFamily: 'Inter-SemiBold',
-          }}>
-          {languageData === 'Hindi' ? 'सेटिंग्स' : 'Settings'}
-        </Text>
-      ),
-      headerStyle: {
-        elevation: 10,
-        shadowColor: 'black',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-    });
-  }, [navigation, languageData]);
 
   useEffect(() => {
     Tts.stop();

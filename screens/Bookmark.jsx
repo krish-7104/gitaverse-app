@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useLayoutEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -23,30 +23,6 @@ const Bookmark = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const translationData = useSelector(state => state.translation);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTintColor: 'black',
-      headerTitle: () => (
-        <Text
-          style={{
-            fontSize: languageData === 'Hindi' ? 20 : 18,
-            marginTop: 6,
-            color: '#000',
-            fontFamily: 'Inter-SemiBold',
-          }}>
-          {languageData === 'Hindi' ? 'बुकमार्क' : 'Bookmarks'}
-        </Text>
-      ),
-      headerStyle: {
-        elevation: 10,
-        shadowColor: 'black',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-    });
-  }, [navigation, languageData]);
 
   useEffect(() => {
     getData();

@@ -99,7 +99,7 @@ const Home = ({navigation}) => {
         tabBarLabelStyle: {
           fontFamily: 'Inter-Medium',
           textTransform: 'capitalize',
-          fontSize: 12,
+          fontSize: 10,
         },
       })}>
       <Tab.Screen
